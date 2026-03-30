@@ -54,6 +54,12 @@ _Last updated: 2026-03-30_
 
 ## Current Projects
 
+### Project Source of Truth
+- **Operational source of truth:** `/home/user/.openclaw/workspace/PROJECT.md`
+- Use `PROJECT.md` for current status, episode progress, decisions, open issues, and next steps
+- `MEMORY.md` remains long-term stable memory, not the main operational tracker
+
+
 ### Navi OS (React + Vite)
 - Personal operating system dashboard
 - Location: /home/user/.openclaw/workspace/navi-os

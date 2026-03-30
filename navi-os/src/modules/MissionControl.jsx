@@ -20,13 +20,6 @@ function formatDuration(ms) {
   return `${secs}s`
 }
 
-function formatTime(iso) {
-  if (!iso) return '—'
-  try {
-    return new Date(iso).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })
-  } catch { return '—' }
-}
-
 function formatDate(iso) {
   if (!iso) return '—'
   try {
@@ -119,7 +112,7 @@ function SessionDetail({ session, onBack }) {
 function ActiveSessions() {
   const [sessions, setSessions] = useState([])
   const [loading, setLoading] = useState(true)
-  const [expandedSession, setExpandedSession] = useState(null)
+  const [expandedSession] = useState(null)
   const [detailSession, setDetailSession] = useState(null)
 
   const loadSessions = () => {
@@ -358,8 +351,6 @@ function ServiceStatusItem({ service }) {
 // ─── Mission Control ───────────────────────────────────────────────────────────
 
 export default function MissionControl() {
-  const [selectedModel, setSelectedModel] = useState('minimax-m2')
-
   return (
     <div className="mission-control">
       <ActiveSessions />

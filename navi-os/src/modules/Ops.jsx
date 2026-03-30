@@ -25,13 +25,12 @@ const FEATURES = [
 
 function OvernightSummary() {
   const [cronJobs, setCronJobs] = useState([])
-  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     fetch('/api/cron-health')
       .then(r => r.json())
-      .then(d => { setCronJobs(d.jobs || []); setLoading(false) })
-      .catch(() => setLoading(false))
+      .then(d => { setCronJobs(d.jobs || []) })
+      .catch(() => {})
   }, [])
 
   const now = new Date()

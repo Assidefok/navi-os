@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import {
   FlaskConical, Lightbulb, Rocket, Search, Plus, Play, Pause, Archive,
   ChevronRight, X, RefreshCw, TrendingUp, Clock, Star
@@ -11,7 +11,7 @@ const API_BASE = '/api'
 
 // ─── Prototype Portfolio ──────────────────────────────────────────────────────
 
-function PrototypePortfolio({ onClose }) {
+function PrototypePortfolio() {
   const [prototypes, setPrototypes] = useState([])
   const [loading, setLoading] = useState(true)
 
@@ -145,16 +145,6 @@ function IdeasGallery() {
 // ─── Research Dashboard ───────────────────────────────────────────────────────
 
 function ResearchDashboard() {
-  const [files, setFiles] = useState([])
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    // Try to read from /home/user/.openclaw/workspace/research
-    // Since we're in browser, this would need a dedicated endpoint
-    // For now, show placeholder with instruction
-    setLoading(false)
-  }, [])
-
   return (
     <div className="research-dashboard">
       <div className="section-stats">
