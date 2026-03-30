@@ -664,6 +664,32 @@ app.get('/api/file', (req, res) => {
   }
 })
 
+// Serve files as binary (for image previews)
+app.get('/api/file-binary', (req, res) => {
+  try {
+    const reqPath = String(req.query.path || '').replace(/^\/+/, '')
+    const fullPath = resolve(WORKSPACE, reqPath)
+    if (!fullPath.startsWith(WORKSPACE)) return res.status(403).json({ error: 'Invalid path' })
+    if (!existsSync(fullPath)) return res.status(404).json({ error: 'File not found' })
+    
+    // Detect content type
+    const ext = reqPath.split('.').pop().toLowerCase()
+    const mimeTypes = {
+      'jpg': 'image/jpeg', 'jpeg': 'image/jpeg', 'png': 'image/png',
+      'gif': 'image/gif', 'webp': 'image/webp', 'svg': 'image/svg+xml',
+      'bmp': 'image/bmp', 'ico': 'image/x-icon'
+    }
+    const contentType = mimeTypes[ext] || 'application/octet-stream'
+    
+    res.setHeader('Content-Type', contentType)
+    res.setHeader('Cache-Control', 'max-age=3600')
+    const buffer = readFileSync(fullPath)
+    res.send(buffer)
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
+
 app.post('/api/file', (req, res) => {
   try {
     const reqPath = String(req.body.path || '').replace(/^\/+/, '')
@@ -671,6 +697,38 @@ app.post('/api/file', (req, res) => {
     if (!fullPath.startsWith(WORKSPACE)) return res.status(403).json({ error: 'Invalid path' })
     writeFileSync(fullPath, String(req.body.content || ''), 'utf-8')
     res.json({ ok: true, path: reqPath })
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
+
+app.get('/api/download', (req, res) => {
+  try {
+    const reqPath = String(req.query.path || '').replace(/^\/+/, '')
+    const fullPath = resolve(WORKSPACE, reqPath)
+    if (!fullPath.startsWith(WORKSPACE)) return res.status(403).json({ error: 'Invalid path' })
+    if (!existsSync(fullPath)) return res.status(404).json({ error: 'File not found' })
+    const fileName = reqPath.split('/').pop()
+    res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`)
+    res.setHeader('Content-Security-Policy', 'default-src \'none\'')
+    res.sendFile(fullPath)
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
+
+app.post('/api/upload', (req, res) => {
+  try {
+    const { path: dirPath, name, content } = req.body || {}
+    if (!dirPath || !name) return res.status(400).json({ error: 'path and name required' })
+    const fullDir = resolve(WORKSPACE, String(dirPath).replace(/^\/+/, ''))
+    if (!fullDir.startsWith(WORKSPACE)) return res.status(403).json({ error: 'Invalid path' })
+    const filePath = join(fullDir, String(name))
+    if (!filePath.startsWith(WORKSPACE)) return res.status(403).json({ error: 'Invalid path' })
+    mkdirSync(dirname(filePath), { recursive: true })
+    const buffer = Buffer.from(content, 'base64')
+    writeFileSync(filePath, buffer)
+    res.json({ ok: true, path: filePath.replace(WORKSPACE + '/', '') })
   } catch (err) {
     res.status(500).json({ error: err.message })
   }
