@@ -6,7 +6,7 @@
 import express from 'express'
 import cors from 'cors'
 import { execSync } from 'child_process'
-import { readFileSync, readdirSync, statSync, existsSync, writeFileSync, mkdirSync } from 'fs'
+import { readFileSync, readdirSync, statSync, existsSync, writeFileSync, mkdirSync, createReadStream } from 'fs'
 import { join, resolve, dirname } from 'path'
 import { fileURLToPath } from 'url'
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -710,8 +710,9 @@ app.get('/api/download', (req, res) => {
     if (!existsSync(fullPath)) return res.status(404).json({ error: 'File not found' })
     const fileName = reqPath.split('/').pop()
     res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`)
-    res.setHeader('Content-Security-Policy', 'default-src \'none\'')
-    res.sendFile(fullPath)
+    const stream = createReadStream(fullPath)
+    stream.pipe(res)
+    stream.on('error', () => res.status(500).end())
   } catch (err) {
     res.status(500).json({ error: err.message })
   }

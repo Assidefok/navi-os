@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react'
 import { AlertTriangle, CheckCircle2, XCircle, Loader2, Key, Lock, Eye, Zap } from 'lucide-react'
 import './Security.css'
 
-function SecurityItem({ name, status, details, color = 'green' }) {
+function SecurityItem({ name, status, details, color = 'green', icon }) {
+  const Icon = icon
   return (
     <div className={`security-item ${status}`}>
       <div className={`security-item-icon ${color}`}><Icon size={16} /></div>
@@ -40,7 +41,7 @@ function SkillsStatus() {
       <div className="security-items-list">
         {skills.length === 0 && <span className="empty-state">Cap skill trobada</span>}
         {skills.map(s => (
-          <SecurityItem key={s.name} name={s.name} status="ok" details={s.source || s.type || 'skill'} color="amber" />
+          <SecurityItem key={s.name} name={s.name} status="ok" details={s.source || s.type || 'skill'} color="amber" icon={Zap} />
         ))}
       </div>
     </div>
@@ -78,7 +79,7 @@ function ToolsStatus() {
       <h3 className="section-title"><Key size={14} /> Tools disponibles</h3>
       <div className="security-items-list">
         {tools.map(t => (
-          <SecurityItem key={t.name} name={t.name} status={t.status || 'ok'} details={t.type || 'tool'} color="sky" />
+          <SecurityItem key={t.name} name={t.name} status={t.status || 'ok'} details={t.type || 'tool'} color="sky" icon={Key} />
         ))}
       </div>
     </div>
@@ -110,7 +111,7 @@ function GatewaySecurity() {
       <h3 className="section-title"><Lock size={14} /> Gateway Security</h3>
       <div className="security-items-list">
         {items.map(item => (
-          <SecurityItem key={item.name} name={item.name} status={item.status} details={item.details} color="amber" />
+          <SecurityItem key={item.name} name={item.name} status={item.status} details={item.details} color="amber" icon={Lock} />
         ))}
       </div>
     </div>

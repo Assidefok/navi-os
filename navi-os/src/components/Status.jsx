@@ -5,7 +5,8 @@ import {
 } from 'lucide-react'
 import './Status.css'
 
-function MetricCard({ label, value, sub, color = 'amber' }) {
+function MetricCard({ label, value, sub, color = 'amber', icon }) {
+  const Icon = icon
   return (
     <div className={`metric-card ${color}`}>
       <div className="metric-icon"><Icon size={18} /></div>
