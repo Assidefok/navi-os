@@ -1,11 +1,15 @@
 import { useState, useEffect } from 'react'
-import { Activity, Zap, Link, FolderSync, Shield, Database, Users, Bot, MessageSquare, Moon, CheckCircle2, AlertCircle, Clock, LayoutList, LayoutDashboard } from 'lucide-react'
+import { Activity, Zap, Link, FolderSync, Shield, Database, Users, Bot, MessageSquare, Moon, CheckCircle2, AlertCircle, Clock, LayoutList, LayoutDashboard, FileCode, Server } from 'lucide-react'
 import TaskPipeline from '../components/TaskPipeline'
 import DeliverableTracker from '../components/DeliverableTracker'
 import TaskManager from '../components/TaskManager'
 import FeatureCard from '../components/ui/FeatureCard'
 import MissionControl from './MissionControl'
 import OrgChart from './OrgChart'
+import Status from '../components/Status'
+import Files from '../components/Files'
+import Security from '../components/Security'
+import Sync from '../components/Sync'
 import './Ops.css'
 
 const FEATURES = [
@@ -82,15 +86,61 @@ function OvernightSummary() {
   )
 }
 
+// ─── System Modules Panel ──────────────────────────────────────────────────────
+
+function SystemModules() {
+  const [metrics, setMetrics] = useState(null)
+  const [agents, setAgents] = useState([])
+  const [sessions, setSessions] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const [sysRes, agentsRes, sessionsRes] = await Promise.all([
+          fetch('/api/system-metrics').catch(() => null),
+          fetch('/api/agents').catch(() => null),
+          fetch('/api/sessions').catch(() => null),
+        ])
+        if (sysRes?.ok) setMetrics(await sysRes.json())
+        if (agentsRes?.ok) setAgents(await agentsRes.json())
+        if (sessionsRes?.ok) setSessions(await sessionsRes.json())
+      } catch {}
+      setLoading(false)
+    }
+    load()
+  }, [])
+
+  const modules = [
+    { name: 'Gateway', status: 'operational', desc: 'OpenClaw Gateway' },
+    { name: 'Agents', status: agents.length > 0 ? 'operational' : 'idle', desc: `${agents.length} agent(s)` },
+    { name: 'Sessions', status: sessions.length > 0 ? 'operational' : 'idle', desc: `${sessions.length} sessio(s)` },
+    { name: 'Files', status: 'operational', desc: 'Workspace' },
+    { name: 'Cron', status: 'operational', desc: 'Tasques programades' },
+    { name: 'Memory', status: 'operational', desc: 'Vector store' },
+  ]
+
+  return (
+    <div className="system-modules">
+      <h3 className="system-modules-title"><Server size={14} /> Moduls del sistema</h3>
+      <div className="system-modules-grid">
+        {modules.map(mod => (
+          <div key={mod.name} className={`system-module-card ${mod.status}`}>
+            <div className="module-status-dot" />
+            <span className="module-name">{mod.name}</span>
+            <span className="module-desc">{mod.desc}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 // ─── Main Ops ─────────────────────────────────────────────────────────────────
 
-const PLACEHOLDER_PANELS = [
-  { icon: MessageSquare, title: 'Session Monitoring', desc: 'Control de sessions actives', color: 'amber' },
-  { icon: Users, title: 'Agent Overview', desc: 'Visio dels agents actius', color: 'amber' }
-]
-
 export default function Ops() {
-  const [viewMode, setViewMode] = useState('hub') // 'hub' | 'orgchart' | 'pipeline' | 'manager'
+  const [viewMode, setViewMode] = useState('hub')
+  const [activePanel, setActivePanel] = useState(null)
 
   return (
     <div className="module-view ops">
@@ -100,43 +150,134 @@ export default function Ops() {
       <div className="ops-toggles">
         <button
           className={`toggle-btn ${viewMode === 'hub' ? 'active' : ''}`}
-          onClick={() => setViewMode('hub')}
+          onClick={() => { setViewMode('hub'); setActivePanel(null) }}
         >
           <LayoutDashboard size={15} />
           Mission Control
         </button>
         <button
           className={`toggle-btn ${viewMode === 'orgchart' ? 'active' : ''}`}
-          onClick={() => setViewMode('orgchart')}
+          onClick={() => { setViewMode('orgchart'); setActivePanel(null) }}
         >
           <Users size={15} />
           Org Chart
         </button>
         <button
           className={`toggle-btn ${viewMode === 'pipeline' ? 'active' : ''}`}
-          onClick={() => setViewMode('pipeline')}
+          onClick={() => { setViewMode('pipeline'); setActivePanel(null) }}
         >
           <LayoutList size={15} />
           PM Board
         </button>
         <button
           className={`toggle-btn ${viewMode === 'manager' ? 'active' : ''}`}
-          onClick={() => setViewMode('manager')}
+          onClick={() => { setViewMode('manager'); setActivePanel(null) }}
         >
           <Activity size={15} />
           Task Manager
         </button>
       </div>
 
-      {/* Hub View: Mission Control + Overnight Summary */}
-      {(viewMode === 'hub' || viewMode === 'orgchart') && (
-        <OvernightSummary />
+      {/* Full-screen panel views */}
+      {activePanel === 'status' && (
+        <div className="panel-fullscreen">
+          <button className="panel-back-btn" onClick={() => setActivePanel(null)}>← Enrere</button>
+          <Status />
+        </div>
       )}
 
-      {/* View: Mission Control Hub */}
-      {viewMode === 'hub' && <MissionControl />}
+      {activePanel === 'files' && (
+        <div className="panel-fullscreen">
+          <button className="panel-back-btn" onClick={() => setActivePanel(null)}>← Enrere</button>
+          <Files />
+        </div>
+      )}
 
-      {/* View: Org Chart */}
+      {activePanel === 'security' && (
+        <div className="panel-fullscreen">
+          <button className="panel-back-btn" onClick={() => setActivePanel(null)}>← Enrere</button>
+          <Security />
+        </div>
+      )}
+
+      {activePanel === 'sync' && (
+        <div className="panel-fullscreen">
+          <button className="panel-back-btn" onClick={() => setActivePanel(null)}>← Enrere</button>
+          <Sync />
+        </div>
+      )}
+
+      {/* Hub View */}
+      {viewMode === 'hub' && !activePanel && (
+        <>
+          {(viewMode === 'hub' || viewMode === 'orgchart') && <OvernightSummary />}
+          <MissionControl />
+
+          {/* Real Status and Files panels */}
+          <div className="ops-panel-row">
+            <div className="ops-real-panel" onClick={() => setActivePanel('status')}>
+              <div className="panel-header">
+                <Activity size={16} className="panel-icon amber" />
+                <span>Status</span>
+              </div>
+              <div className="panel-body">
+                <p>Estat del sistema, agents i sessions</p>
+                <span className="panel-link">Obrir →</span>
+              </div>
+            </div>
+            <div className="ops-real-panel" onClick={() => setActivePanel('files')}>
+              <div className="panel-header">
+                <FolderSync size={16} className="panel-icon amber" />
+                <span>Files</span>
+              </div>
+              <div className="panel-body">
+                <p>Explorador de fitxers + editor integrat</p>
+                <span className="panel-link">Obrir →</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="ops-panel-row">
+            <div className="ops-real-panel" onClick={() => setActivePanel('security')}>
+              <div className="panel-header">
+                <Shield size={16} className="panel-icon amber" />
+                <span>Seguretat</span>
+              </div>
+              <div className="panel-body">
+                <p>Skills, tools, gateway i audit de seguretat</p>
+                <span className="panel-link">Obrir →</span>
+              </div>
+            </div>
+            <div className="ops-real-panel" onClick={() => setActivePanel('sync')}>
+              <div className="panel-header">
+                <Database size={16} className="panel-icon amber" />
+                <span>Sync</span>
+              </div>
+              <div className="panel-body">
+                <p>Backup, git history i push status</p>
+                <span className="panel-link">Obrir →</span>
+              </div>
+            </div>
+          </div>
+
+          <SystemModules />
+
+          <div className="ops-section-title">Automatitzacio i Integracions</div>
+          <div className="features-grid">
+            {FEATURES.filter(f => f.name === 'Automation' || f.name === 'Integrations').map((f, i) => (
+              <FeatureCard
+                key={i}
+                icon={f.icon}
+                title={f.name}
+                description={f.desc}
+                colorClass="amber"
+              />
+            ))}
+          </div>
+        </>
+      )}
+
+      {/* Org Chart View */}
       {viewMode === 'orgchart' && <OrgChart />}
 
       {/* Task Views */}
@@ -152,42 +293,6 @@ export default function Ops() {
         <>
           <OvernightSummary />
           <TaskManager />
-        </>
-      )}
-
-      {/* Placeholder Panels - only on hub */}
-      {viewMode === 'hub' && (
-        <>
-          <div className="ops-panel-row">
-            {PLACEHOLDER_PANELS.map((panel, i) => (
-              <div key={i} className="ops-placeholder-panel">
-                <div className="panel-header">
-                  <panel.icon size={16} className="panel-icon" />
-                  <span>{panel.title}</span>
-                </div>
-                <div className="panel-body">
-                  <p>{panel.desc}</p>
-                  <div className="panel-placeholder-content">
-                    <span>— En desenvolupament —</span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Legacy Features Grid */}
-          <div className="ops-section-title">Moduls del sistema</div>
-          <div className="features-grid">
-            {FEATURES.map((f, i) => (
-              <FeatureCard
-                key={i}
-                icon={f.icon}
-                title={f.name}
-                description={f.desc}
-                colorClass="amber"
-              />
-            ))}
-          </div>
         </>
       )}
     </div>

@@ -1,3 +1,5 @@
+import { marked } from 'marked'
+import DOMPurify from 'dompurify'
 import { useState, useEffect, useCallback } from 'react'
 import {
   Brain as BrainIcon, FolderOpen, FileText, Clock, Search, BookOpen,
@@ -13,18 +15,21 @@ const API_BASE = '/api'
 
 // ─── Markdown Renderer ─────────────────────────────────────────────────────────
 
+// Configure marked for clean output
+marked.setOptions({
+  breaks: true,
+  gfm: true,
+})
+
 function renderMarkdown(text) {
-  if (!text) return null
-  return text.split('\n').map((line, i) => {
-    if (line.startsWith('# ')) return <h2 key={i}>{line.substring(2)}</h2>
-    if (line.startsWith('## ')) return <h3 key={i}>{line.substring(3)}</h3>
-    if (line.startsWith('### ')) return <h4 key={i}>{line.substring(4)}</h4>
-    if (line.startsWith('- ')) return <li key={i}>{line.substring(2)}</li>
-    if (line.startsWith('|')) return <div key={i} className="md-table-row">{line}</div>
-    if (line.trim() === '') return <br key={i} />
-    if (line.match(/^\d+\.\s/)) return <li key={i} className="numbered">{line.replace(/^\d+\.\s/, '')}</li>
-    return <p key={i}>{line}</p>
-  })
+  if (!text) return <p className="empty-markdown">No content</p>
+  try {
+    const html = marked.parse(text)
+    const sanitized = DOMPurify.sanitize(html)
+    return <div className="markdown-body" dangerouslySetInnerHTML={{ __html: sanitized }} />
+  } catch {
+    return <p>{text}</p>
+  }
 }
 
 // ─── Section: Memory Viewer ────────────────────────────────────────────────────

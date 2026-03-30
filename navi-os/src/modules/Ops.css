@@ -180,3 +180,142 @@
 .job-status.healthy { color: #00ff41; }
 .job-status.failed { color: #ff6b6b; }
 .job-status.disabled { color: #606070; }
+
+/* Real panels (clickable) */
+.ops-real-panel {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.ops-real-panel:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 184, 0, 0.25);
+  transform: translateY(-2px);
+}
+
+.ops-real-panel .panel-body {
+  padding: 14px 16px;
+}
+
+.ops-real-panel .panel-body p {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.45);
+  margin-bottom: 10px;
+}
+
+.panel-link {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 12px;
+  color: #ffb800;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.ops-real-panel:hover .panel-link {
+  opacity: 1;
+}
+
+/* System modules grid */
+.system-modules {
+  margin-top: 40px;
+}
+
+.system-modules-title {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.35);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.system-modules-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+}
+
+.system-module-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.2s;
+}
+
+.system-module-card:hover {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.module-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.system-module-card.operational .module-status-dot {
+  background: #30d158;
+  box-shadow: 0 0 6px rgba(48, 209, 88, 0.6);
+}
+
+.system-module-card.idle .module-status-dot {
+  background: #ffb800;
+}
+
+.system-module-card.error .module-status-dot {
+  background: #ff453a;
+  box-shadow: 0 0 6px rgba(255, 69, 58, 0.6);
+}
+
+.module-name {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #fff;
+}
+
+.module-desc {
+  margin-left: auto;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* Fullscreen panel */
+.panel-fullscreen {
+  position: relative;
+}
+
+.panel-back-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 8px 16px;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  margin-bottom: 16px;
+  transition: all 0.2s;
+}
+
+.panel-back-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}

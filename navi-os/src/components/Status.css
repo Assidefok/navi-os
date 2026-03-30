@@ -1,0 +1,295 @@
+.status-view {
+  max-width: 900px;
+}
+
+.status-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.status-tab {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 8px 16px;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.status-tab:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.status-tab.active {
+  background: rgba(255, 184, 0, 0.15);
+  border-color: rgba(255, 184, 0, 0.4);
+  color: #ffb800;
+}
+
+.status-content {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.status-section {
+  margin-bottom: 24px;
+}
+
+.status-section:last-child {
+  margin-bottom: 0;
+}
+
+.section-title {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.metric-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.metric-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.metric-card.amber .metric-icon {
+  background: rgba(255, 184, 0, 0.15);
+  color: #ffb800;
+}
+
+.metric-card.sky .metric-icon {
+  background: rgba(0, 180, 216, 0.15);
+  color: #00b4d8;
+}
+
+.metric-card.green .metric-icon {
+  background: rgba(0, 255, 65, 0.12);
+  color: #00ff41;
+}
+
+.metric-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.metric-value {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.metric-label {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+}
+
+.metric-sub {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: 2px;
+}
+
+.refresh-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.refresh-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.agents-list, .sessions-list, .cron-list, .integrations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.agent-row, .session-row, .cron-row, .integration-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 10px;
+  font-size: 13px;
+}
+
+.agent-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.agent-status-dot.active { background: #30d158; box-shadow: 0 0 6px #30d158; }
+.agent-status-dot.idle { background: #ffb800; }
+.agent-status-dot.error { background: #ff453a; }
+
+.agent-name {
+  font-family: 'Ubuntu', sans-serif;
+  font-weight: 500;
+  color: #fff;
+  min-width: 100px;
+}
+
+.agent-role, .agent-uptime, .session-model, .session-duration {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+}
+
+.session-id {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  min-width: 80px;
+}
+
+.session-status {
+  margin-left: auto;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  text-transform: uppercase;
+}
+
+.session-status.active { background: rgba(48, 209, 88, 0.15); color: #30d158; }
+.session-status.error { background: rgba(255, 69, 58, 0.15); color: #ff453a; }
+
+.cron-summary {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.cron-stat {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 13px;
+}
+
+.cron-stat.green { color: #30d158; }
+.cron-stat.red { color: #ff453a; }
+
+.cron-name {
+  font-family: 'Ubuntu', sans-serif;
+  font-weight: 500;
+  color: #fff;
+  min-width: 160px;
+}
+
+.cron-schedule {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 12px;
+  font-family: 'Ubuntu Mono', monospace;
+}
+
+.cron-status-badge {
+  margin-left: auto;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  text-transform: uppercase;
+}
+
+.cron-status-badge.healthy { background: rgba(48, 209, 88, 0.15); color: #30d158; }
+.cron-status-badge.failed { background: rgba(255, 69, 58, 0.15); color: #ff453a; }
+.cron-status-badge.idle { background: rgba(255, 184, 0, 0.15); color: #ffb800; }
+
+.integration-row {
+  justify-content: space-between;
+}
+
+.integration-name {
+  font-family: 'Ubuntu', sans-serif;
+  font-weight: 500;
+  color: #fff;
+}
+
+.integration-status {
+  font-size: 12px;
+  padding: 2px 10px;
+  border-radius: 6px;
+}
+
+.integration-status.connected,
+.integration-status.active { background: rgba(48, 209, 88, 0.15); color: #30d158; }
+.integration-status.error,
+.integration-status.failed { background: rgba(255, 69, 58, 0.15); color: #ff453a; }
+.integration-status.idle { background: rgba(255, 184, 0, 0.15); color: #ffb800; }
+
+.status-loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 13px;
+  padding: 20px 0;
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.empty-state {
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 13px;
+  padding: 10px 0;
+}

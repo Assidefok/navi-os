@@ -10,6 +10,9 @@
 .mc-header {
   padding: 20px 24px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .mc-header h2 {
@@ -18,6 +21,23 @@
   font-weight: 500;
   color: var(--ops-amber);
   text-shadow: 0 0 20px var(--ops-glow);
+}
+
+.mc-refresh {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  transition: all 0.2s;
+}
+
+.mc-refresh:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
 }
 
 .mc-section {
@@ -42,6 +62,49 @@
   letter-spacing: 0.5px;
 }
 
+/* Stats Row */
+.mc-stats {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 16px;
+}
+
+.mc-stat {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.stat-num {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 28px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.stat-label {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Loading / Empty States */
+.mc-loading {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  padding: 16px;
+  text-align: center;
+}
+
+.mc-empty {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.3);
+  padding: 16px;
+  text-align: center;
+}
+
 /* Model Selector */
 .model-selector {
   display: flex;
@@ -59,6 +122,8 @@
   justify-content: space-between;
   align-items: center;
   transition: all 0.2s;
+  color: inherit;
+  font: inherit;
 }
 
 .model-btn:hover {
@@ -82,7 +147,7 @@
   color: rgba(255, 255, 255, 0.5);
 }
 
-/* Sessions */
+/* Sessions List */
 .sessions-list {
   display: flex;
   flex-direction: column;
@@ -116,9 +181,23 @@
   color: rgba(255, 255, 255, 0.8);
 }
 
+.session-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
 .session-label {
   font-family: 'Ubuntu Mono', monospace;
   font-size: 13px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.session-type {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.4);
+  text-transform: uppercase;
 }
 
 .session-meta {
@@ -127,18 +206,11 @@
   gap: 10px;
 }
 
-.session-status {
+.session-status-badge {
   font-family: 'Ubuntu Mono', monospace;
-  font-size: 11px;
+  font-size: 10px;
   padding: 3px 8px;
   border-radius: 4px;
-  background: rgba(74, 222, 128, 0.15);
-  color: #4ade80;
-}
-
-.session-status.inactiva {
-  background: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.5);
 }
 
 .session-details {
@@ -163,14 +235,6 @@
   color: rgba(255, 255, 255, 0.9);
 }
 
-.text-success {
-  color: #4ade80 !important;
-}
-
-.text-muted {
-  color: rgba(255, 255, 255, 0.5) !important;
-}
-
 /* Cron Jobs */
 .cron-list {
   display: flex;
@@ -193,6 +257,7 @@
   flex: 1;
   font-family: 'Ubuntu Mono', monospace;
   font-size: 13px;
+  text-transform: capitalize;
 }
 
 .cron-schedule {
@@ -204,8 +269,29 @@
   border-radius: 4px;
 }
 
-.cron-status {
+.cron-status-text {
   font-family: 'Ubuntu Mono', monospace;
-  font-size: 11px;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.cron-status-text.cron-healthy {
   color: #4ade80;
+  background: rgba(74, 222, 128, 0.1);
+}
+
+.cron-status-text.cron-running {
+  color: #60a5fa;
+  background: rgba(96, 165, 250, 0.1);
+}
+
+.cron-status-text.cron-failed {
+  color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.1);
+}
+
+.cron-status-text.cron-disabled {
+  color: #a0a0b0;
+  background: rgba(160, 160, 176, 0.1);
 }

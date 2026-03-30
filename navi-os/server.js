@@ -133,49 +133,122 @@ app.get('/api/skills', (req, res) => {
   }
 })
 
-// ─── Cron Health ──────────────────────────────────────────────────────────────
+// ─── Sessions (from OpenClaw sessions.json) ─────────────────────────────────
+
+app.get('/api/sessions', (req, res) => {
+  try {
+    const sessionsFile = '/home/user/.openclaw/agents/main/sessions/sessions.json'
+    if (!existsSync(sessionsFile)) {
+      return res.json({ sessions: [], activeCount: 0 })
+    }
+    const raw = JSON.parse(readFileSync(sessionsFile, 'utf-8'))
+    const sessions = []
+    
+    for (const [key, data] of Object.entries(raw)) {
+      if (key.includes(':subagent:')) {
+        sessions.push({
+          id: key,
+          label: data.label || key.split(':').pop(),
+          type: 'subagent',
+          status: data.status || 'unknown',
+          model: data.model || 'unknown',
+          runtimeMs: data.runtimeMs || 0,
+          totalTokens: data.totalTokens || 0,
+          startedAt: data.startedAt,
+          endedAt: data.endedAt,
+          channel: data.lastChannel || 'unknown',
+        })
+      } else if (key.includes(':cron:')) {
+        const nameMatch = key.match(/cron:([^:]+)/)
+        sessions.push({
+          id: key,
+          label: data.label || (nameMatch ? `Cron: ${nameMatch[1]}` : key),
+          type: 'cron',
+          status: data.status || 'unknown',
+          model: data.model || 'MiniMax-M2.7',
+          runtimeMs: data.runtimeMs || 0,
+          totalTokens: data.totalTokens || 0,
+          startedAt: data.startedAt,
+          endedAt: data.endedAt,
+          channel: data.lastChannel || 'system',
+        })
+      } else if (key.includes(':main:')) {
+        sessions.push({
+          id: key,
+          label: 'Sessio Principal',
+          type: 'main',
+          status: data.status || 'unknown',
+          model: data.model || 'MiniMax-M2.7',
+          runtimeMs: data.runtimeMs || 0,
+          totalTokens: data.totalTokens || 0,
+          startedAt: data.startedAt,
+          endedAt: data.endedAt,
+          channel: data.lastChannel || 'webchat',
+        })
+      }
+    }
+    
+    const activeCount = sessions.filter(s => s.status === 'running').length
+    res.json({ sessions, activeCount })
+  } catch (err) {
+    res.status(500).json({ error: err.message, sessions: [] })
+  }
+})
+
+// ─── OpenClaw Cron Health ─────────────────────────────────────────────────────
 
 app.get('/api/cron-health', (req, res) => {
   try {
-    const scriptsDir = join(WORKSPACE, 'scripts')
     const jobs = []
-
+    
+    const schedules = {
+      'repo-backup':   { label: 'Diari 02:00', interval: 86400000 },
+      'overnight-audit': { label: 'Diari 03:00', interval: 86400000 },
+      'daily-brief':   { label: 'Diari 08:00', interval: 86400000 },
+      'daily-news':    { label: 'Diari 07:00', interval: 86400000 },
+      'rolling-docs':  { label: 'Cada 6h',    interval: 21600000 },
+    }
+    
+    const scriptsDir = join(WORKSPACE, 'scripts')
     if (existsSync(scriptsDir)) {
       const cronFiles = readdirSync(scriptsDir).filter(f => f.endsWith('.sh') && !f.startsWith('.'))
-
+      
       for (const file of cronFiles) {
         const fullPath = join(scriptsDir, file)
         const content = readFileSync(fullPath, 'utf-8')
         const stat = statSync(fullPath)
-        // Name from filename e.g. "01-repo-backup.sh" -> "repo-backup"
         const name = file.replace(/^\d+-/, '').replace('.sh', '')
+        const sched = schedules[name] || { label: 'Personalitzat', interval: 86400000 }
         const disabled = /^\s*#\s*DISABLED/m.test(content) || /^\s*#DISABLED/m.test(content)
         const errorMatch = content.match(/# LAST ERROR: (.+)/)
-
-        const schedules = {
-          'repo-backup': { interval: 86400000, label: 'Diari 02:00' },
-          'overnight-audit': { interval: 86400000, label: 'Diari 03:00' },
-          'daily-brief': { interval: 86400000, label: 'Diari 08:00' },
-          'daily-news': { interval: 86400000, label: 'Diari 07:00' },
-          'rolling-docs': { interval: 21600000, label: 'Cada 6h' },
-        }
-        const sched = schedules[name] || { interval: 86400000, label: 'Diari' }
-        const nextRun = new Date(stat.mtime.getTime() + sched.interval).toISOString()
-
+        
+        // Use file mtime as last run time (cron jobs touch their scripts on execution)
+        let lastRun = stat.mtime.toISOString()
+        
+        // Check if last run is within expected interval (with 10% tolerance)
+        const now = Date.now()
+        const elapsed = now - new Date(lastRun).getTime()
+        const expectedInterval = sched.interval
+        const isStale = elapsed > expectedInterval * 1.1
+        
+        let status = disabled ? 'disabled' : (isStale ? 'failed' : 'healthy')
+        
+        const nextRun = new Date(new Date(lastRun).getTime() + expectedInterval).toISOString()
+        
         jobs.push({
           name,
           nameLabel: sched.label,
-          status: disabled ? 'disabled' : 'healthy',
-          lastRun: stat.mtime.toISOString(),
+          status,
+          lastRun,
           nextRun,
           error: disabled ? 'Manually disabled' : (errorMatch ? errorMatch[1] : null),
         })
       }
     }
-
+    
     res.json({ jobs })
   } catch (err) {
-    res.status(500).json({ error: err.message })
+    res.status(500).json({ error: err.message, jobs: [] })
   }
 })
 
