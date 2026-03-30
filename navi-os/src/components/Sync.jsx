@@ -26,13 +26,22 @@ function formatRelative(iso) {
 
 function BackupStatus() {
   const [backup, setBackup] = useState(null)
+  const [snapshots, setSnapshots] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch('/api/backup-status')
-      .then(r => r.ok ? r.json() : { status: 'unknown', note: 'No disponible' })
-      .then(setBackup)
-      .catch(() => setBackup({ status: 'unknown', note: 'Could not determine backup status' }))
+    Promise.all([
+      fetch('/api/backup-status').then(r => r.ok ? r.json() : { status: 'unknown', note: 'No disponible' }),
+      fetch('/api/backups').then(r => r.ok ? r.json() : { backups: [] }),
+    ])
+      .then(([statusData, backupsData]) => {
+        setBackup(statusData)
+        setSnapshots(backupsData.backups || [])
+      })
+      .catch(() => {
+        setBackup({ status: 'unknown', note: 'Could not determine backup status' })
+        setSnapshots([])
+      })
       .finally(() => setLoading(false))
   }, [])
 
@@ -67,6 +76,18 @@ function BackupStatus() {
         )}
         {backup?.note && (
           <div className="backup-note">{backup.note}</div>
+        )}
+        {snapshots.length > 0 && (
+          <div className="backup-note" style={{ marginTop: 12 }}>
+            <strong>Restore points:</strong>
+            <div style={{ marginTop: 8, display: 'grid', gap: 6 }}>
+              {snapshots.slice(0, 5).map(s => (
+                <div key={s.name} className="mono" style={{ fontSize: '12px', opacity: 0.9 }}>
+                  {s.createdAt} · {s.type} · {s.size} · {s.name}
+                </div>
+              ))}
+            </div>
+          </div>
         )}
       </div>
     </div>

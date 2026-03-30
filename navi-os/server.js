@@ -372,15 +372,26 @@ app.get('/api/git-push', (req, res) => {
 
 app.get('/api/backup-status', (req, res) => {
   try {
-    const workspace = WORKSPACE
-    const out = execSync(`find "${workspace}" -name "*.tar" -o -name "*.zip" -o -name "backup*" 2>/dev/null | head -5`, { encoding: 'utf-8', timeout: 5000 }).trim()
-    const files = out.split('\n').filter(Boolean)
-    const gitDate = execSync(`cd "${workspace}" && git log -1 --format="%ai" 2>/dev/null`, { encoding: 'utf-8', timeout: 3000 }).trim()
+    const backupRoot = join(WORKSPACE, 'backups')
+    const out = existsSync(backupRoot)
+      ? execSync(`find "${backupRoot}" -name "*.tar.gz" | sort | tail -5`, { encoding: 'utf-8', timeout: 5000 }).trim()
+      : ''
+    const files = out ? out.split('\n').filter(Boolean) : []
+    const lastBackup = files.length > 0 ? files[files.length - 1] : null
+    let lastBackupTime = null
+    let size = null
+    if (lastBackup && existsSync(lastBackup)) {
+      const stat = statSync(lastBackup)
+      lastBackupTime = stat.mtime.toISOString()
+      size = stat.size
+    }
     res.json({
-      lastBackup: files.length > 0 ? files[0] : null,
-      lastBackupTime: gitDate || null,
-      status: files.length > 0 ? 'ok' : 'warning',
-      note: files.length > 0 ? `${files.length} archive(s) found` : 'No backup archive found'
+      lastBackup,
+      lastBackupTime,
+      status: lastBackup ? 'ok' : 'warning',
+      note: lastBackup ? `${files.length} snapshot(s) found` : 'No backup archive found',
+      totalSnapshots: files.length,
+      size,
     })
   } catch {
     res.json({ status: 'unknown', note: 'Could not determine backup status' })
@@ -520,7 +531,98 @@ app.post('/api/file', (req, res) => {
 })
 
 app.get('/api/session/:id/messages', (req, res) => {
-  res.json({ messages: [] })
+  try {
+    const { id } = req.params
+    const sessionsDir = '/home/user/.openclaw/agents/main/sessions'
+    const sessionsFile = join(sessionsDir, 'sessions.json')
+    
+    let sessionFilePath = null
+    
+    // Find session file path from sessions.json
+    if (existsSync(sessionsFile)) {
+      const sessionsData = JSON.parse(readFileSync(sessionsFile, 'utf-8'))
+      const sessionData = sessionsData[id]
+      if (sessionData?.sessionFile) {
+        sessionFilePath = sessionData.sessionFile
+      }
+    }
+    
+    // Fallback: try direct path
+    if (!sessionFilePath) {
+      const directPath = join(sessionsDir, `${id}.jsonl`)
+      if (existsSync(directPath)) sessionFilePath = directPath
+    }
+    
+    // Last resort: search for file
+    if (!sessionFilePath) {
+      const files = readdirSync(sessionsDir).filter(f => f.endsWith('.jsonl') && !f.includes('.reset.') && !f.includes('.lock'))
+      const match = files.find(f => f.startsWith(id.split(':').pop()?.substring(0, 8)))
+      if (match) sessionFilePath = join(sessionsDir, match)
+    }
+    
+    if (!sessionFilePath || !existsSync(sessionFilePath)) {
+      return res.json({ messages: [], error: 'Session file not found' })
+    }
+    
+    // Read JSONL file
+    const content = readFileSync(sessionFilePath, 'utf-8')
+    const lines = content.split('\n').filter(Boolean)
+    
+    const messages = []
+    for (const line of lines) {
+      try {
+        const parsed = JSON.parse(line)
+        
+        // Handle OpenClaw message format: { type: "message", message: { role, content: [{type:"text",text}] } }
+        if (parsed.type === 'message' && parsed.message) {
+          const msg = parsed.message
+          let text = ''
+          if (Array.isArray(msg.content)) {
+            text = msg.content.map(c => c.text || c.content || '').join('\n')
+          } else if (typeof msg.content === 'string') {
+            text = msg.content
+          }
+          messages.push({
+            role: msg.role || 'unknown',
+            content: text,
+            timestamp: parsed.timestamp || null
+          })
+        }
+        // Handle simple { role, content } format
+        else if (parsed.role && parsed.content && parsed.type !== 'message') {
+          const text = typeof parsed.content === 'string' ? parsed.content : JSON.stringify(parsed.content)
+          messages.push({ role: parsed.role, content: text, timestamp: parsed.timestamp || null })
+        }
+      } catch {
+        // ignore malformed session lines
+      }
+    }
+    
+    // Limit to last 50 messages
+    const limited = messages.slice(-50)
+    res.json({ messages: limited })
+  } catch (err) {
+    res.json({ messages: [], error: err.message })
+  }
+})
+
+app.get('/api/backups', (req, res) => {
+  try {
+    const backupRoot = join(WORKSPACE, 'backups')
+    if (!existsSync(backupRoot)) return res.json({ backups: [] })
+
+    const manifests = execSync(`find "${backupRoot}" -name manifest.json | sort`, { encoding: 'utf-8', timeout: 5000 })
+      .split('\n')
+      .filter(Boolean)
+
+    const backups = manifests
+      .map(path => JSON.parse(readFileSync(path, 'utf-8')))
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+
+    res.json({ backups })
+  } catch (err) {
+    res.status(500).json({ error: err.message, backups: [] })
+  }
 })
 
 // ─── Serve static React build ─────────────────────────────────────────────────
