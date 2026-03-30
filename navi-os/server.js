@@ -6,17 +6,57 @@
 import express from 'express'
 import cors from 'cors'
 import { execSync } from 'child_process'
-import { readFileSync, readdirSync, statSync, existsSync, writeFileSync } from 'fs'
+import { readFileSync, readdirSync, statSync, existsSync, writeFileSync, mkdirSync } from 'fs'
 import { join, resolve, dirname } from 'path'
 import { fileURLToPath } from 'url'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const WORKSPACE = '/home/user/.openclaw/workspace'
 const MEMORY_DIR = join(WORKSPACE, 'memory')
 const SKILLS_DIR = join(WORKSPACE, 'skills')
+const DATA_DIR = join(WORKSPACE, 'data')
+const ORG_CHART_FILE = join(DATA_DIR, 'org-chart.json')
+const PM_BOARD_FILE = join(DATA_DIR, 'pm-board.json')
 
 const app = express()
 app.use(cors())
 app.use(express.json())
+
+function ensureDataFile(filePath, fallback) {
+  mkdirSync(dirname(filePath), { recursive: true })
+  if (!existsSync(filePath)) {
+    writeFileSync(filePath, JSON.stringify(fallback, null, 2), 'utf-8')
+  }
+}
+
+function readJsonSafe(filePath, fallback) {
+  try {
+    ensureDataFile(filePath, fallback)
+    return JSON.parse(readFileSync(filePath, 'utf-8'))
+  } catch {
+    return fallback
+  }
+}
+
+function writeJsonSafe(filePath, data) {
+  mkdirSync(dirname(filePath), { recursive: true })
+  writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8')
+}
+
+function getOrgChart() {
+  return readJsonSafe(ORG_CHART_FILE, { human: { name: 'Aleix', role: 'Human', emoji: '🧑' }, chiefs: [] })
+}
+
+function getPmBoard() {
+  return readJsonSafe(PM_BOARD_FILE, {
+    meta: { version: 1, path: PM_BOARD_FILE, updatedAt: new Date().toISOString() },
+    tasks: [],
+  })
+}
+
+function savePmBoard(board) {
+  board.meta = { ...(board.meta || {}), version: 1, path: PM_BOARD_FILE, updatedAt: new Date().toISOString() }
+  writeJsonSafe(PM_BOARD_FILE, board)
+}
 
 // ─── Memory Files ─────────────────────────────────────────────────────────────
 
@@ -97,6 +137,109 @@ app.get('/api/briefs', (req, res) => {
     }
     briefs.sort((a, b) => new Date(b.date) - new Date(a.date))
     res.json({ briefs })
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
+
+// ─── Org Chart / PM Board ─────────────────────────────────────────────────────
+
+app.get('/api/org-chart', (req, res) => {
+  res.json(getOrgChart())
+})
+
+app.get('/api/pm-board', (req, res) => {
+  const board = getPmBoard()
+  const org = getOrgChart()
+  const chiefsById = Object.fromEntries((org.chiefs || []).map(chief => [chief.agentId, chief]))
+  const tasks = (board.tasks || []).map(task => ({
+    ...task,
+    assigneeChief: chiefsById[task.assignee] || null,
+    stale: task.updatedDate ? (Date.now() - new Date(task.updatedDate).getTime()) >= 5 * 24 * 60 * 60 * 1000 : false,
+  }))
+  res.json({ ...board, tasks })
+})
+
+app.post('/api/pm-board', (req, res) => {
+  try {
+    const board = getPmBoard()
+    const body = req.body || {}
+    const now = new Date().toISOString()
+    const task = {
+      id: body.id || `pm-${Date.now()}`,
+      title: String(body.title || '').trim(),
+      description: String(body.description || '').trim(),
+      assignee: String(body.assignee || '').trim(),
+      status: ['todo', 'in-progress', 'review', 'done'].includes(body.status) ? body.status : 'todo',
+      priority: ['critica', 'alta', 'media', 'baixa'].includes(body.priority) ? body.priority : 'media',
+      createdDate: now,
+      updatedDate: now,
+      deliverableLink: String(body.deliverableLink || ''),
+      notes: Array.isArray(body.notes) ? body.notes : [],
+      history: [
+        {
+          at: now,
+          by: String(body.movedBy || 'system'),
+          action: 'created',
+          to: ['todo', 'in-progress', 'review', 'done'].includes(body.status) ? body.status : 'todo',
+        }
+      ]
+    }
+
+    if (!task.title || !task.assignee) {
+      return res.status(400).json({ error: 'title and assignee are required' })
+    }
+
+    board.tasks = [...(board.tasks || []), task]
+    savePmBoard(board)
+    res.json({ ok: true, task })
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
+
+app.patch('/api/pm-board/:id', (req, res) => {
+  try {
+    const board = getPmBoard()
+    const body = req.body || {}
+    const now = new Date().toISOString()
+    let updatedTask = null
+
+    board.tasks = (board.tasks || []).map(task => {
+      if (task.id !== req.params.id) return task
+      const next = { ...task }
+      const history = Array.isArray(next.history) ? [...next.history] : []
+
+      if (body.status && body.status !== next.status) {
+        history.push({
+          at: now,
+          by: String(body.movedBy || 'system'),
+          action: 'status-change',
+          from: next.status,
+          to: body.status,
+        })
+        next.status = body.status
+      }
+
+      if (body.note) {
+        next.notes = [
+          ...(Array.isArray(next.notes) ? next.notes : []),
+          { at: now, by: String(body.movedBy || 'system'), text: String(body.note) }
+        ]
+      }
+
+      if (body.deliverableLink !== undefined) next.deliverableLink = String(body.deliverableLink || '')
+      if (body.priority && ['critica', 'alta', 'media', 'baixa'].includes(body.priority)) next.priority = body.priority
+      if (body.assignee) next.assignee = String(body.assignee)
+      next.history = history
+      next.updatedDate = now
+      updatedTask = next
+      return next
+    })
+
+    if (!updatedTask) return res.status(404).json({ error: 'Task not found' })
+    savePmBoard(board)
+    res.json({ ok: true, task: updatedTask })
   } catch (err) {
     res.status(500).json({ error: err.message })
   }
@@ -643,6 +786,80 @@ app.post('/api/backups/create', (req, res) => {
     res.json({ ok: true, archive, type: safeType, label: safeLabel })
   } catch (err) {
     res.status(500).json({ ok: false, error: err.message })
+  }
+})
+
+// ─── Ideas API ──────────────────────────────────────────────────────────────────
+
+app.get('/api/ideas', (req, res) => {
+  try {
+    const dataFile = join(WORKSPACE, 'navi-os/src/data/ideas.json')
+    if (!existsSync(dataFile)) {
+      return res.json({ ideas: [] })
+    }
+    const data = JSON.parse(readFileSync(dataFile, 'utf-8'))
+    res.json(data)
+  } catch (err) {
+    res.status(500).json({ error: err.message, ideas: [] })
+  }
+})
+
+app.post('/api/ideas/:id/accept', (req, res) => {
+  try {
+    const { id } = req.params
+    const ideasFile = join(WORKSPACE, 'navi-os/src/data/ideas.json')
+    const proposalsFile = join(WORKSPACE, 'data/proposals.json')
+    
+    // Load ideas
+    const ideasData = existsSync(ideasFile) ? JSON.parse(readFileSync(ideasFile, 'utf-8')) : { ideas: [] }
+    const ideaIdx = ideasData.ideas.findIndex(i => i.id === id)
+    if (ideaIdx === -1) {
+      return res.status(404).json({ error: 'Idea not found' })
+    }
+    const idea = ideasData.ideas[ideaIdx]
+    
+    // Remove from ideas
+    ideasData.ideas.splice(ideaIdx, 1)
+    writeFileSync(ideasFile, JSON.stringify(ideasData, null, 2))
+    
+    // Add to proposals
+    const proposalsData = existsSync(proposalsFile) ? JSON.parse(readFileSync(proposalsFile, 'utf-8')) : { proposals: [] }
+    const newProposal = {
+      id: `prop-${Date.now()}`,
+      title: idea.title,
+      description: idea.description,
+      category: idea.category,
+      status: 'pending',
+      source: 'idea',
+      originalId: idea.id,
+      createdAt: new Date().toISOString()
+    }
+    proposalsData.proposals = proposalsData.proposals || []
+    proposalsData.proposals.unshift(newProposal)
+    writeFileSync(proposalsFile, JSON.stringify(proposalsData, null, 2))
+    
+    res.json({ success: true, proposal: newProposal })
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
+
+app.post('/api/ideas/:id/reject', (req, res) => {
+  try {
+    const { id } = req.params
+    const ideasFile = join(WORKSPACE, 'navi-os/src/data/ideas.json')
+    
+    const ideasData = existsSync(ideasFile) ? JSON.parse(readFileSync(ideasFile, 'utf-8')) : { ideas: [] }
+    const ideaIdx = ideasData.ideas.findIndex(i => i.id === id)
+    if (ideaIdx === -1) {
+      return res.status(404).json({ error: 'Idea not found' })
+    }
+    
+    ideasData.ideas[ideaIdx].status = 'rejected'
+    writeFileSync(ideasFile, JSON.stringify(ideasData, null, 2))
+    res.json({ success: true })
+  } catch (err) {
+    res.status(500).json({ error: err.message })
   }
 })
 

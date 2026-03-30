@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import {
   FlaskConical, Lightbulb, Rocket, Search, Plus, Play, Pause, Archive,
-  ChevronRight, X, RefreshCw, TrendingUp, Clock, Star
+  ChevronRight, X, RefreshCw, TrendingUp, Clock, Star, Check, Ban
 } from 'lucide-react'
 import Modal from '../components/ui/Modal'
 import FeatureCard from '../components/ui/FeatureCard'
@@ -83,13 +83,35 @@ function IdeasGallery() {
   const [ideas, setIdeas] = useState([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState('all')
+  const [actionLoading, setActionLoading] = useState(null)
 
-  useEffect(() => {
+  const loadIdeas = () => {
+    setLoading(true)
     fetch(`${API_BASE}/ideas`)
       .then(r => r.json())
       .then(d => { setIdeas(d.ideas || []); setLoading(false) })
       .catch(() => setLoading(false))
+  }
+
+  useEffect(() => {
+    loadIdeas()
   }, [])
+
+  const acceptIdea = (id) => {
+    setActionLoading(id)
+    fetch(`${API_BASE}/ideas/${id}/accept`, { method: 'POST' })
+      .then(r => r.json())
+      .then(() => { loadIdeas(); setActionLoading(null) })
+      .catch(() => setActionLoading(null))
+  }
+
+  const rejectIdea = (id) => {
+    setActionLoading(id)
+    fetch(`${API_BASE}/ideas/${id}/reject`, { method: 'POST' })
+      .then(r => r.json())
+      .then(() => { loadIdeas(); setActionLoading(null) })
+      .catch(() => setActionLoading(null))
+  }
 
   const filtered = filter === 'all' ? ideas : ideas.filter(i => i.track === filter)
 
@@ -131,6 +153,22 @@ function IdeasGallery() {
               <span className="idea-date"><Clock size={11} /> {formatDate(idea.date)}</span>
               <span className="idea-category">{idea.category}</span>
               <span className={`idea-status ${idea.status}`}>{idea.status}</span>
+            </div>
+            <div className="idea-actions">
+              <button 
+                className="idea-btn accept" 
+                onClick={() => acceptIdea(idea.id)}
+                disabled={actionLoading === idea.id}
+              >
+                <Check size={14} /> Acceptar
+              </button>
+              <button 
+                className="idea-btn reject" 
+                onClick={() => rejectIdea(idea.id)}
+                disabled={actionLoading === idea.id}
+              >
+                <Ban size={14} /> Rebutjar
+              </button>
             </div>
           </div>
         ))}

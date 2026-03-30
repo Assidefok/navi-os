@@ -554,6 +554,55 @@
   color: rgba(255, 255, 255, 0.4);
 }
 
+.idea-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.idea-btn {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.idea-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.idea-btn.accept {
+  background: rgba(48, 209, 88, 0.15);
+  color: #30d158;
+  border: 1px solid rgba(48, 209, 88, 0.25);
+}
+
+.idea-btn.accept:hover:not(:disabled) {
+  background: rgba(48, 209, 88, 0.25);
+}
+
+.idea-btn.reject {
+  background: rgba(255, 69, 58, 0.1);
+  color: #ff453a;
+  border: 1px solid rgba(255, 69, 58, 0.2);
+}
+
+.idea-btn.reject:hover:not(:disabled) {
+  background: rgba(255, 69, 58, 0.2);
+}
+
 /* ─── Research Dashboard ─────────────────────────────────────────────────────── */
 
 .research-dashboard {
