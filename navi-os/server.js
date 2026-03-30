@@ -646,6 +646,62 @@ app.post('/api/backups/create', (req, res) => {
   }
 })
 
+// ─── Proposals API ─────────────────────────────────────────────────────────────
+
+app.get('/api/proposals', (req, res) => {
+  try {
+    const dataFile = join(WORKSPACE, 'data', 'proposals.json')
+    if (!existsSync(dataFile)) {
+      return res.json({ proposals: [] })
+    }
+    const data = JSON.parse(readFileSync(dataFile, 'utf-8'))
+    res.json(data)
+  } catch (err) {
+    res.status(500).json({ error: err.message, proposals: [] })
+  }
+})
+
+app.post('/api/proposals', (req, res) => {
+  try {
+    const dataFile = join(WORKSPACE, 'data', 'proposals.json')
+    const data = existsSync(dataFile) ? JSON.parse(readFileSync(dataFile, 'utf-8')) : { proposals: [] }
+    
+    const newProposal = {
+      id: `prop-${Date.now()}`,
+      ...req.body,
+      createdAt: new Date().toISOString(),
+      status: 'pending'
+    }
+    
+    data.proposals = data.proposals || []
+    data.proposals.unshift(newProposal)
+    
+    writeFileSync(dataFile, JSON.stringify(data, null, 2))
+    res.json(newProposal)
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
+
+app.patch('/api/proposals/:id', (req, res) => {
+  try {
+    const { id } = req.params
+    const dataFile = join(WORKSPACE, 'data', 'proposals.json')
+    const data = existsSync(dataFile) ? JSON.parse(readFileSync(dataFile, 'utf-8')) : { proposals: [] }
+    
+    const idx = data.proposals.findIndex(p => p.id === id)
+    if (idx === -1) {
+      return res.status(404).json({ error: 'Proposal not found' })
+    }
+    
+    data.proposals[idx] = { ...data.proposals[idx], ...req.body, updatedAt: new Date().toISOString() }
+    writeFileSync(dataFile, JSON.stringify(data, null, 2))
+    res.json(data.proposals[idx])
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
+
 // ─── Serve static React build ─────────────────────────────────────────────────
 
 const distPath = join(__dirname, 'dist')

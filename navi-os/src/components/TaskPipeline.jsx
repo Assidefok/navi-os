@@ -30,9 +30,14 @@ export default function TaskPipeline() {
     if (stored) {
       setTasks(JSON.parse(stored))
     } else {
-      import('../data/tasks.json').then(data => {
-        setTasks(data.default)
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(data.default))
+      // In Vite, JSON imports are available directly
+      import('../data/tasks.json').then(m => {
+        const data = m.default || m
+        setTasks(data)
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
+      }).catch(() => {
+        // Fallback to empty array
+        setTasks([])
       })
     }
   }, [])

@@ -10,6 +10,7 @@ import Status from '../components/Status'
 import Files from '../components/Files'
 import Security from '../components/Security'
 import Sync from '../components/Sync'
+import Proposals from '../components/Proposals'
 import './Ops.css'
 
 const FEATURES = [
@@ -338,6 +339,7 @@ export default function Ops() {
         <>
           <OvernightSummary />
           <TaskPipeline />
+          <Proposals />
           <DeliverableTracker />
         </>
       )}
