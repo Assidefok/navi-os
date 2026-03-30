@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
-import { Activity, Zap, Link, FolderSync, Shield, Database, Users, Bot, MessageSquare, Moon, CheckCircle2, AlertCircle, Clock, LayoutList } from 'lucide-react'
+import { Activity, Zap, Link, FolderSync, Shield, Database, Users, Bot, MessageSquare, Moon, CheckCircle2, AlertCircle, Clock, LayoutList, LayoutDashboard } from 'lucide-react'
 import TaskPipeline from '../components/TaskPipeline'
 import DeliverableTracker from '../components/DeliverableTracker'
 import TaskManager from '../components/TaskManager'
 import FeatureCard from '../components/ui/FeatureCard'
+import MissionControl from './MissionControl'
+import OrgChart from './OrgChart'
 import './Ops.css'
 
 const FEATURES = [
@@ -88,20 +90,34 @@ const PLACEHOLDER_PANELS = [
 ]
 
 export default function Ops() {
-  const [viewMode, setViewMode] = useState('pipeline') // 'pipeline' | 'manager'
+  const [viewMode, setViewMode] = useState('hub') // 'hub' | 'orgchart' | 'pipeline' | 'manager'
 
   return (
     <div className="module-view ops">
       <h1 className="dashboard-title amber neon-amber">Operacions</h1>
 
-      {/* Quick Toggles */}
+      {/* Navigation Toggles */}
       <div className="ops-toggles">
+        <button
+          className={`toggle-btn ${viewMode === 'hub' ? 'active' : ''}`}
+          onClick={() => setViewMode('hub')}
+        >
+          <LayoutDashboard size={15} />
+          Mission Control
+        </button>
+        <button
+          className={`toggle-btn ${viewMode === 'orgchart' ? 'active' : ''}`}
+          onClick={() => setViewMode('orgchart')}
+        >
+          <Users size={15} />
+          Org Chart
+        </button>
         <button
           className={`toggle-btn ${viewMode === 'pipeline' ? 'active' : ''}`}
           onClick={() => setViewMode('pipeline')}
         >
           <LayoutList size={15} />
-          PM Board (Kanban)
+          PM Board
         </button>
         <button
           className={`toggle-btn ${viewMode === 'manager' ? 'active' : ''}`}
@@ -112,50 +128,68 @@ export default function Ops() {
         </button>
       </div>
 
-      {/* Overnight Summary - always visible */}
-      <OvernightSummary />
+      {/* Hub View: Mission Control + Overnight Summary */}
+      {(viewMode === 'hub' || viewMode === 'orgchart') && (
+        <OvernightSummary />
+      )}
+
+      {/* View: Mission Control Hub */}
+      {viewMode === 'hub' && <MissionControl />}
+
+      {/* View: Org Chart */}
+      {viewMode === 'orgchart' && <OrgChart />}
 
       {/* Task Views */}
-      {viewMode === 'pipeline' ? (
+      {viewMode === 'pipeline' && (
         <>
+          <OvernightSummary />
           <TaskPipeline />
           <DeliverableTracker />
         </>
-      ) : (
-        <TaskManager />
       )}
 
-      {/* Placeholder Panels */}
-      <div className="ops-panel-row">
-        {PLACEHOLDER_PANELS.map((panel, i) => (
-          <div key={i} className="ops-placeholder-panel">
-            <div className="panel-header">
-              <panel.icon size={16} className="panel-icon" />
-              <span>{panel.title}</span>
-            </div>
-            <div className="panel-body">
-              <p>{panel.desc}</p>
-              <div className="panel-placeholder-content">
-                <span>— En desenvolupament —</span>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+      {viewMode === 'manager' && (
+        <>
+          <OvernightSummary />
+          <TaskManager />
+        </>
+      )}
 
-      {/* Legacy Features Grid */}
-      <div className="ops-section-title">Moduls del sistema</div>
-      <div className="features-grid">
-        {FEATURES.map((f, i) => (
-          <FeatureCard
-            key={i}
-            icon={f.icon}
-            title={f.name}
-            description={f.desc}
-            colorClass="amber"
-          />
-        ))}
-      </div>
+      {/* Placeholder Panels - only on hub */}
+      {viewMode === 'hub' && (
+        <>
+          <div className="ops-panel-row">
+            {PLACEHOLDER_PANELS.map((panel, i) => (
+              <div key={i} className="ops-placeholder-panel">
+                <div className="panel-header">
+                  <panel.icon size={16} className="panel-icon" />
+                  <span>{panel.title}</span>
+                </div>
+                <div className="panel-body">
+                  <p>{panel.desc}</p>
+                  <div className="panel-placeholder-content">
+                    <span>— En desenvolupament —</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Legacy Features Grid */}
+          <div className="ops-section-title">Moduls del sistema</div>
+          <div className="features-grid">
+            {FEATURES.map((f, i) => (
+              <FeatureCard
+                key={i}
+                icon={f.icon}
+                title={f.name}
+                description={f.desc}
+                colorClass="amber"
+              />
+            ))}
+          </div>
+        </>
+      )}
     </div>
   )
 }

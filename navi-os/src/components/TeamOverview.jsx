@@ -38,7 +38,7 @@ const DELEGATIONS = [
   { id: 2, from: 'Navi', to: 'DevOps Agent', task: 'Set up daily backup cron', time: '15m ago' },
   { id: 3, from: 'Navi', to: 'Research Agent', task: 'Investigate OpenClaw v2 features', time: '1h ago' },
   { id: 4, from: 'Navi', to: 'Code Agent', task: 'Fix TaskManager state bug', time: '2h ago' },
-  { id: 5, from: 'Navi', to: 'Research Agent', task: 'Find替代Claude API options', time: '3h ago' }
+  { id: 5, from: 'Navi', to: 'Research Agent', task: 'Find alternative Claude API options', time: '3h ago' }
 ]
 
 function StatusIndicator({ status }) {
