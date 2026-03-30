@@ -1,4 +1,5 @@
-import { User, Bot, Columns, Users } from 'lucide-react'
+import { User, Bot, Sparkles } from 'lucide-react'
+import TeamOverview from '../components/TeamOverview'
 import './OrgChart.css'
 
 export default function OrgChart() {
@@ -6,7 +7,7 @@ export default function OrgChart() {
     <div className="org-chart">
       <div className="org-header">
         <h2>Estructura Organitzativa</h2>
-        <span className="org-badge">Placeholder</span>
+        <span className="org-badge">Multi-Agent</span>
       </div>
 
       <div className="org-tree">
@@ -28,36 +29,15 @@ export default function OrgChart() {
           <div className="connector-branch" />
         </div>
 
-        {/* Level 2: Goat (Main Agent) */}
+        {/* Level 2: Navi (Chief of Staff) */}
         <div className="org-level">
           <div className="org-node main-agent">
-            <div className="node-icon goat">
-              <Bot size={24} />
+            <div className="node-icon navi">
+              <Sparkles size={24} />
             </div>
             <div className="node-info">
-              <span className="node-name">Goat</span>
-              <span className="node-role">Main Agent</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="org-connector">
-          <div className="connector-line" />
-          <div className="connector-branch" />
-        </div>
-
-        {/* Level 3: Agent Columns */}
-        <div className="org-level columns-level">
-          <div className="org-node column-agent">
-            <div className="node-icon">
-              <Columns size={24} />
-            </div>
-            <div className="node-info">
-              <span className="node-name">Agent Columns</span>
-              <span className="node-role">Specialized Agents</span>
-            </div>
-            <div className="node-placeholder">
-              <span>Coming soon</span>
+              <span className="node-name">Navi</span>
+              <span className="node-role">Chief of Staff</span>
             </div>
           </div>
         </div>
@@ -67,44 +47,9 @@ export default function OrgChart() {
           <div className="connector-branch multi" />
         </div>
 
-        {/* Level 4: Sub-agents */}
-        <div className="org-level sub-agents-level">
-          <div className="org-node sub-agent">
-            <div className="node-icon">
-              <Users size={20} />
-            </div>
-            <div className="node-info">
-              <span className="node-name">Sub-Agents</span>
-              <span className="node-role">Task Executors</span>
-            </div>
-            <div className="node-placeholder">
-              <span>Coming soon</span>
-            </div>
-          </div>
-          <div className="org-node sub-agent">
-            <div className="node-icon">
-              <Users size={20} />
-            </div>
-            <div className="node-info">
-              <span className="node-name">Sub-Agents</span>
-              <span className="node-role">Task Executors</span>
-            </div>
-            <div className="node-placeholder">
-              <span>Coming soon</span>
-            </div>
-          </div>
-          <div className="org-node sub-agent">
-            <div className="node-icon">
-              <Users size={20} />
-            </div>
-            <div className="node-info">
-              <span className="node-name">Sub-Agents</span>
-              <span className="node-role">Task Executors</span>
-            </div>
-            <div className="node-placeholder">
-              <span>Coming soon</span>
-            </div>
-          </div>
+        {/* Level 3: Specialized Chiefs (TeamOverview) */}
+        <div className="org-level overview-level">
+          <TeamOverview />
         </div>
       </div>
     </div>

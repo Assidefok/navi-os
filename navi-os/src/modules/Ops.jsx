@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
-import { Activity, Zap, Link, FolderSync, Shield, Database, Users, Bot, MessageSquare, Moon, CheckCircle2, AlertCircle, Clock } from 'lucide-react'
+import { Activity, Zap, Link, FolderSync, Shield, Database, Users, Bot, MessageSquare, Moon, CheckCircle2, AlertCircle, Clock, LayoutList } from 'lucide-react'
 import TaskPipeline from '../components/TaskPipeline'
 import DeliverableTracker from '../components/DeliverableTracker'
+import TaskManager from '../components/TaskManager'
 import FeatureCard from '../components/ui/FeatureCard'
 import './Ops.css'
 
@@ -87,7 +88,7 @@ const PLACEHOLDER_PANELS = [
 ]
 
 export default function Ops() {
-  const [showPipeline, setShowPipeline] = useState(true)
+  const [viewMode, setViewMode] = useState('pipeline') // 'pipeline' | 'manager'
 
   return (
     <div className="module-view ops">
@@ -96,23 +97,32 @@ export default function Ops() {
       {/* Quick Toggles */}
       <div className="ops-toggles">
         <button
-          className={`toggle-btn ${showPipeline ? 'active' : ''}`}
-          onClick={() => setShowPipeline(v => !v)}
+          className={`toggle-btn ${viewMode === 'pipeline' ? 'active' : ''}`}
+          onClick={() => setViewMode('pipeline')}
+        >
+          <LayoutList size={15} />
+          PM Board (Kanban)
+        </button>
+        <button
+          className={`toggle-btn ${viewMode === 'manager' ? 'active' : ''}`}
+          onClick={() => setViewMode('manager')}
         >
           <Activity size={15} />
-          Task Pipeline
+          Task Manager
         </button>
       </div>
 
       {/* Overnight Summary - always visible */}
       <OvernightSummary />
 
-      {/* Task Pipeline Kanban */}
-      {showPipeline && (
+      {/* Task Views */}
+      {viewMode === 'pipeline' ? (
         <>
           <TaskPipeline />
           <DeliverableTracker />
         </>
+      ) : (
+        <TaskManager />
       )}
 
       {/* Placeholder Panels */}
