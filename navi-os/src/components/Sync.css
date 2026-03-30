@@ -215,3 +215,216 @@
     min-width: 50px;
   }
 }
+
+/* Commit Detail Modal */
+.commit-detail-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.commit-detail-modal {
+  background: #1a1a2e;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 700px;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+}
+
+.commit-detail-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 22px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  position: sticky;
+  top: 0;
+  background: #1a1a2e;
+  border-radius: 16px 16px 0 0;
+}
+
+.commit-detail-header h3 {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+}
+
+.commit-detail-close {
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.commit-detail-close:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.commit-detail-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.commit-detail-error {
+  color: #ff453a;
+  padding: 30px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.commit-detail-content {
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.commit-detail-summary h4 {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.95);
+  margin: 0 0 12px 0;
+}
+
+.commit-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.commit-meta-row code {
+  color: #ffb800;
+  background: rgba(255, 184, 0, 0.1);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.commit-body-section {
+  margin-top: 14px;
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 10px;
+}
+
+.commit-body-section h5 {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 8px 0;
+}
+
+.commit-body-section p {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.commit-files-section {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.commit-files-section h5 {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 12px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.commit-files-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.commit-file-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 6px 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 6px;
+}
+
+.commit-file-item svg {
+  color: rgba(255, 255, 255, 0.4);
+  flex-shrink: 0;
+}
+
+.commit-stats-section {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.commit-stats-section h5 {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 12px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.commit-stats-pre {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.6);
+  background: rgba(0, 0, 0, 0.2);
+  padding: 12px;
+  border-radius: 8px;
+  margin: 0;
+  overflow-x: auto;
+  white-space: pre;
+}

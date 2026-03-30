@@ -280,6 +280,45 @@ app.get('/api/ideas', (req, res) => {
   }
 })
 
+// ─── Git Commit Detail ─────────────────────────────────────────────────────────
+
+app.get('/api/git-commit/:hash', (req, res) => {
+  try {
+    const { hash } = req.params
+    
+    // Get commit info and changed files
+    const info = execSync(`cd "${WORKSPACE}" && git show --format="%H|%an|%ae|%ai|%s|%b" --name-only ${hash} 2>/dev/null`, { encoding: 'utf-8', timeout: 5000 })
+    
+    const lines = info.split('\n')
+    const firstLine = lines[0] || ''
+    const parts = firstLine.split('|')
+    
+    if (parts.length < 5) {
+      return res.json({ error: 'Could not parse commit' })
+    }
+    
+    const [commitHash, authorName, authorEmail, date, subject, ...bodyRest] = parts
+    const body = bodyRest.join('|')
+    const files = lines.slice(1).filter(l => l.trim() && !l.includes('|'))
+    
+    // Get diff stats
+    const stats = execSync(`cd "${WORKSPACE}" && git diff --stat ${hash}^..${hash} 2>/dev/null`, { encoding: 'utf-8', timeout: 3000 }).trim()
+    
+    res.json({
+      hash: commitHash,
+      author: authorName,
+      email: authorEmail,
+      date,
+      subject,
+      body: body.trim(),
+      files,
+      stats
+    })
+  } catch (err) {
+    res.json({ error: err.message })
+  }
+})
+
 // ─── Git Log ───────────────────────────────────────────────────────────────────
 
 app.get('/api/git-log', (req, res) => {

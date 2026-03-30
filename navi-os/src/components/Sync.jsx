@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { GitCommit, CheckCircle2, XCircle, AlertCircle, HardDrive, Loader2, Upload } from 'lucide-react'
+import { GitCommit, CheckCircle2, XCircle, AlertCircle, HardDrive, Loader2, Upload, X, FileText, GitBranch } from 'lucide-react'
 import './Sync.css'
 
 function formatDate(iso) {
@@ -73,10 +73,82 @@ function BackupStatus() {
   )
 }
 
+// ─── Commit Detail Modal ─────────────────────────────────────────────────────────
+
+function CommitDetail({ commitHash, onClose }) {
+  const [detail, setDetail] = useState(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetch(`/api/git-commit/${commitHash}`)
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { setDetail(d); setLoading(false) })
+      .catch(() => setLoading(false))
+  }, [commitHash])
+
+  return (
+    <div className="commit-detail-overlay" onClick={onClose}>
+      <div className="commit-detail-modal" onClick={e => e.stopPropagation()}>
+        <div className="commit-detail-header">
+          <h3><GitCommit size={18} /> Commit Detail</h3>
+          <button className="commit-detail-close" onClick={onClose}><X size={18} /></button>
+        </div>
+        
+        {loading ? (
+          <div className="commit-detail-loading"><Loader2 size={24} className="spin" /></div>
+        ) : detail?.error ? (
+          <div className="commit-detail-error">{detail.error}</div>
+        ) : detail ? (
+          <div className="commit-detail-content">
+            <div className="commit-detail-summary">
+              <h4>{detail.subject}</h4>
+              <div className="commit-meta-row">
+                <span><strong>Hash:</strong> <code>{detail.hash?.slice(0, 7)}</code></span>
+                <span><strong>Autor:</strong> {detail.author}</span>
+                <span><strong>Data:</strong> {formatDate(detail.date)}</span>
+              </div>
+              {detail.body && (
+                <div className="commit-body-section">
+                  <h5>Descripcio:</h5>
+                  <p>{detail.body}</p>
+                </div>
+              )}
+            </div>
+
+            <div className="commit-files-section">
+              <h5><FileText size={14} /> Fitxers canviats ({detail.files?.length || 0})</h5>
+              <div className="commit-files-list">
+                {detail.files?.map((file, i) => (
+                  <div key={i} className="commit-file-item">
+                    <FileText size={12} />
+                    <span>{file}</span>
+                  </div>
+                )) || <span className="empty-state">Cap fitxer</span>}
+              </div>
+            </div>
+
+            {detail.stats && (
+              <div className="commit-stats-section">
+                <h5><GitBranch size={14} /> Estadistiques</h5>
+                <pre className="commit-stats-pre">{detail.stats}</pre>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="commit-detail-error">No s'ha pogut carregar el commit</div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// ─── GitLog ───────────────────────────────────────────────────────────────────
+
 function GitLog() {
   const [commits, setCommits] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [selectedCommit, setSelectedCommit] = useState(null)
 
   useEffect(() => {
     fetch('/api/git-log')
@@ -98,7 +170,7 @@ function GitLog() {
       <div className="git-list">
         {commits.length === 0 && <span className="empty-state">Cap commit trobat</span>}
         {commits.map((commit, i) => (
-          <div key={i} className="git-commit">
+          <div key={i} className="git-commit" onClick={() => setSelectedCommit(commit.hash)}>
             <span className="commit-hash">{commit.hash?.slice(0, 7)}</span>
             <div className="commit-body">
               <span className="commit-message">{commit.message}</span>
@@ -111,6 +183,10 @@ function GitLog() {
           </div>
         ))}
       </div>
+
+      {selectedCommit && (
+        <CommitDetail commitHash={selectedCommit} onClose={() => setSelectedCommit(null)} />
+      )}
     </div>
   )
 }
