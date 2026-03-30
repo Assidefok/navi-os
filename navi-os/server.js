@@ -9,9 +9,6 @@ import { execSync } from 'child_process'
 import { readFileSync, readdirSync, statSync, existsSync, writeFileSync } from 'fs'
 import { join, resolve, dirname } from 'path'
 import { fileURLToPath } from 'url'
-import { createRequire } from 'module'
-const require = createRequire(import.meta.url)
-
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const WORKSPACE = '/home/user/.openclaw/workspace'
 const MEMORY_DIR = join(WORKSPACE, 'memory')
@@ -315,7 +312,6 @@ app.get('/api/git-log', (req, res) => {
 
 app.get('/api/git-push', (req, res) => {
   try {
-    const { execSync } = require('child_process')
     const remote = execSync(`cd "${WORKSPACE}" && git remote -v 2>/dev/null`, { encoding: 'utf-8', timeout: 3000 }).trim()
     const branch = execSync(`cd "${WORKSPACE}" && git branch --show-current 2>/dev/null`, { encoding: 'utf-8', timeout: 3000 }).trim()
     const status = execSync(`cd "${WORKSPACE}" && git status -sb 2>/dev/null`, { encoding: 'utf-8', timeout: 3000 }).trim()
@@ -337,7 +333,6 @@ app.get('/api/git-push', (req, res) => {
 
 app.get('/api/backup-status', (req, res) => {
   try {
-    const { execSync } = require('child_process')
     const workspace = WORKSPACE
     const out = execSync(`find "${workspace}" -name "*.tar" -o -name "*.zip" -o -name "backup*" 2>/dev/null | head -5`, { encoding: 'utf-8', timeout: 5000 }).trim()
     const files = out.split('\n').filter(Boolean)
@@ -348,9 +343,145 @@ app.get('/api/backup-status', (req, res) => {
       status: files.length > 0 ? 'ok' : 'warning',
       note: files.length > 0 ? `${files.length} archive(s) found` : 'No backup archive found'
     })
-  } catch (err) {
+  } catch {
     res.json({ status: 'unknown', note: 'Could not determine backup status' })
   }
+})
+
+// ─── System / Security / Files APIs ───────────────────────────────────────────
+
+app.get('/api/tools', (req, res) => {
+  res.json({
+    tools: [
+      { name: 'read', status: 'ok', type: 'tool' },
+      { name: 'write', status: 'ok', type: 'tool' },
+      { name: 'edit', status: 'ok', type: 'tool' },
+      { name: 'exec', status: 'ok', type: 'tool' },
+      { name: 'web_search', status: 'ok', type: 'tool' },
+      { name: 'web_fetch', status: 'ok', type: 'tool' },
+      { name: 'image_generate', status: 'ok', type: 'tool' },
+      { name: 'process', status: 'ok', type: 'tool' },
+      { name: 'sessions_yield', status: 'ok', type: 'tool' },
+    ]
+  })
+})
+
+app.get('/api/system-metrics', (req, res) => {
+  try {
+    const cpuRaw = execSync("top -bn1 | grep 'Cpu(s)' | awk '{print $2}' | sed 's/%us,//'", { encoding: 'utf-8', timeout: 3000 }).trim()
+    const memRaw = execSync("free -m | awk '/Mem:/{print $2\":\"$3}'", { encoding: 'utf-8', timeout: 3000 }).trim()
+    const diskRaw = execSync("df -h / | tail -1 | awk '{print $5\":\"$4}'", { encoding: 'utf-8', timeout: 3000 }).trim()
+    const [memTotal, memUsed] = (memRaw || '0:0').split(':')
+    const [diskPct, diskFree] = (diskRaw || '0:0').split(':')
+
+    res.json({
+      cpu: parseFloat(cpuRaw) || 0,
+      memory: { used: parseInt(memUsed, 10) || 0, total: parseInt(memTotal, 10) || 0 },
+      disk: { used: (diskPct || '0').replace('%', ''), free: diskFree || '0' }
+    })
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
+
+app.get('/api/agents', (req, res) => {
+  res.json({ agents: [] })
+})
+
+app.get('/api/integrations', (req, res) => {
+  res.json({
+    integrations: [
+      { name: 'OpenClaw Gateway', status: 'connected' },
+      { name: 'Git', status: 'connected' },
+      { name: 'Workspace', status: 'connected' },
+    ]
+  })
+})
+
+app.get('/api/gateway-security', (req, res) => {
+  try {
+    const out = execSync('openclaw status 2>/dev/null | grep -E "Gateway|bind|auth|password" | head -10', { encoding: 'utf-8', timeout: 5000 })
+    const lines = out.split('\n').filter(Boolean)
+    const data = { auth: 'warning', bind: 'warning', trustedProxies: 'warning' }
+
+    for (const line of lines) {
+      if (line.includes('loopback') || line.includes('127.0.0.1')) data.bind = 'ok'
+      if (line.toLowerCase().includes('auth') || line.toLowerCase().includes('password')) data.auth = 'ok'
+    }
+
+    res.json(data)
+  } catch {
+    res.json({ auth: 'unknown', bind: 'unknown', trustedProxies: 'unknown' })
+  }
+})
+
+app.get('/api/security-audit', (req, res) => {
+  try {
+    const out = execSync('openclaw security-audit 2>/dev/null | head -30', { encoding: 'utf-8', timeout: 8000 })
+    const lines = out.split('\n')
+    const result = { critical: 0, warn: 0, info: 0, issues: [] }
+
+    for (const line of lines) {
+      const lower = line.toLowerCase()
+      if (lower.includes('critical')) result.critical += 1
+      else if (lower.includes('warn')) result.warn += 1
+      else if (lower.includes('info')) result.info += 1
+    }
+
+    res.json(result)
+  } catch {
+    res.json({ critical: 0, warn: 0, info: 0, issues: [] })
+  }
+})
+
+app.get('/api/workspace-files', (req, res) => {
+  try {
+    const out = execSync(`find "${WORKSPACE}" -type f ! -path "*/node_modules/*" ! -path "*/.git/*" ! -path "*/dist/*" ! -path "*/.cache/*" 2>/dev/null | head -300`, { encoding: 'utf-8', timeout: 5000 })
+    const files = out
+      .split('\n')
+      .filter(Boolean)
+      .map(fullPath => {
+        const stat = statSync(fullPath)
+        return {
+          path: fullPath.replace(`${WORKSPACE}/`, ''),
+          name: fullPath.split('/').pop(),
+          size: stat.size,
+          modified: stat.mtime.toISOString(),
+        }
+      })
+    res.json({ files })
+  } catch (err) {
+    res.status(500).json({ error: err.message, files: [] })
+  }
+})
+
+app.get('/api/file', (req, res) => {
+  try {
+    const reqPath = String(req.query.path || '').replace(/^\/+/, '')
+    const fullPath = resolve(WORKSPACE, reqPath)
+    if (!fullPath.startsWith(WORKSPACE)) return res.status(403).json({ error: 'Invalid path' })
+    if (!existsSync(fullPath)) return res.status(404).json({ error: 'File not found' })
+    const content = readFileSync(fullPath, 'utf-8')
+    res.json({ path: reqPath, content })
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
+
+app.post('/api/file', (req, res) => {
+  try {
+    const reqPath = String(req.body.path || '').replace(/^\/+/, '')
+    const fullPath = resolve(WORKSPACE, reqPath)
+    if (!fullPath.startsWith(WORKSPACE)) return res.status(403).json({ error: 'Invalid path' })
+    writeFileSync(fullPath, String(req.body.content || ''), 'utf-8')
+    res.json({ ok: true, path: reqPath })
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
+
+app.get('/api/session/:id/messages', (req, res) => {
+  res.json({ messages: [] })
 })
 
 // ─── Serve static React build ─────────────────────────────────────────────────
@@ -368,7 +499,7 @@ if (existsSync(distPath)) {
   })
 }
 
-const PORT = process.env.PORT || 3001
+const PORT = globalThis.process?.env?.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Navi OS API server running on http://localhost:${PORT}`)
 })

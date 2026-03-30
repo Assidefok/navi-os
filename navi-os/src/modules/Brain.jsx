@@ -65,7 +65,9 @@ function MemoryViewer({ onClose }) {
     setLoading(false)
   }, [])
 
-  useEffect(() => { loadFiles() }, [loadFiles])
+  useEffect(() => {
+    Promise.resolve().then(() => loadFiles())
+  }, [loadFiles])
 
   const selectFile = useCallback(async (file) => {
     setSelectedFile(file)
@@ -448,7 +450,9 @@ function CronHealthDashboard() {
     setLoading(false)
   }, [])
 
-  useEffect(() => { load() }, [load])
+  useEffect(() => {
+    Promise.resolve().then(() => load())
+  }, [load])
 
   const stats = {
     healthy: jobs.filter(j => j.status === 'healthy').length,

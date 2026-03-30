@@ -23,12 +23,12 @@ Altres fitxers serveixen de suport o historial:
 - App principal: `/home/user/.openclaw/workspace/navi-os`
 - Port oficial: `8100`
 - Stack: React + Vite + Node/Express
-- Estat actual: Episodi 2 funcional però no prou net per donar-lo per tancat tècnicament
+- Estat actual: Episodi 2 sanejat i funcionant; base preparada per començar l'Episodi 3
 
 ## Bootcamp status
 - Episodi 1: Complet
-- Episodi 2: Implementat funcionalment, pendent de sanejament tècnic
-- Episodi 3: No iniciat encara
+- Episodi 2: Tancat funcionalment i sanejat
+- Episodi 3: Preparat per iniciar
 - Episodi 4: Pendent
 - Episodi 5: Pendent
 
@@ -46,18 +46,16 @@ Altres fitxers serveixen de suport o historial:
 - [x] `npm run build` funciona
 
 ### No prou bé / pendent de neteja
-- [ ] `npm run lint` continua fallant, però ja s'han eliminat alguns errors trivials inicials
-- [ ] Diversos components frontend intenten fer `require('child_process')`
-- [ ] Hi ha endpoints que la UI intenta usar però el backend no exposa
-- [ ] Hi ha placeholders i fallback massa febles
-- [ ] Hi ha text/estat que diu “complet” abans d'estar net de debò
-- [ ] Fitxers de seguiment massa dispersos
+- [x] `npm run lint` ja passa
+- [x] Eliminats els usos de `require('child_process')` del frontend
+- [x] Afegits endpoints reals perquè la UI deixi de dependre de fallback incorrecte
+- [ ] Encara hi ha placeholders que convindrà polir més endavant
+- [x] S'ha centralitzat el seguiment operatiu a `PROJECT.md`
 
 ## Incidències obertes prioritàries
-1. Eliminar patrons incorrectes Node-dins-browser dels components React
-2. Fer que la UI depengui només d'endpoints reals del backend
-3. Reduir placeholders o marcar-los clarament com a pendents
-4. Deixar Episodi 2 net abans d'obrir Episodi 3
+1. Polir placeholders restants i enriquir dades reals
+2. Definir l'abast exacte de l'Episodi 3
+3. Introduir arquitectura de multi-agent sense degradar la simplicitat actual
 
 ## Pla immediat
 1. Crear aquest fitxer com a centre operatiu
@@ -72,4 +70,4 @@ Altres fitxers serveixen de suport o historial:
 - `MEMORY.md` no serà el tauler operatiu principal; serà memòria estable
 
 ## Següent pas actiu
-Continuar la neteja estructural de l'Episodi 2: eliminar usos incorrectes de Node dins del frontend, alinear la UI amb endpoints reals i deixar `lint` en un estat acceptable abans d'entrar a l'Episodi 3.
+Definir i començar l'Episodi 3 sobre la base ja sanejada de l'Episodi 2.

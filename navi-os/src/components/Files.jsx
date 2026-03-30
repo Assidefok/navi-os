@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import {
   FolderOpen, File, FileCode, FileText, ChevronRight, ChevronDown,
-  Plus, Upload, Search, X, Save, FolderPlus
+  Search, X, Save
 } from 'lucide-react'
 import './Files.css'
 
@@ -83,18 +83,11 @@ function TreeNode({ node, path, expanded, onToggle, selectedPath, onSelect }) {
 
 function Editor({ path, content, onChange, onSave }) {
   const textareaRef = useRef(null)
-  const [localContent, setLocalContent] = useState(content)
-  const [lineCount, setLineCount] = useState(1)
-
-  useEffect(() => {
-    setLocalContent(content)
-    if (content) setLineCount(content.split('\n').length)
-  }, [content, path])
+  const localContent = content || ''
+  const lineCount = localContent.split('\n').length
 
   const handleChange = (e) => {
     const val = e.target.value
-    setLocalContent(val)
-    setLineCount(val.split('\n').length)
     onChange(val)
   }
 
@@ -108,8 +101,6 @@ function Editor({ path, content, onChange, onSave }) {
       const start = e.target.selectionStart
       const end = e.target.selectionEnd
       const newVal = localContent.substring(0, start) + '  ' + localContent.substring(end)
-      setLocalContent(newVal)
-      setLineCount(newVal.split('\n').length)
       onChange(newVal)
       setTimeout(() => {
         if (textareaRef.current) {
@@ -154,98 +145,46 @@ export default function Files() {
   const [fileContent, setFileContent] = useState('')
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
-  const [hasChanges, setHasChanges] = useState(false)
-
-  const WORKSPACE = '/home/user/.openclaw/workspace'
-
-  useEffect(() => {
-    loadFiles()
-  }, [])
 
   const loadFiles = async () => {
     setLoading(true)
     try {
       const res = await fetch('/api/workspace-files')
-      if (res.ok) {
-        const data = await res.json()
-        setFiles(data.files || [])
-      } else {
-        throw new Error('API not available')
-      }
+      const data = await res.json()
+      setFiles(data.files || [])
     } catch {
-      // Fallback: list via shell
-      try {
-        const { execSync } = require('child_process')
-        const output = execSync(
-          `find "${WORKSPACE}" -type f ! -path "*/node_modules/*" ! -path "*/.git/*" ! -path "*/dist/*" ! -path "*/.cache/*" 2>/dev/null | head -200`,
-          { timeout: 5000 }
-        ).toString()
-        const paths = output.split('\n').filter(Boolean)
-        setFiles(paths.map(p => ({
-          path: p.replace(WORKSPACE + '/', ''),
-          name: p.split('/').pop(),
-          size: 0,
-          modified: null
-        })))
-      } catch {
-        setFiles([])
-      }
+      setFiles([])
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
   }
+
+  useEffect(() => {
+    loadFiles()
+  }, [])
 
   const openFile = async (path) => {
     setSelectedPath(path)
     try {
       const res = await fetch(`/api/file?path=${encodeURIComponent(path)}`)
-      if (res.ok) {
-        const data = await res.json()
-        setFileContent(data.content || '')
-      } else {
-        throw new Error()
-      }
+      const data = await res.json()
+      setFileContent(data.content || '')
     } catch {
-      try {
-        const { execSync } = require('child_process')
-        const fullPath = `${WORKSPACE}/${path}`
-        const content = execSync(`cat "${fullPath}" 2>/dev/null`, { encoding: 'utf8', timeout: 3000 })
-        setFileContent(content)
-      } catch {
-        setFileContent('// No s\'ha pogut llegir el fitxer')
-      }
+      setFileContent('// No s\'ha pogut llegir el fitxer')
     }
-    setHasChanges(false)
   }
 
   const saveFile = async () => {
     if (!selectedPath) return
     try {
-      const res = await fetch('/api/file', {
+      await fetch('/api/file', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ path: selectedPath, content: fileContent })
       })
-      if (res.ok) {
-        setHasChanges(false)
-      } else {
-        throw new Error()
-      }
     } catch {
-      // Fallback shell write
-      try {
-        const { execSync } = require('child_process')
-        const fullPath = `${WORKSPACE}/${selectedPath}`
-        execSync(`echo '${fileContent.replace(/'/g, "'\\''")}' > "${fullPath}"`, { timeout: 3000 })
-        setHasChanges(false)
-      } catch {
-        alert('No s\'ha pogut desar el fitxer')
-      }
+      alert('No s\'ha pogut desar el fitxer')
     }
-  }
-
-  const handleContentChange = (val) => {
-    setFileContent(val)
-    setHasChanges(true)
   }
 
   const filteredFiles = files.filter(f =>
@@ -299,7 +238,7 @@ export default function Files() {
             <Editor
               path={selectedPath}
               content={fileContent}
-              onChange={handleContentChange}
+              onChange={setFileContent}
               onSave={saveFile}
             />
           ) : (

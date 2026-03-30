@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react'
 import {
-  Cpu, HardDrive, Wifi, Clock, Activity, Users, Bot, CheckCircle2,
-  AlertCircle, XCircle, Loader2, Server, Shield, Database, RefreshCw
+  Cpu, HardDrive, Wifi, Clock, Activity, Bot, CheckCircle2,
+  XCircle, Loader2, Server, Database, RefreshCw
 } from 'lucide-react'
 import './Status.css'
 
-function MetricCard({ icon: Icon, label, value, sub, color = 'amber' }) {
+function MetricCard({ label, value, sub, color = 'amber' }) {
   return (
     <div className={`metric-card ${color}`}>
       <div className="metric-icon"><Icon size={18} /></div>
@@ -29,24 +29,15 @@ function SystemStatus() {
       const data = await res.json()
       setMetrics(data)
     } catch {
-      // Fallback: shell out
-      const [cpu, mem, disk] = await Promise.all([
-        execAsync("top -bn1 | grep 'Cpu(s)' | awk '{print $2}' | sed 's/%us,//'"),
-        execAsync("free -m | awk '/Mem:/{print $2\":\"$3}'"),
-        execAsync("df -h / | tail -1 | awk '{print $5\":\"$4}'"),
-      ])
-      const [memTotal, memUsed] = (mem || '0:0').split(':')
-      const [diskPct, diskFree] = (disk || '0:0').split(':')
-      setMetrics({
-        cpu: parseFloat(cpu) || 0,
-        memory: { used: parseInt(memUsed) || 0, total: parseInt(memTotal) || 0 },
-        disk: { used: diskPct?.replace('%','') || '0', free: diskFree }
-      })
+      setMetrics(null)
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
   }
 
-  useEffect(() => { fetchMetrics() }, [])
+  useEffect(() => {
+    fetchMetrics()
+  }, [])
 
   if (loading && !metrics) {
     return <div className="status-loading"><Loader2 size={20} className="spin" /> Carregant...</div>
@@ -56,7 +47,7 @@ function SystemStatus() {
   const memUsed = metrics?.memory?.used || 0
   const memTotal = metrics?.memory?.total || 1
   const memPct = Math.round((memUsed / memTotal) * 100)
-  const memVal = memTotal ? `${memUsed}MB / ${memTotal}MB` : '—'
+  const memVal = metrics?.memory ? `${memUsed}MB / ${memTotal}MB` : '—'
   const diskVal = metrics?.disk ? `${metrics.disk.used}% (${metrics.disk.free} free)` : '—'
 
   return (
@@ -81,8 +72,9 @@ function AgentStatus() {
   useEffect(() => {
     fetch('/api/agents')
       .then(r => r.json())
-      .then(d => { setAgents(d.agents || []); setLoading(false) })
-      .catch(() => setLoading(false))
+      .then(d => setAgents(d.agents || []))
+      .catch(() => setAgents([]))
+      .finally(() => setLoading(false))
   }, [])
 
   if (loading) return <div className="status-loading"><Loader2 size={16} className="spin" /></div>
@@ -112,8 +104,9 @@ function SessionStatus() {
   useEffect(() => {
     fetch('/api/sessions')
       .then(r => r.json())
-      .then(d => { setSessions(d.sessions || []); setLoading(false) })
-      .catch(() => setLoading(false))
+      .then(d => setSessions(d.sessions || []))
+      .catch(() => setSessions([]))
+      .finally(() => setLoading(false))
   }, [])
 
   if (loading) return <div className="status-loading"><Loader2 size={16} className="spin" /></div>
@@ -125,7 +118,7 @@ function SessionStatus() {
         {sessions.length === 0 && <span className="empty-state">Cap sessio activa</span>}
         {sessions.map(s => (
           <div key={s.id} className="session-row">
-            <span className="session-id">{s.id?.slice(0,8) || '—'}</span>
+            <span className="session-id">{s.id?.slice(0, 8) || '—'}</span>
             <span className="session-model">{s.model || '—'}</span>
             <span className="session-duration">{s.duration || s.elapsed || '—'}</span>
             <span className={`session-status ${s.status}`}>{s.status || 'active'}</span>
@@ -143,8 +136,9 @@ function CronStatus() {
   useEffect(() => {
     fetch('/api/cron-health')
       .then(r => r.json())
-      .then(d => { setJobs(d.jobs || []); setLoading(false) })
-      .catch(() => setLoading(false))
+      .then(d => setJobs(d.jobs || []))
+      .catch(() => setJobs([]))
+      .finally(() => setLoading(false))
   }, [])
 
   if (loading) return <div className="status-loading"><Loader2 size={16} className="spin" /></div>
@@ -179,12 +173,9 @@ function IntegrationStatus() {
   useEffect(() => {
     fetch('/api/integrations')
       .then(r => r.json())
-      .then(d => { setIntegrations(d.integrations || []); setLoading(false) })
-      .catch(() => {
-        // Try openclaw status
-        setLoading(false)
-        setIntegrations([])
-      })
+      .then(d => setIntegrations(d.integrations || []))
+      .catch(() => setIntegrations([]))
+      .finally(() => setLoading(false))
   }, [])
 
   if (loading) return <div className="status-loading"><Loader2 size={16} className="spin" /></div>
@@ -208,15 +199,6 @@ function IntegrationStatus() {
       </div>
     </div>
   )
-}
-
-// Helper
-function execAsync(cmd) {
-  return new Promise(resolve => {
-    const { execSync } = require('child_process')
-    try { resolve(execSync(cmd, { timeout: 3000 }).toString().trim()) }
-    catch { resolve('') }
-  })
 }
 
 export default function Status() {

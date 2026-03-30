@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import {
   ChevronDown, ChevronUp, ChevronRight, Cpu, MessageSquare, Clock, Bot, Sparkles,
   Moon, RefreshCw, CheckCircle2, AlertCircle, Loader2, Wifi, WifiOff,
@@ -129,7 +129,9 @@ function ActiveSessions() {
       })
   }
 
-  useEffect(() => { loadSessions() }, [])
+  useEffect(() => {
+    Promise.resolve().then(() => loadSessions())
+  }, [])
 
   const activeSessions = sessions.filter(s => s.status === 'running' || s.status === 'active')
   const inactiveSessions = sessions.filter(s => s.status !== 'running' && s.status !== 'active')
@@ -228,19 +230,13 @@ function ActiveSessions() {
 // ─── Model Selector ────────────────────────────────────────────────────────────
 
 function ModelSelector() {
-  const [models, setModels] = useState([])
-  const [selectedModel, setSelectedModel] = useState(null)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    setModels([
-      { id: 'minimax-m2', name: 'MiniMax-M2', provider: 'MiniMax', status: 'available' },
-      { id: 'gpt-5.4', name: 'GPT-5.4', provider: 'OpenAI', status: 'unknown' },
-      { id: 'gemini-3', name: 'Gemini 3 Pro', provider: 'Google', status: 'unknown' },
-    ])
-    setSelectedModel('minimax-m2')
-    setLoading(false)
-  }, [])
+  const [selectedModel, setSelectedModel] = useState('minimax-m2')
+  const loading = false
+  const models = [
+    { id: 'minimax-m2', name: 'MiniMax-M2', provider: 'MiniMax', status: 'available' },
+    { id: 'gpt-5.4', name: 'GPT-5.4', provider: 'OpenAI', status: 'unknown' },
+    { id: 'gemini-3', name: 'Gemini 3 Pro', provider: 'Google', status: 'unknown' },
+  ]
 
   const getStatusIcon = (status) => {
     if (status === 'available') return <CheckCircle2 size={12} style={{ color: '#30d158' }} />
@@ -303,46 +299,6 @@ function ModelSelector() {
             <span className="service-unknown"><Wifi size={12} /> Unknown</span>
           </div>
         </div>
-      </div>
-    </div>
-  )
-}
-
-function ServiceStatusItem({ service }) {
-  const [status, setStatus] = useState(null) // null=unknown, true=up, false=down
-
-  const checkService = useCallback(async () => {
-    setStatus(null)
-    try {
-      // Try a simple fetch with short timeout
-      const controller = new AbortController()
-      const timeout = setTimeout(() => controller.abort(), 3000)
-      const res = await fetch(service.url, { method: 'HEAD', signal: controller.signal })
-      clearTimeout(timeout)
-      setStatus(res.ok)
-    } catch {
-      setStatus(false)
-    }
-  }, [service.url])
-
-  useEffect(() => {
-    if (service.check === 'gateway') {
-      setStatus(true) // local gateway is always available if we're talking to it
-    } else {
-      checkService()
-    }
-  }, [service.check, checkService])
-
-  return (
-    <div className="service-item">
-      <div className="service-info">
-        <span className="service-name">{service.name}</span>
-        <span className="service-url">{service.url}</span>
-      </div>
-      <div className="service-status">
-        {status === null && <Loader2 size={12} className="spin" style={{ color: '#ffb800' }} />}
-        {status === true && <span className="service-up"><CheckCircle2 size={12} /> UP</span>}
-        {status === false && <span className="service-down"><WifiOff size={12} /> DOWN</span>}
       </div>
     </div>
   )
