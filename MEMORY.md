@@ -59,9 +59,10 @@ _Last updated: 2026-03-30_
 - Location: /home/user/.openclaw/workspace/navi-os
 - Port: 8100 (NEVER CHANGE)
 - 3 modules: Ops (⚙️), Brain (🧠), Lab (🧪)
+- Ops té 4 vistes: Mission Control, Org Chart, PM Board (Kanban), Task Manager
 - Migrated from vanilla JS to React following Aleix's course
 - Episode 1: COMPLETAT
-- Episode 2: EN PROGRES (Task Manager, PM boards pendents)
+- Episode 2: COMPLETAT (Mission Control, Org Chart, Task Manager, PM Boards, Brain, Lab)
 - Status: Active development
 
 ### OpenClaw Implementation Business
@@ -73,7 +74,7 @@ _Last updated: 2026-03-30_
 | Episode | Titol | Status |
 |---------|-------|--------|
 | 1 | AI-Powered Dashboard | ✅ Complet |
-| 2 | Full Operating System | ⚠️ Parcial |
+| 2 | Full Operating System | ✅ Implementat |
 | 3 | Multi-Agent Team | 📋 Pendent |
 | 4 | Automate Agents | 📋 Pendent |
 | 5 | Production 24/7 | 📋 Pendent |

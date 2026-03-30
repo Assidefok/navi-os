@@ -68,13 +68,16 @@
 - PM boards per tracking de tasques
 
 ### Estat a Navi-OS:
-⚠️ **PARCIALMENT IMPLEMENTAT**
+✅ **COMPLETAT** (2026-03-30)
 - ✅ Ops Module amb Mission Control
 - ✅ macOS-style Dock
-- ✅ Org Chart (placeholder)
-- ❌ Task Manager no implementat
-- ❌ Research tools no implementats
-- ❌ PM boards no implementats
+- ✅ Org Chart (estructura completa amb 3 agents)
+- ✅ Task Manager (CRUD complet amb modal)
+- ✅ PM Boards (Kanban amb drag & drop)
+- ✅ Research tools (Brain Module)
+- ✅ Prototypes tracking (Lab Module)
+- ✅ Ideas Gallery (Lab Module)
+- ✅ 4 vistes a Ops: Mission Control, Org Chart, PM Board, Task Manager
 
 ---
 
