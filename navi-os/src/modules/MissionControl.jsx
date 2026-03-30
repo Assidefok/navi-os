@@ -38,24 +38,49 @@ function renderMarkdown(text) {
 // ─── Session Message ──────────────────────────────────────────────────────────
 
 function SessionMessage({ message }) {
-  const isUser = message.role === 'user'
+  const role = message.role || 'unknown'
+  const isUser = role === 'user'
+  const isToolResult = role === 'toolResult'
+  
+  const getRoleLabel = () => {
+    switch (role) {
+      case 'user': return 'Tu'
+      case 'assistant': return 'Navi'
+      case 'toolResult': return 'Tool'
+      default: return role
+    }
+  }
+  
+  const formatTimestamp = (iso) => {
+    if (!iso) return null
+    try {
+      const d = new Date(iso)
+      return d.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })
+    } catch { return null }
+  }
+  
+  // Clean content - truncate if too long
+  const content = typeof message.content === 'string' 
+    ? message.content.trim()
+    : String(message.content || '')
+  
+  const displayContent = content.length > 2000 
+    ? content.substring(0, 2000) + '...' 
+    : content
+  
   return (
-    <div className={`session-message ${isUser ? 'user' : 'agent'}`}>
+    <div className={`session-message ${isUser ? 'user' : isToolResult ? 'toolResult' : 'assistant'}`}>
       <div className="message-avatar">
-        {isUser ? <User size={14} /> : <Bot size={14} />}
+        {isUser ? <User size={16} /> : isToolResult ? '🔧' : <Bot size={16} />}
       </div>
       <div className="message-body">
-        <span className="message-role">{isUser ? 'Tu' : message.role}</span>
+        <span className="message-role">{getRoleLabel()}</span>
         <div className="message-content">
-          {typeof message.content === 'string'
-            ? renderMarkdown(message.content)
-            : Array.isArray(message.content)
-              ? message.content.map((block, i) => (
-                  block.type === 'text' ? <p key={i}>{block.text}</p> : null
-                ))
-              : <p>{String(message.content)}</p>
-          }
+          {renderMarkdown(displayContent)}
         </div>
+        {message.timestamp && (
+          <div className="message-timestamp">{formatTimestamp(message.timestamp)}</div>
+        )}
       </div>
     </div>
   )
@@ -66,11 +91,21 @@ function SessionMessage({ message }) {
 function SessionDetail({ session, onBack }) {
   const [messages, setMessages] = useState([])
   const [loading, setLoading] = useState(true)
+  const messagesEndRef = { current: null }
 
   useEffect(() => {
     fetch(`/api/session/${session.id}/messages`)
       .then(r => r.json())
-      .then(d => { setMessages(d.messages || []); setLoading(false) })
+      .then(d => { 
+        setMessages(d.messages || []); 
+        setLoading(false);
+        // Scroll to bottom after messages load
+        setTimeout(() => {
+          if (messagesEndRef.current) {
+            messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
+          }
+        }, 100)
+      })
       .catch(() => setLoading(false))
   }, [session.id])
 
@@ -98,9 +133,12 @@ function SessionDetail({ session, onBack }) {
         ) : messages.length === 0 ? (
           <div className="session-empty">No hi ha missatges registrats per a aquesta sessio</div>
         ) : (
-          messages.map((msg, i) => (
-            <SessionMessage key={i} message={msg} />
-          ))
+          <>
+            {messages.map((msg, i) => (
+              <SessionMessage key={i} message={msg} />
+            ))}
+            <div ref={messagesEndRef} />
+          </>
         )}
       </div>
     </div>
