@@ -5,9 +5,12 @@
 
 import express from 'express'
 import cors from 'cors'
-import { readFileSync, readdirSync, statSync, existsSync } from 'fs'
+import { execSync } from 'child_process'
+import { readFileSync, readdirSync, statSync, existsSync, writeFileSync } from 'fs'
 import { join, resolve, dirname } from 'path'
 import { fileURLToPath } from 'url'
+import { createRequire } from 'module'
+const require = createRequire(import.meta.url)
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const WORKSPACE = '/home/user/.openclaw/workspace'
@@ -277,6 +280,76 @@ app.get('/api/ideas', (req, res) => {
     res.json(data)
   } catch (err) {
     res.status(500).json({ error: err.message })
+  }
+})
+
+// ─── Git Log ───────────────────────────────────────────────────────────────────
+
+app.get('/api/git-log', (req, res) => {
+  try {
+    const out = execSync(`cd "${WORKSPACE}" && git log --oneline -30 2>/dev/null`, { encoding: 'utf-8', timeout: 5000 }).trim()
+    const lines = out.split('\n').filter(Boolean).map(line => {
+      const parts = line.match(/^([a-f0-9]+)\s+(.*)$/)
+      if (parts) return { hash: parts[1], message: parts[2], author: '—', date: '—' }
+      return { hash: line.slice(0, 7), message: line.slice(8) || line, author: '—', date: '—' }
+    })
+    try {
+      const dates = execSync(`cd "${WORKSPACE}" && git log --format="%ai|%an" -30 2>/dev/null`, { encoding: 'utf-8', timeout: 3000 }).trim().split('\n')
+      lines.forEach((line, i) => {
+        if (dates[i]) {
+          const [date, author] = dates[i].split('|')
+          line.date = date
+          line.author = author
+        }
+      })
+    } catch {
+      // ignore optional git metadata enrichment errors
+    }
+    res.json({ commits: lines })
+  } catch (err) {
+    res.json({ commits: [], error: err.message })
+  }
+})
+
+// ─── Git Push Status ───────────────────────────────────────────────────────────
+
+app.get('/api/git-push', (req, res) => {
+  try {
+    const { execSync } = require('child_process')
+    const remote = execSync(`cd "${WORKSPACE}" && git remote -v 2>/dev/null`, { encoding: 'utf-8', timeout: 3000 }).trim()
+    const branch = execSync(`cd "${WORKSPACE}" && git branch --show-current 2>/dev/null`, { encoding: 'utf-8', timeout: 3000 }).trim()
+    const status = execSync(`cd "${WORKSPACE}" && git status -sb 2>/dev/null`, { encoding: 'utf-8', timeout: 3000 }).trim()
+    const unpushed = execSync(`cd "${WORKSPACE}" && git log @{u}..HEAD --oneline 2>/dev/null | wc -l`, { encoding: 'utf-8', timeout: 3000 }).trim()
+    const ahead = parseInt(unpushed) || 0
+    res.json({
+      remote: remote || 'origin',
+      branch: branch || 'master',
+      status: status || 'clean',
+      ahead,
+      synced: ahead === 0
+    })
+  } catch (err) {
+    res.json({ status: 'unknown', note: 'No git repo or not configured', error: err.message })
+  }
+})
+
+// ─── Backup Status ─────────────────────────────────────────────────────────────
+
+app.get('/api/backup-status', (req, res) => {
+  try {
+    const { execSync } = require('child_process')
+    const workspace = WORKSPACE
+    const out = execSync(`find "${workspace}" -name "*.tar" -o -name "*.zip" -o -name "backup*" 2>/dev/null | head -5`, { encoding: 'utf-8', timeout: 5000 }).trim()
+    const files = out.split('\n').filter(Boolean)
+    const gitDate = execSync(`cd "${workspace}" && git log -1 --format="%ai" 2>/dev/null`, { encoding: 'utf-8', timeout: 3000 }).trim()
+    res.json({
+      lastBackup: files.length > 0 ? files[0] : null,
+      lastBackupTime: gitDate || null,
+      status: files.length > 0 ? 'ok' : 'warning',
+      note: files.length > 0 ? `${files.length} archive(s) found` : 'No backup archive found'
+    })
+  } catch (err) {
+    res.json({ status: 'unknown', note: 'Could not determine backup status' })
   }
 })
 
