@@ -341,47 +341,55 @@ function SkillsDirectory() {
 
 // ─── Section: Cron Health Dashboard ──────────────────────────────────────────
 
-function ForceRunModal({ job, onClose }) {
-  const [running, setRunning] = useState(false)
-  const [result, setResult] = useState(null)
-
-  const handleForceRun = async () => {
-    setRunning(true)
-    setResult(null)
-    try {
-      const res = await fetch('/api/cron-force', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: job.name })
-      })
-      const data = await res.json()
-      setResult({ ok: true, message: data.message || 'Executat correctament' })
-    } catch {
-      setResult({ ok: false, message: 'Error en executar el cron job' })
-    }
-    setRunning(false)
-  }
-
+function CronDetailModal({ job, onClose }) {
   const formatDate = (iso) => {
     if (!iso) return '—'
     try {
-      return new Date(iso).toLocaleString('es-ES', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+      return new Date(iso).toLocaleString('ca-ES', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
     } catch { return iso }
   }
 
-  const statusIndicator = () => {
-    if (job.status === 'healthy') return <span className="status-plus ok" title="Executat correctament">+</span>
-    if (job.status === 'failed') return <span className="status-plus error" title="Error">+</span>
-    if (!job.lastRun) return <span className="status-plus pending" title="Mai executat">+</span>
-    return <span className="status-plus idle" title="Inactiu">+</span>
+  const getStatusMeta = () => {
+    if (job.status === 'healthy') {
+      return {
+        label: 'Correcte',
+        className: 'healthy',
+        icon: <span className="status-plus ok">+</span>,
+        help: 'S ha executat correctament',
+      }
+    }
+    if (job.status === 'failed') {
+      return {
+        label: 'Amb errors',
+        className: 'failed',
+        icon: <span className="status-plus error">+</span>,
+        help: 'L ultima execucio ha fallat',
+      }
+    }
+    if (!job.lastRun) {
+      return {
+        label: 'Pendent',
+        className: 'idle',
+        icon: <span className="status-plus pending">+</span>,
+        help: 'Encara no s ha executat mai',
+      }
+    }
+    return {
+      label: 'Inactiu',
+      className: 'idle',
+      icon: <span className="status-plus idle">+</span>,
+      help: 'Sense informacio recent',
+    }
   }
+
+  const status = getStatusMeta()
 
   return (
     <div className="cron-modal-backdrop" onClick={onClose}>
       <div className="cron-modal" onClick={e => e.stopPropagation()}>
         <div className="cron-modal-header">
           <div className="cron-modal-title">
-            {statusIndicator()}
+            {status.icon}
             <span>{job.name}</span>
           </div>
           <button className="cron-modal-close" onClick={onClose}><X size={18} /></button>
@@ -390,18 +398,22 @@ function ForceRunModal({ job, onClose }) {
           <div className="cron-info-grid">
             <div className="cron-info-row">
               <span className="info-label">Estat</span>
-              <span className={`cron-status-label ${job.status}`}>{job.status}</span>
+              <span className={`cron-status-label ${status.className}`}>{status.label}</span>
             </div>
             <div className="cron-info-row">
-              <span className="info-label">Schedule</span>
-              <span className="info-value">{job.schedule || job.nameLabel || '—'}</span>
+              <span className="info-label">Resum</span>
+              <span className="info-value">{status.help}</span>
             </div>
             <div className="cron-info-row">
-              <span className="info-label">Last run</span>
+              <span className="info-label">Frequencia</span>
+              <span className="info-value">{job.nameLabel || job.schedule || '—'}</span>
+            </div>
+            <div className="cron-info-row">
+              <span className="info-label">Ultima execucio</span>
               <span className="info-value">{formatDate(job.lastRun)}</span>
             </div>
             <div className="cron-info-row">
-              <span className="info-label">Next run</span>
+              <span className="info-label">Propera execucio</span>
               <span className="info-value">{formatDate(job.nextRun)}</span>
             </div>
             {job.error && (
@@ -410,22 +422,11 @@ function ForceRunModal({ job, onClose }) {
                 <span className="info-value error">{job.error}</span>
               </div>
             )}
-            {job.description && (
-              <div className="cron-info-row">
-                <span className="info-label">Descripcio</span>
-                <span className="info-value">{job.description}</span>
-              </div>
-            )}
           </div>
-          <button className="force-run-btn" onClick={handleForceRun} disabled={running}>
-            {running ? <><Loader2 size={14} className="spin" /> Executant...</> : <><Play size={14} /> Forçar execució</>}
-          </button>
-          {result && (
-            <div className={`force-result ${result.ok ? 'ok' : 'error'}`}>
-              {result.ok ? <CheckCircle2 size={14} /> : <AlertCircle size={14} />}
-              {result.message}
-            </div>
-          )}
+          <div className="force-result error" style={{ marginTop: 12 }}>
+            <AlertCircle size={14} />
+            L execucio manual encara no esta disponible des d aquesta interfície.
+          </div>
         </div>
       </div>
     </div>
@@ -517,7 +518,7 @@ function CronHealthDashboard() {
         )}
       </div>
       {selectedJob && (
-        <ForceRunModal job={selectedJob} onClose={() => setSelectedJob(null)} />
+        <CronDetailModal job={selectedJob} onClose={() => setSelectedJob(null)} />
       )}
     </div>
   )

@@ -521,7 +521,7 @@
   align-items: center;
 }
 
-.service-up, .service-down {
+.service-up, .service-down, .service-unknown {
   display: flex;
   align-items: center;
   gap: 5px;
@@ -539,6 +539,11 @@
 .service-down {
   color: #ff453a;
   background: rgba(255, 69, 58, 0.12);
+}
+
+.service-unknown {
+  color: #ffb800;
+  background: rgba(255, 184, 0, 0.12);
 }
 
 .subsection-title {

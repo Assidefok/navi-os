@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import {
-  ChevronDown, ChevronUp, Cpu, MessageSquare, Clock, Bot, Sparkles,
+  ChevronDown, ChevronUp, ChevronRight, Cpu, MessageSquare, Clock, Bot, Sparkles,
   Moon, RefreshCw, CheckCircle2, AlertCircle, Loader2, Wifi, WifiOff,
   Globe, Send, User, Zap
 } from 'lucide-react'
@@ -240,42 +240,14 @@ function ModelSelector() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch('/api/models')
-      .then(r => r.ok ? r.json() : null)
-      .then(d => {
-        if (d?.models) {
-          setModels(d.models)
-          setSelectedModel(d.activeModel || d.models[0]?.id)
-        } else {
-          loadViaFallback()
-        }
-      })
-      .catch(() => loadViaFallback())
-  }, [])
-
-  const loadViaFallback = () => {
-    // Try openclaw status to get model info
-    try {
-      const { execSync } = require('child_process')
-      const out = execSync('openclaw status 2>/dev/null | grep -i "model\|provider" | head -10', { timeout: 3000 }).toString()
-      // Parse default model from status
-      const defaultModel = execSync('openclaw status 2>/dev/null | grep "default" | head -1', { timeout: 3000 }).toString()
-      setModels([
-        { id: 'minimax-m2', name: 'MiniMax-M2', provider: 'MiniMax', status: 'available' },
-        { id: 'gpt-5.4', name: 'GPT-5.4', provider: 'OpenAI', status: 'available' },
-        { id: 'gemini-3', name: 'Gemini 3 Pro', provider: 'Google', status: 'available' },
-      ])
-      setSelectedModel('minimax-m2')
-    } catch {
-      setModels([
-        { id: 'minimax-m2', name: 'MiniMax-M2', provider: 'MiniMax', status: 'available' },
-        { id: 'gpt-5.4', name: 'GPT-5.4', provider: 'OpenAI', status: 'unknown' },
-        { id: 'gemini-3', name: 'Gemini 3 Pro', provider: 'Google', status: 'unknown' },
-      ])
-      setSelectedModel('minimax-m2')
-    }
+    setModels([
+      { id: 'minimax-m2', name: 'MiniMax-M2', provider: 'MiniMax', status: 'available' },
+      { id: 'gpt-5.4', name: 'GPT-5.4', provider: 'OpenAI', status: 'unknown' },
+      { id: 'gemini-3', name: 'Gemini 3 Pro', provider: 'Google', status: 'unknown' },
+    ])
+    setSelectedModel('minimax-m2')
     setLoading(false)
-  }
+  }, [])
 
   const getStatusIcon = (status) => {
     if (status === 'available') return <CheckCircle2 size={12} style={{ color: '#30d158' }} />
@@ -309,16 +281,35 @@ function ModelSelector() {
         </div>
       )}
 
-      {/* External Services */}
       <h3 style={{ marginTop: 20 }}><Globe size={16} /> Serveis externs</h3>
       <div className="services-grid">
-        {[
-          { name: 'OpenClaw Gateway', url: 'http://127.0.0.1:18789', check: 'gateway' },
-          { name: 'MiniMax API', url: 'https://api.minimax.chat', check: 'minimax' },
-          { name: 'Google AI', url: 'https://generativelanguage.googleapis.com', check: 'google' },
-        ].map(svc => (
-          <ServiceStatusItem key={svc.check} service={svc} />
-        ))}
+        <div className="service-item">
+          <div className="service-info">
+            <span className="service-name">OpenClaw Gateway</span>
+            <span className="service-url">local control ui</span>
+          </div>
+          <div className="service-status">
+            <span className="service-up"><CheckCircle2 size={12} /> UP</span>
+          </div>
+        </div>
+        <div className="service-item">
+          <div className="service-info">
+            <span className="service-name">MiniMax API</span>
+            <span className="service-url">estat no verificat des del navegador</span>
+          </div>
+          <div className="service-status">
+            <span className="service-unknown"><Wifi size={12} /> Unknown</span>
+          </div>
+        </div>
+        <div className="service-item">
+          <div className="service-info">
+            <span className="service-name">Google AI</span>
+            <span className="service-url">estat no verificat des del navegador</span>
+          </div>
+          <div className="service-status">
+            <span className="service-unknown"><Wifi size={12} /> Unknown</span>
+          </div>
+        </div>
       </div>
     </div>
   )

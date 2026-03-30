@@ -1,42 +1,31 @@
-# Backup Failure — 2026-03-30
+# 2026-03-30 - Backup Failure
 
-## Script
-`/home/user/.openclaw/workspace/scripts/01-repo-backup.sh`
+**Hora:** 22:58 UTC
+**Script:** `/home/user/.openclaw/workspace/scripts/01-repo-backup.sh`
 
 ## Error
+
 ```
-Identidad del autor desconocido
-
-*** Por favor cuéntame quién eres.
-
-Ejecuta
-
-  git config --global user.email "you@example.com"
-  git config --global user.name "Tu Nombre"
-
-para configurar tu identidad por defecto de tu cuenta.
-Omite --global para configurar tu identidad solo en este repositorio.
-
-fatal: no es posible auto-detectar la dirección de correo (se obtuvo 'user@n100.(none)')
-ERROR: Commit failed
+error: src refspec main no concuerda con ninguno
+error: falló el empuje de algunas referencias a 'https://github.com/Assidefok/navi-os.git'
 ```
 
-## Root Cause
-Git no té `user.email` ni `user.name` configurats globalment. El sistema detecta un email `user@n100.(none)` que no és válid.
+## Causa
 
-## Proposta de fix
-Cal configurar la identitat global de git per a l'usuari actual:
+El script intenta fer `git push origin main`, però la branca local és `master`, no `main`.
 
+## Fix proposat
+
+Canviar el script per fer:
 ```bash
-git config --global user.email "aleix@navi-os.local"
-git config --global user.name "Aleix"
+git push origin master
 ```
-
-Alternativament, si prefereixes una identitat diferent per al workspace:
+o bé renombrar la branca local a `main`:
 ```bash
-git config --global user.email "navi@openclaw.local"
-git config --global user.name "Navi"
+git branch -m master main
+git push origin main
 ```
 
-## Comportament
-El script no ha pogut fer el commit del backup. Cal executar `git config` i tornar a executar el script manualment o esperar a la propera execució del cron.
+## Estat
+
+Backup local completat. Push a GitHub fallit.

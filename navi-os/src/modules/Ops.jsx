@@ -89,31 +89,17 @@ function OvernightSummary() {
 // ─── System Modules Panel ──────────────────────────────────────────────────────
 
 function SystemModules() {
-  const [metrics, setMetrics] = useState(null)
-  const [agents, setAgents] = useState([])
   const [sessions, setSessions] = useState([])
-  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const load = async () => {
-      try {
-        const [sysRes, agentsRes, sessionsRes] = await Promise.all([
-          fetch('/api/system-metrics').catch(() => null),
-          fetch('/api/agents').catch(() => null),
-          fetch('/api/sessions').catch(() => null),
-        ])
-        if (sysRes?.ok) setMetrics(await sysRes.json())
-        if (agentsRes?.ok) setAgents(await agentsRes.json())
-        if (sessionsRes?.ok) setSessions(await sessionsRes.json())
-      } catch {}
-      setLoading(false)
-    }
-    load()
+    fetch('/api/sessions')
+      .then(r => r.json())
+      .then(d => setSessions(d.sessions || []))
+      .catch(() => setSessions([]))
   }, [])
 
   const modules = [
     { name: 'Gateway', status: 'operational', desc: 'OpenClaw Gateway' },
-    { name: 'Agents', status: agents.length > 0 ? 'operational' : 'idle', desc: `${agents.length} agent(s)` },
     { name: 'Sessions', status: sessions.length > 0 ? 'operational' : 'idle', desc: `${sessions.length} sessio(s)` },
     { name: 'Files', status: 'operational', desc: 'Workspace' },
     { name: 'Cron', status: 'operational', desc: 'Tasques programades' },
@@ -143,84 +129,25 @@ function HealthErrors() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const load = async () => {
-      try {
-        const [cronRes, agentsRes, sessionsRes, auditRes] = await Promise.all([
-          fetch('/api/cron-health').catch(() => null),
-          fetch('/api/agents').catch(() => null),
-          fetch('/api/sessions').catch(() => null),
-          fetch('/api/security-audit').catch(() => null),
-        ])
-
-        const allErrors = []
-
-        // Cron failures
-        if (cronRes?.ok) {
-          const cronData = await cronRes.json()
-          ;(cronData.jobs || []).forEach(j => {
-            if (j.status === 'failed') {
-              allErrors.push({
-                source: 'Cron',
-                name: j.name,
-                message: j.error || 'Job failed',
-                severity: 'error',
-                time: j.lastRun
-              })
-            }
-          })
-        }
-
-        // Agent failures
-        if (agentsRes?.ok) {
-          const agentsData = await agentsRes.json()
-          ;(agentsData.agents || []).forEach(a => {
-            if (a.status === 'error' || a.status === 'failed') {
-              allErrors.push({
-                source: 'Agent',
-                name: a.name || a.id,
-                message: a.error || 'Agent in error state',
-                severity: 'error',
-                time: null
-              })
-            }
-          })
-        }
-
-        // Session errors
-        if (sessionsRes?.ok) {
-          const sessionsData = await sessionsRes.json()
-          ;(sessionsData.sessions || []).forEach(s => {
-            if (s.status === 'error' || s.status === 'failed') {
-              allErrors.push({
-                source: 'Session',
-                name: s.id,
-                message: s.error || 'Session error',
-                severity: 'error',
-                time: s.startedAt
-              })
-            }
-          })
-        }
-
-        // Security audit issues
-        if (auditRes?.ok) {
-          const auditData = await auditRes.json()
-          if (auditData.warn > 0 || auditData.critical > 0) {
-            allErrors.push({
-              source: 'Security',
-              name: 'Security Audit',
-              message: `${auditData.critical} critical, ${auditData.warn} warnings`,
-              severity: auditData.critical > 0 ? 'critical' : 'warn',
-              time: null
-            })
-          }
-        }
-
+    fetch('/api/cron-health')
+      .then(r => r.json())
+      .then(data => {
+        const allErrors = (data.jobs || [])
+          .filter(j => j.status === 'failed')
+          .map(j => ({
+            source: 'Cron',
+            name: j.name,
+            message: j.error || 'Job failed',
+            severity: 'error',
+            time: j.lastRun,
+          }))
         setErrors(allErrors)
-      } catch {}
-      setLoading(false)
-    }
-    load()
+        setLoading(false)
+      })
+      .catch(() => {
+        setErrors([])
+        setLoading(false)
+      })
   }, [])
 
   const formatTime = (iso) => {

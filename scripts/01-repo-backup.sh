@@ -10,6 +10,13 @@ LOG_FILE="$WORKSPACE/memory/$(date +%Y-%m-%d)-backup.md"
 
 cd "$WORKSPACE"
 
+# Resolve branch to push (handle master->main transition)
+BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "master")
+# Default to master if not on a recognized branch
+if [ "$BRANCH" != "main" ] && [ "$BRANCH" != "master" ]; then
+  BRANCH="master"
+fi
+
 # Create exclude patterns for sensitive files
 EXCLUDE_PATTERNS=(
   ".env"
@@ -69,7 +76,7 @@ MAX_RETRIES=3
 RETRY_COUNT=0
 
 while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
-  if git push origin main 2>&1 | tee -a "$LOG_FILE"; then
+  if git push origin "$BRANCH" 2>&1 | tee -a "$LOG_FILE"; then
     echo "" >> "$LOG_FILE"
     echo "STATUS: SUCCESS - Backup completed" >> "$LOG_FILE"
     echo "Backup completed successfully"
