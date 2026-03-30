@@ -1,0 +1,188 @@
+.module-view {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.dashboard-title {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 28px;
+  font-weight: 300;
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+/* Brief Section */
+.brief-section {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 24px;
+  margin-bottom: 32px;
+}
+
+.brief-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  padding: 16px;
+  background: rgba(0, 180, 216, 0.05);
+  border-radius: 14px;
+  border: 1px solid rgba(0, 180, 216, 0.15);
+  transition: all 0.3s;
+}
+
+.brief-header:hover {
+  background: rgba(0, 180, 216, 0.1);
+  border-color: rgba(0, 180, 216, 0.3);
+}
+
+.brief-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.brief-info h3 {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--brain-sky);
+  margin-bottom: 4px;
+}
+
+.brief-info p {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.brief-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.priority-badge {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  text-transform: uppercase;
+}
+
+.priority-badge.alta {
+  background: rgba(255, 100, 100, 0.2);
+  color: #ff6b6b;
+}
+
+.priority-badge.normal {
+  background: rgba(0, 180, 216, 0.2);
+  color: var(--brain-sky);
+}
+
+.history-btn {
+  margin-top: 16px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.history-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+/* Brief Content */
+.brief-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.brief-section-content h4 {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--brain-sky);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.markdown-content {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 13px;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.markdown-content p {
+  margin-bottom: 8px;
+}
+
+.markdown-content li {
+  margin-left: 20px;
+  margin-bottom: 4px;
+}
+
+/* History List */
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.history-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 18px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.history-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.history-item.active {
+  background: rgba(0, 180, 216, 0.1);
+  border-color: rgba(0, 180, 216, 0.3);
+}
+
+.history-date {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  min-width: 90px;
+}
+
+.history-title {
+  flex: 1;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.9);
+}

@@ -1,0 +1,211 @@
+.mission-control {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  margin-bottom: 32px;
+}
+
+.mc-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.mc-header h2 {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--ops-amber);
+  text-shadow: 0 0 20px var(--ops-glow);
+}
+
+.mc-section {
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.mc-section:last-child {
+  border-bottom: none;
+}
+
+.mc-section h3 {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Model Selector */
+.model-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.model-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 12px 16px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s;
+}
+
+.model-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.model-btn.active {
+  background: rgba(255, 184, 0, 0.1);
+  border-color: var(--ops-amber);
+}
+
+.model-name {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 14px;
+  color: #fff;
+}
+
+.model-provider {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Sessions */
+.sessions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.session-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.session-header {
+  padding: 14px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.session-header:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.session-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.session-label {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 13px;
+}
+
+.session-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.session-status {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: rgba(74, 222, 128, 0.15);
+  color: #4ade80;
+}
+
+.session-status.inactiva {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.session-details {
+  padding: 12px 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 12px;
+}
+
+.detail-row span:first-child {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.detail-row span:last-child {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.text-success {
+  color: #4ade80 !important;
+}
+
+.text-muted {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Cron Jobs */
+.cron-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cron-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.cron-name {
+  flex: 1;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 13px;
+}
+
+.cron-schedule {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.05);
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.cron-status {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+  color: #4ade80;
+}

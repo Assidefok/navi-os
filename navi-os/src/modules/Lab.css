@@ -1,0 +1,302 @@
+.module-view {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.dashboard-title {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 28px;
+  font-weight: 300;
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+/* Quick Actions */
+.quick-actions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.action-btn {
+  flex: 1;
+  background: rgba(0, 255, 65, 0.08);
+  border: 1px solid rgba(0, 255, 65, 0.2);
+  border-radius: 12px;
+  padding: 16px 20px;
+  color: var(--lab-green);
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.3s;
+}
+
+.action-btn:hover {
+  background: rgba(0, 255, 65, 0.15);
+  border-color: rgba(0, 255, 65, 0.4);
+}
+
+/* Prototypes Grid */
+.prototypes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.prototype-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.prototype-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(0, 255, 65, 0.3);
+  transform: translateY(-2px);
+}
+
+.proto-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.proto-status {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.proto-status-text {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+}
+
+.prototype-card h3 {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.prototype-card p {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 16px;
+}
+
+.proto-progress {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.proto-progress-bar {
+  height: 100%;
+  background: var(--lab-green);
+  border-radius: 2px;
+  transition: width 0.3s;
+}
+
+.proto-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* Prototype Detail */
+.prototype-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.detail-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+  text-transform: uppercase;
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.detail-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.detail-btn {
+  background: rgba(0, 255, 65, 0.15);
+  border: 1px solid rgba(0, 255, 65, 0.3);
+  border-radius: 8px;
+  padding: 8px 16px;
+  color: var(--lab-green);
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.detail-btn:hover {
+  background: rgba(0, 255, 65, 0.25);
+}
+
+.detail-btn.secondary {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.detail-btn.secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.detail-description {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.detail-progress {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 13px;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--lab-green);
+  border-radius: 4px;
+}
+
+.detail-section h4 {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.build-history {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.build-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Build Logs List */
+.build-logs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.log-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+}
+
+.log-icon {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.log-content {
+  flex: 1;
+}
+
+.log-message {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 4px;
+}
+
+.log-timestamp {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.log-status {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+.log-status.success {
+  background: rgba(0, 255, 65, 0.15);
+  color: var(--lab-green);
+}
+
+.log-status.error {
+  background: rgba(255, 100, 100, 0.15);
+  color: #ff6b6b;
+}

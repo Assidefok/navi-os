@@ -1,0 +1,126 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&family=Ubuntu+Mono:wght@400;700&display=swap');
+
+:root {
+  /* Color Palette */
+  --bg-primary: rgba(15, 15, 25, 0.85);
+  --bg-secondary: rgba(25, 25, 45, 0.75);
+  --bg-tertiary: rgba(35, 35, 60, 0.6);
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  
+  /* Text */
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-muted: rgba(255, 255, 255, 0.5);
+  
+  /* Module Colors */
+  --ops-amber: #ffb800;
+  --ops-glow: rgba(255, 184, 0, 0.4);
+  --brain-sky: #00b4d8;
+  --brain-glow: rgba(0, 180, 216, 0.4);
+  --lab-green: #00ff41;
+  --lab-glow: rgba(0, 255, 65, 0.4);
+  
+  /* Accent */
+  --accent: #6c7aff;
+  
+  /* Borders */
+  --border-radius: 16px;
+  --border-radius-sm: 10px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Ubuntu Mono', monospace;
+  background: linear-gradient(135deg, #0a0a1a 0%, #0d1b2a 50%, #0a0a1a 100%);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Ubuntu', sans-serif;
+  font-weight: 500;
+}
+
+.app {
+  min-height: 100vh;
+}
+
+/* Glassmorphic effect */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+}
+
+.glass-strong {
+  background: rgba(20, 20, 40, 0.9);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Neon glow effects */
+.neon-amber {
+  text-shadow: 0 0 10px var(--ops-glow), 0 0 20px var(--ops-glow), 0 0 30px var(--ops-glow);
+  color: var(--ops-amber);
+}
+
+.neon-sky {
+  text-shadow: 0 0 10px var(--brain-glow), 0 0 20px var(--brain-glow), 0 0 30px var(--brain-glow);
+  color: var(--brain-sky);
+}
+
+.neon-green {
+  text-shadow: 0 0 10px var(--lab-glow), 0 0 20px var(--lab-glow), 0 0 30px var(--lab-glow);
+  color: var(--lab-green);
+}
+
+.neon-icon-amber {
+  filter: drop-shadow(0 0 8px var(--ops-glow));
+}
+
+.neon-icon-sky {
+  filter: drop-shadow(0 0 8px var(--brain-glow));
+}
+
+.neon-icon-green {
+  filter: drop-shadow(0 0 8px var(--lab-glow));
+}
+
+/* Main content area */
+.main-content {
+  position: fixed;
+  top: 48px;
+  left: 0;
+  right: 0;
+  bottom: 80px;
+  overflow-y: auto;
+  padding: 32px;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
