@@ -300,3 +300,396 @@
   background: rgba(255, 100, 100, 0.15);
   color: #ff6b6b;
 }
+
+/* ─── Lab Nav ───────────────────────────────────────────────────────────────── */
+
+.lab-nav {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.lab-nav-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 10px 18px;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.lab-nav-btn:hover {
+  background: rgba(0, 255, 65, 0.1);
+  border-color: rgba(0, 255, 65, 0.3);
+  color: #fff;
+}
+
+.lab-nav-btn.active {
+  background: rgba(0, 255, 65, 0.15);
+  border-color: rgba(0, 255, 65, 0.4);
+  color: var(--lab-green);
+}
+
+/* ─── Lab Command Center ─────────────────────────────────────────────────────── */
+
+.lab-command-center {
+  padding: 8px 0;
+}
+
+.tiles-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 600px) {
+  .tiles-grid { grid-template-columns: 1fr; }
+}
+
+.lab-tile {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  transition: all 0.3s;
+}
+
+.lab-tile:hover {
+  background: rgba(0, 255, 65, 0.06);
+  border-color: rgba(0, 255, 65, 0.25);
+  transform: translateY(-2px);
+}
+
+.tile-icon {
+  flex-shrink: 0;
+}
+
+.tile-info {
+  flex: 1;
+}
+
+.tile-info h3 {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
+  margin-bottom: 6px;
+}
+
+.tile-count {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.tile-latest {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.35);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 220px;
+}
+
+.tile-arrow {
+  color: rgba(255, 255, 255, 0.3);
+  flex-shrink: 0;
+}
+
+/* ─── Prototype Portfolio ───────────────────────────────────────────────────── */
+
+.prototype-portfolio {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.proto-port {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 10px;
+  color: var(--lab-green);
+  background: rgba(0, 255, 65, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: auto;
+}
+
+.proto-name {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: #fff;
+  margin-bottom: 6px;
+}
+
+.proto-one-liner {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.55);
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+.proto-score {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 12px;
+}
+
+/* ─── Ideas Gallery ─────────────────────────────────────────────────────────── */
+
+.ideas-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ideas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.idea-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 18px;
+  transition: all 0.2s;
+}
+
+.idea-card:hover {
+  background: rgba(255, 184, 0, 0.05);
+  border-color: rgba(255, 184, 0, 0.2);
+}
+
+.idea-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.track-badge {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 5px;
+  text-transform: uppercase;
+}
+
+.track-badge.track-a {
+  background: rgba(0, 180, 216, 0.15);
+  color: var(--brain-sky);
+}
+
+.track-badge.track-b {
+  background: rgba(255, 184, 0, 0.15);
+  color: #ffb800;
+}
+
+.idea-impact {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  text-transform: uppercase;
+}
+
+.idea-title {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.idea-description {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.idea-footer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.35);
+  flex-wrap: wrap;
+}
+
+.idea-date {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.idea-category {
+  text-transform: capitalize;
+}
+
+.idea-status {
+  margin-left: auto;
+  text-transform: capitalize;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* ─── Research Dashboard ─────────────────────────────────────────────────────── */
+
+.research-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.research-placeholder {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px dashed rgba(0, 255, 65, 0.2);
+  border-radius: 16px;
+  padding: 32px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.research-placeholder h4 {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 16px;
+  color: #fff;
+}
+
+.research-placeholder p {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.research-placeholder .sub {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.timeline-placeholder {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.timeline-placeholder h4 {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.timeline-item {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.timeline-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--lab-green);
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+.timeline-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.timeline-date {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+/* ─── Overnight Section ────────────────────────────────────────────────────── */
+
+.overnight-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  gap: 14px;
+  text-align: center;
+  padding: 40px;
+  border-radius: 20px;
+  border: 2px dashed rgba(0, 180, 216, 0.25);
+}
+
+.overnight-section h3 {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 18px;
+  color: #fff;
+}
+
+.overnight-section p {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.overnight-section .sub {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* ─── Shared ─────────────────────────────────────────────────────────────────── */
+
+.dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.dot.running { background: #00ff41; }
+.dot.stopped { background: #ffb800; }
+.dot.archived { background: #606070; }
+
+.empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px;
+  color: rgba(255, 255, 255, 0.3);
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 14px;
+}
+
+.green { color: #00ff41; }
+.amber { color: #ffb800; }
+.sky { color: #00b4d8; }
+.purple { color: #b388ff; }

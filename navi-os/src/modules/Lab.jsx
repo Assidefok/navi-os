@@ -1,216 +1,321 @@
-import { useState } from 'react'
-import { FlaskConical, Code, Rocket, FileCode, Clock, ChevronRight, Plus, X, Play, Pause } from 'lucide-react'
+import { useState, useEffect, useCallback } from 'react'
+import {
+  FlaskConical, Lightbulb, Rocket, Search, Plus, Play, Pause, Archive,
+  ChevronRight, X, RefreshCw, TrendingUp, Clock, Star
+} from 'lucide-react'
 import Modal from '../components/ui/Modal'
 import FeatureCard from '../components/ui/FeatureCard'
 import './Lab.css'
 
-const FEATURES = [
-  { icon: FlaskConical, name: 'Prototypes', desc: 'Projectes en desenvolupament' },
-  { icon: Code, name: 'Build Logs', desc: 'Registre de construccio' },
-  { icon: Rocket, name: 'Deploy', desc: 'Desplegament' },
-  { icon: FileCode, name: 'Skills', desc: 'Habilitats del sistema' }
-]
+const API_BASE = '/api'
 
-const PROTOTYPES = [
-  {
-    id: 1,
-    name: 'Navi OS v2',
-    description: 'Sistema operatiu personal amb React',
-    status: 'active',
-    lastBuild: '2026-03-30 01:55',
-    progress: 75
-  },
-  {
-    id: 2,
-    name: 'Cron Manager',
-    description: 'Gestio avançada de tasques programades',
-    status: 'planning',
-    lastBuild: '2026-03-28 15:30',
-    progress: 30
-  },
-  {
-    id: 3,
-    name: 'Memory Bridge',
-    description: 'Sincronitzacio de memoria entre sessions',
-    status: 'planning',
-    lastBuild: '2026-03-25 10:00',
-    progress: 15
+// ─── Prototype Portfolio ──────────────────────────────────────────────────────
+
+function PrototypePortfolio({ onClose }) {
+  const [prototypes, setPrototypes] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetch(`${API_BASE}/prototypes`)
+      .then(r => r.json())
+      .then(d => { setPrototypes(d.prototypes || []); setLoading(false) })
+      .catch(() => setLoading(false))
+  }, [])
+
+  const stats = {
+    running: prototypes.filter(p => p.status === 'running').length,
+    stopped: prototypes.filter(p => p.status === 'stopped').length,
+    total: prototypes.length,
   }
-]
 
-const BUILD_LOGS = [
-  { id: 1, timestamp: '2026-03-30 01:55', type: 'build', message: 'Navi OS - Build completat', status: 'success' },
-  { id: 2, timestamp: '2026-03-30 03:00', type: 'cron', message: 'Overnight Audit - 2 issues resolts', status: 'success' },
-  { id: 3, timestamp: '2026-03-30 08:00', type: 'cron', message: 'Daily Brief - Generat', status: 'success' },
-  { id: 4, timestamp: '2026-03-29 23:00', type: 'cron', message: 'Rolling Docs - Actualitzat', status: 'success' },
-  { id: 5, timestamp: '2026-03-29 02:00', type: 'cron', message: 'Repo Backup - Push exit', status: 'success' },
-  { id: 6, timestamp: '2026-03-28 15:30', type: 'build', message: 'Cron Manager - Inicialitzat', status: 'success' },
-  { id: 7, timestamp: '2026-03-28 10:15', type: 'build', message: 'React Migration - Completada', status: 'success' },
-  { id: 8, timestamp: '2026-03-27 18:00', type: 'build', message: 'Mission Control - Implementat', status: 'success' }
-]
+  const statusColor = (status) => {
+    switch (status) {
+      case 'running': return '#00ff41'
+      case 'stopped': return '#ffb800'
+      case 'archived': return '#606070'
+      default: return '#606070'
+    }
+  }
 
-export default function Lab() {
-  const [showPrototypes, setShowPrototypes] = useState(false)
-  const [showBuildLogs, setShowBuildLogs] = useState(false)
-  const [selectedPrototype, setSelectedPrototype] = useState(null)
+  const formatDate = (iso) => {
+    if (!iso) return '—'
+    try { return new Date(iso).toLocaleDateString('es-ES', { month: 'short', day: 'numeric', year: 'numeric' }) } catch { return iso }
+  }
 
-  const getStatusColor = (status) => {
-    switch(status) {
-      case 'active': return '#00ff41'
-      case 'planning': return '#ffb800'
-      case 'paused': return '#a0a0b0'
+  return (
+    <div className="prototype-portfolio">
+      <div className="section-stats">
+        <span className="stat"><span className="dot running" /> {stats.running} running</span>
+        <span className="stat"><span className="dot stopped" /> {stats.stopped} stopped</span>
+        <span className="stat"><span className="dot archived" /> {stats.total} total</span>
+      </div>
+      <div className="prototypes-grid">
+        {prototypes.map(proto => (
+          <div key={proto.id} className="prototype-card">
+            <div className="proto-header">
+              <span className="proto-status-dot" style={{ background: statusColor(proto.status) }} />
+              <span className="proto-status-text">{proto.status}</span>
+              {proto.port && <span className="proto-port">:{proto.port}</span>}
+            </div>
+            <h3 className="proto-name">{proto.name}</h3>
+            <p className="proto-one-liner">{proto['one-liner']}</p>
+            <div className="proto-score">
+              <Star size={12} className="amber" />
+              <span>{proto.score}/100</span>
+            </div>
+            <div className="proto-footer">
+              <span>Build: {formatDate(proto.lastBuild)}</span>
+              <ChevronRight size={14} />
+            </div>
+          </div>
+        ))}
+        {prototypes.length === 0 && !loading && (
+          <div className="empty-state">No prototypes found</div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// ─── Ideas Gallery ────────────────────────────────────────────────────────────
+
+function IdeasGallery() {
+  const [ideas, setIdeas] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [filter, setFilter] = useState('all')
+
+  useEffect(() => {
+    fetch(`${API_BASE}/ideas`)
+      .then(r => r.json())
+      .then(d => { setIdeas(d.ideas || []); setLoading(false) })
+      .catch(() => setLoading(false))
+  }, [])
+
+  const filtered = filter === 'all' ? ideas : ideas.filter(i => i.track === filter)
+
+  const impactColor = (impact) => {
+    switch (impact) {
+      case 'high': return '#00ff41'
+      case 'medium': return '#ffb800'
+      case 'low': return '#a0a0b0'
       default: return '#a0a0b0'
     }
+  }
+
+  const formatDate = (d) => {
+    try { return new Date(d).toLocaleDateString('es-ES', { month: 'short', day: 'numeric' }) } catch { return d }
+  }
+
+  return (
+    <div className="ideas-gallery">
+      <div className="tab-bar">
+        {['all', 'A', 'B'].map(t => (
+          <button key={t} className={`tab ${filter === t ? 'active' : ''}`} onClick={() => setFilter(t)}>
+            Track {t === 'all' ? 'All' : t}
+            <span className="tab-count">{t === 'all' ? ideas.length : ideas.filter(i => i.track === t).length}</span>
+          </button>
+        ))}
+      </div>
+      <div className="ideas-grid">
+        {filtered.map(idea => (
+          <div key={idea.id} className="idea-card">
+            <div className="idea-header">
+              <span className={`track-badge track-${idea.track.toLowerCase()}`}>Track {idea.track}</span>
+              <span className="idea-impact" style={{ color: impactColor(idea.impact) }}>
+                <TrendingUp size={12} /> {idea.impact}
+              </span>
+            </div>
+            <h4 className="idea-title">{idea.title}</h4>
+            <p className="idea-description">{idea.description}</p>
+            <div className="idea-footer">
+              <span className="idea-date"><Clock size={11} /> {formatDate(idea.date)}</span>
+              <span className="idea-category">{idea.category}</span>
+              <span className={`idea-status ${idea.status}`}>{idea.status}</span>
+            </div>
+          </div>
+        ))}
+        {filtered.length === 0 && !loading && (
+          <div className="empty-state">No ideas for this track</div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// ─── Research Dashboard ───────────────────────────────────────────────────────
+
+function ResearchDashboard() {
+  const [files, setFiles] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    // Try to read from /home/user/.openclaw/workspace/research
+    // Since we're in browser, this would need a dedicated endpoint
+    // For now, show placeholder with instruction
+    setLoading(false)
+  }, [])
+
+  return (
+    <div className="research-dashboard">
+      <div className="section-stats">
+        <span className="stat"><Search size={14} /> AI Pulse & Research</span>
+      </div>
+      <div className="research-placeholder">
+        <Search size={32} className="green" />
+        <h4>Research Files</h4>
+        <p>Place markdown research files in /home/user/.openclaw/workspace/research/</p>
+        <p className="sub">They will appear here automatically.</p>
+      </div>
+      <div className="timeline-placeholder">
+        <h4>Timeline</h4>
+        <div className="timeline-item">
+          <div className="timeline-dot" />
+          <div className="timeline-content">
+            <span className="timeline-date">2026-03-30</span>
+            <span>Research dashboard initialized</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ─── Lab Command Center (Landing) ────────────────────────────────────────────
+
+function LabCommandCenter({ onNavigate }) {
+  const [prototypes, setPrototypes] = useState([])
+  const [ideas, setIdeas] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    Promise.all([
+      fetch(`${API_BASE}/prototypes`).then(r => r.json()).catch(() => ({ prototypes: [] })),
+      fetch(`${API_BASE}/ideas`).then(r => r.json()).catch(() => ({ ideas: [] })),
+    ]).then(([pData, iData]) => {
+      setPrototypes(pData.prototypes || [])
+      setIdeas(iData.ideas || [])
+      setLoading(false)
+    }).catch(() => setLoading(false))
+  }, [])
+
+  const latestPrototype = prototypes[0]
+  const latestIdea = ideas[0]
+
+  return (
+    <div className="lab-command-center">
+      <div className="tiles-grid">
+        {/* Ideas Tile */}
+        <div className="lab-tile" onClick={() => onNavigate('ideas')}>
+          <div className="tile-icon"><Lightbulb size={28} className="amber" /></div>
+          <div className="tile-info">
+            <h3>Ideas</h3>
+            <span className="tile-count">{loading ? '...' : ideas.length} ideas</span>
+            {latestIdea && (
+              <p className="tile-latest">Latest: {latestIdea.title.substring(0, 40)}...</p>
+            )}
+          </div>
+          <ChevronRight size={18} className="tile-arrow" />
+        </div>
+
+        {/* Prototypes Tile */}
+        <div className="lab-tile" onClick={() => onNavigate('prototypes')}>
+          <div className="tile-icon"><FlaskConical size={28} className="green" /></div>
+          <div className="tile-info">
+            <h3>Prototypes</h3>
+            <span className="tile-count">
+              {loading ? '...' : `${prototypes.filter(p => p.status === 'running').length} running / ${prototypes.length} total`}
+            </span>
+            {latestPrototype && (
+              <p className="tile-latest">Latest: {latestPrototype.name}</p>
+            )}
+          </div>
+          <ChevronRight size={18} className="tile-arrow" />
+        </div>
+
+        {/* Overnight Builds Tile */}
+        <div className="lab-tile" onClick={() => onNavigate('overnight')}>
+          <div className="tile-icon"><Rocket size={28} className="sky" /></div>
+          <div className="tile-info">
+            <h3>Overnight Builds</h3>
+            <span className="tile-count">Automated</span>
+            <p className="tile-latest">Cron-driven construction pipeline</p>
+          </div>
+          <ChevronRight size={18} className="tile-arrow" />
+        </div>
+
+        {/* Research Tile */}
+        <div className="lab-tile" onClick={() => onNavigate('research')}>
+          <div className="tile-icon"><Search size={28} className="purple" /></div>
+          <div className="tile-info">
+            <h3>Research</h3>
+            <span className="tile-count">AI Pulse</span>
+            <p className="tile-latest">Technology landscape tracking</p>
+          </div>
+          <ChevronRight size={18} className="tile-arrow" />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ─── Main Lab Module ──────────────────────────────────────────────────────────
+
+export default function Lab() {
+  const [activeSection, setActiveSection] = useState('landing')
+  const [showPrototypes, setShowPrototypes] = useState(false)
+  const [showIdeas, setShowIdeas] = useState(false)
+
+  const handleNavigate = (section) => {
+    setActiveSection(section)
+    if (section === 'prototypes') setShowPrototypes(true)
+    if (section === 'ideas') setShowIdeas(true)
   }
 
   return (
     <div className="module-view lab">
       <h1 className="dashboard-title green neon-green">Laboratori</h1>
 
-      {/* Quick Actions */}
-      <div className="quick-actions">
-        <button className="action-btn" onClick={() => setShowPrototypes(true)}>
-          <FlaskConical size={18} />
+      {/* Section Nav */}
+      <div className="lab-nav">
+        <button className={`lab-nav-btn ${activeSection === 'landing' ? 'active' : ''}`} onClick={() => setActiveSection('landing')}>
+          Command Center
+        </button>
+        <button className={`lab-nav-btn ${activeSection === 'prototypes' ? 'active' : ''}`} onClick={() => { setActiveSection('prototypes'); setShowPrototypes(true) }}>
           Prototypes
         </button>
-        <button className="action-btn" onClick={() => setShowBuildLogs(true)}>
-          <Clock size={18} />
-          Build Logs
+        <button className={`lab-nav-btn ${activeSection === 'ideas' ? 'active' : ''}`} onClick={() => { setActiveSection('ideas'); setShowIdeas(true) }}>
+          Ideas
+        </button>
+        <button className={`lab-nav-btn ${activeSection === 'overnight' ? 'active' : ''}`} onClick={() => setActiveSection('overnight')}>
+          Overnight
+        </button>
+        <button className={`lab-nav-btn ${activeSection === 'research' ? 'active' : ''}`} onClick={() => setActiveSection('research')}>
+          Research
         </button>
       </div>
 
-      {/* Features Grid */}
-      <div className="features-grid">
-        {FEATURES.map((f, i) => (
-          <FeatureCard
-            key={i}
-            icon={f.icon}
-            title={f.name}
-            description={f.desc}
-            colorClass="green"
-            onClick={
-              f.name === 'Prototypes' ? () => setShowPrototypes(true) :
-              f.name === 'Build Logs' ? () => setShowBuildLogs(true) : undefined
-            }
-          />
-        ))}
-      </div>
-
-      {/* Prototypes Modal */}
-      <Modal
-        isOpen={showPrototypes}
-        onClose={() => setShowPrototypes(false)}
-        title="Prototypes"
-        width="80%"
-        height="80%"
-      >
-        <div className="prototypes-grid">
-          {PROTOTYPES.map(proto => (
-            <div 
-              key={proto.id}
-              className="prototype-card"
-              onClick={() => setSelectedPrototype(proto)}
-            >
-              <div className="proto-header">
-                <div 
-                  className="proto-status"
-                  style={{ background: getStatusColor(proto.status) }}
-                />
-                <span className="proto-status-text">{proto.status}</span>
-              </div>
-              <h3>{proto.name}</h3>
-              <p>{proto.description}</p>
-              <div className="proto-progress">
-                <div 
-                  className="proto-progress-bar"
-                  style={{ width: `${proto.progress}%` }}
-                />
-              </div>
-              <div className="proto-footer">
-                <span>Ultim build: {proto.lastBuild}</span>
-                <ChevronRight size={16} />
-              </div>
-            </div>
-          ))}
-        </div>
-      </Modal>
-
-      {/* Prototype Detail Modal */}
-      <Modal
-        isOpen={!!selectedPrototype}
-        onClose={() => setSelectedPrototype(null)}
-        title={selectedPrototype?.name || ''}
-        width="75%"
-        height="75%"
-      >
-        {selectedPrototype && (
-          <div className="prototype-detail">
-            <div className="detail-header">
-              <div className="detail-status">
-                <span 
-                  className="status-dot"
-                  style={{ background: getStatusColor(selectedPrototype.status) }}
-                />
-                {selectedPrototype.status}
-              </div>
-              <div className="detail-actions">
-                <button className="detail-btn">
-                  <Play size={16} /> Iniciar
-                </button>
-                <button className="detail-btn secondary">
-                  <Pause size={16} /> Pausar
-                </button>
-              </div>
-            </div>
-            <p className="detail-description">{selectedPrototype.description}</p>
-            <div className="detail-progress">
-              <span>Progres</span>
-              <div className="progress-bar">
-                <div 
-                  className="progress-fill"
-                  style={{ width: `${selectedPrototype.progress}%` }}
-                />
-              </div>
-              <span>{selectedPrototype.progress}%</span>
-            </div>
-            <div className="detail-section">
-              <h4>Build History</h4>
-              <div className="build-history">
-                <div className="build-item">
-                  <Clock size={14} />
-                  <span>{selectedPrototype.lastBuild}</span>
-                  <span className="build-message">Ultim build</span>
-                </div>
-              </div>
-            </div>
+      {/* Content */}
+      <div className="lab-content">
+        {activeSection === 'landing' && <LabCommandCenter onNavigate={handleNavigate} />}
+        {activeSection === 'prototypes' && <PrototypePortfolio />}
+        {activeSection === 'ideas' && <IdeasGallery />}
+        {activeSection === 'overnight' && (
+          <div className="overnight-section">
+            <Rocket size={40} className="sky" />
+            <h3>Overnight Builds</h3>
+            <p>Automated build pipeline runs during off-hours.</p>
+            <p className="sub">Configure via /workspace/scripts/cron-*.sh</p>
           </div>
         )}
-      </Modal>
+        {activeSection === 'research' && <ResearchDashboard />}
+      </div>
 
-      {/* Build Logs Modal */}
-      <Modal
-        isOpen={showBuildLogs}
-        onClose={() => setShowBuildLogs(false)}
-        title="Build Logs"
-        width="80%"
-        height="80%"
-      >
-        <div className="build-logs-list">
-          {BUILD_LOGS.map(log => (
-            <div key={log.id} className="log-item">
-              <div className="log-icon">
-                {log.type === 'build' ? <Code size={16} /> : <Clock size={16} />}
-              </div>
-              <div className="log-content">
-                <div className="log-message">{log.message}</div>
-                <div className="log-timestamp">{log.timestamp}</div>
-              </div>
-              <div className={`log-status ${log.status}`}>
-                {log.status === 'success' ? 'OK' : 'ERR'}
-              </div>
-            </div>
-          ))}
-        </div>
+      {/* Modals */}
+      <Modal isOpen={showPrototypes} onClose={() => setShowPrototypes(false)} title="Prototype Portfolio" width="85%" height="80%">
+        <PrototypePortfolio onClose={() => setShowPrototypes(false)} />
+      </Modal>
+      <Modal isOpen={showIdeas} onClose={() => setShowIdeas(false)} title="Ideas Gallery" width="85%" height="80%">
+        <IdeasGallery />
       </Modal>
     </div>
   )

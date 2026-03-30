@@ -1,0 +1,38 @@
+[
+  {
+    "id": "del-001",
+    "title": "Informe d'auditoria TechCorp",
+    "clientName": "TechCorp",
+    "owner": "Aleix",
+    "slaDate": "2026-04-05",
+    "status": "in_progress",
+    "history": [
+      { "date": "2026-03-25", "status": "pending", "note": "Tasca creada" },
+      { "date": "2026-03-28", "status": "in_progress", "note": "Iniciada recopilacio de dades" }
+    ]
+  },
+  {
+    "id": "del-002",
+    "title": "Manual d'usuari OpenClaw Gateway",
+    "clientName": "TechCorp",
+    "owner": "Aleix",
+    "slaDate": "2026-04-12",
+    "status": "review",
+    "history": [
+      { "date": "2026-03-26", "status": "pending", "note": "Tasca creada" },
+      { "date": "2026-03-29", "status": "in_progress", "note": "Redaccio en curs" },
+      { "date": "2026-03-30", "status": "review", "note": "Enviat a revisio del client" }
+    ]
+  },
+  {
+    "id": "del-003",
+    "title": "Connector API RetailSA",
+    "clientName": "RetailSA",
+    "owner": "Aleix",
+    "slaDate": "2026-04-18",
+    "status": "pending",
+    "history": [
+      { "date": "2026-03-28", "status": "pending", "note": "Tasca creada" }
+    ]
+  }
+]

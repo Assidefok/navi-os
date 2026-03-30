@@ -1,0 +1,44 @@
+{
+  "ideas": [
+    {
+      "id": "idea-001",
+      "title": "Client Onboarding Wizard",
+      "description": "Step-by-step flow for new OpenClaw implementation clients: workspace setup, credential collection, first workflow configuration.",
+      "date": "2026-03-25",
+      "track": "A",
+      "category": "business",
+      "impact": "high",
+      "status": "concept"
+    },
+    {
+      "id": "idea-002",
+      "title": "Weekly Review Automation",
+      "description": "Script that pulls GitHub activity, email summaries, and project updates into a single weekly review brief for Aleix.",
+      "date": "2026-03-22",
+      "track": "A",
+      "category": "automation",
+      "impact": "medium",
+      "status": "concept"
+    },
+    {
+      "id": "idea-003",
+      "title": "Invoice Generator",
+      "description": "Simple CLI tool that reads project hours from a JSON file and outputs a clean PDF invoice using a template.",
+      "date": "2026-03-18",
+      "track": "B",
+      "category": "finance",
+      "impact": "medium",
+      "status": "backlog"
+    },
+    {
+      "id": "idea-004",
+      "title": "Lead Scoring System",
+      "description": "Scoring model for outreach prospects based on company size, industry, tech stack fit, and estimated budget.",
+      "date": "2026-03-15",
+      "track": "B",
+      "category": "sales",
+      "impact": "low",
+      "status": "backlog"
+    }
+  ]
+}

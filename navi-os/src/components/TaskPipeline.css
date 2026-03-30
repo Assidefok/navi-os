@@ -1,0 +1,199 @@
+.task-pipeline {
+  margin-bottom: 40px;
+}
+
+.tp-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.tp-header h2 {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--ops-amber);
+}
+
+.task-count {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  color: rgba(255, 184, 0, 0.6);
+  background: rgba(255, 184, 0, 0.08);
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.kanban-board {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 12px;
+  align-items: flex-start;
+}
+
+.kanban-column {
+  flex: 0 0 180px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 14px;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.kanban-column.drag-over {
+  border-color: var(--stage-color, rgba(255, 184, 0, 0.4));
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.column-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 14px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.column-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.column-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.column-title {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.column-count {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.06);
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.column-body {
+  flex: 1;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 200px;
+}
+
+.column-empty {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.15);
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 18px;
+}
+
+.task-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 12px;
+  cursor: grab;
+  transition: all 0.2s;
+  user-select: none;
+}
+
+.task-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+.task-card.dragging {
+  opacity: 0.4;
+  transform: rotate(2deg);
+  cursor: grabbing;
+}
+
+.task-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.drag-handle {
+  color: rgba(255, 255, 255, 0.2);
+  flex-shrink: 0;
+}
+
+.priority-badge {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.task-title {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+
+.task-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.task-client {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.06);
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+
+.task-due {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.task-blockers {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 10px;
+  color: #ef4444;
+  line-height: 1.4;
+}
+
+.task-blockers svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+}

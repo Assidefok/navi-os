@@ -1,30 +1,36 @@
 import { Settings, Brain, FlaskConical } from 'lucide-react'
 import './Dock.css'
 
-export default function Dock({ tabs, activeTab, setActiveTab }) {
-  const getIcon = (id) => {
-    switch(id) {
-      case 'ops': return <Settings />
-      case 'brain': return <Brain />
-      case 'lab': return <FlaskConical />
-      default: return null
-    }
-  }
+const dockItems = [
+  { id: 'ops', label: 'Operacions', icon: Settings },
+  { id: 'brain', label: 'Cervell', icon: Brain },
+  { id: 'lab', label: 'Laboratori', icon: FlaskConical },
+]
 
+export default function Dock({ activeTab, setActiveTab }) {
   return (
-    <div className="dock">
+    <nav className="dock" role="navigation" aria-label="Navegacio principal">
       <div className="dock-icons">
-        {tabs.map(tab => (
-          <div
-            key={tab.id}
-            className={`dock-item ${activeTab === tab.id ? 'active' : ''}`}
-            onClick={() => setActiveTab(tab.id)}
-            title={tab.label}
-          >
-            {getIcon(tab.id)}
-          </div>
-        ))}
+        {dockItems.map(item => {
+          const Icon = item.icon
+          return (
+            <button
+              key={item.id}
+              className={`dock-item ${activeTab === item.id ? 'active' : ''}`}
+              onClick={() => setActiveTab(item.id)}
+              aria-label={item.label}
+              aria-current={activeTab === item.id ? 'page' : undefined}
+              title={item.label}
+            >
+              <div className="dock-icon-wrap">
+                <Icon size={28} strokeWidth={1.5} />
+              </div>
+              <span className="dock-tooltip">{item.label}</span>
+              {activeTab === item.id && <span className="dock-active-dot" aria-hidden="true" />}
+            </button>
+          )
+        })}
       </div>
-    </div>
+    </nav>
   )
 }

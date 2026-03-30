@@ -6,6 +6,13 @@ export default defineConfig({
   server: {
     port: 8100,
     host: true,
-    allowedHosts: ['n100.casa', 'localhost', '127.0.0.1']
+    allowedHosts: ['n100.casa', 'localhost', '127.0.0.1'],
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '/api'),
+      }
+    }
   }
 })

@@ -4,6 +4,13 @@ _Last updated: 2026-03-30_
 
 ---
 
+## Telegram Configuration
+- **Chat ID:** 267107022
+- **Username:** @Assidefok
+- **Note:** Aleix's personal Telegram for direct messaging
+
+---
+
 ## Active Rules (non-negotiable)
 
 1. **Always respond in Catalan** when talking to Aleix
@@ -36,6 +43,13 @@ _Last updated: 2026-03-30_
   - Find work in AI sector
   - Develop something meaningful
 
+## Identity Reminders
+
+- **I am Navi** (the fairy) - NOT Goat
+- **Goat** = assistant from the ClearMUd course Aleix is following
+- **Navi-OS** = the operating system I'm building
+- Goat follows the course instructions; I maintain my fairy personality
+
 ---
 
 ## Current Projects
@@ -46,6 +60,8 @@ _Last updated: 2026-03-30_
 - Port: 8100 (NEVER CHANGE)
 - 3 modules: Ops (⚙️), Brain (🧠), Lab (🧪)
 - Migrated from vanilla JS to React following Aleix's course
+- Episode 1: COMPLETAT
+- Episode 2: EN PROGRES (Task Manager, PM boards pendents)
 - Status: Active development
 
 ### OpenClaw Implementation Business
@@ -53,16 +69,27 @@ _Last updated: 2026-03-30_
 - Looking for work in AI sector
 - Building production-ready skeleton
 
-### Automation Setup (4 Cron Jobs)
+### ClearMUd Bootcamp Progress
+| Episode | Titol | Status |
+|---------|-------|--------|
+| 1 | AI-Powered Dashboard | ✅ Complet |
+| 2 | Full Operating System | ⚠️ Parcial |
+| 3 | Multi-Agent Team | 📋 Pendent |
+| 4 | Automate Agents | 📋 Pendent |
+| 5 | Production 24/7 | 📋 Pendent |
+
+### Automation Setup (5 Cron Jobs)
 | Job | Schedule |
 |-----|----------|
 | Repo Backup | Daily 02:00 |
 | Overnight Audit | Daily 03:00 |
 | Daily Brief | Daily 08:00 |
+| Daily News | Daily 07:00 |
 | Rolling Docs | Daily 23:00 |
 
 Scripts: /home/user/.openclaw/workspace/scripts/
 Rollback guide: /home/user/.openclaw/workspace/docs/ROLLBACK-GUIDE.md
+Course videos: /home/user/.openclaw/workspace/course/video-reports.md
 
 ---
 
@@ -133,6 +160,35 @@ cron runs <jobId>
 | Overnight Audit | `9a7ceea6-bcd7-4999-a2d5-d735ee78ed20` | Daily 03:00 | Self-improvement audit |
 | Daily Brief | `4182fba8-0791-4016-a2b1-08fb81064fdb` | Daily 08:00 | Morning summary |
 | Rolling Docs | `d7a060a0-dc95-4d6a-814a-6398248610b7` | Daily 23:00 | Update system docs |
+
+---
+
+## PM2 Startup (Auto-resurrect)
+
+PM2 manages Navi OS processes with auto-restart on reboot.
+
+**Processes managed:**
+| Name | Command | Port | Status |
+|------|---------|------|--------|
+| navi-os-api | `node server.js` | 3001 | online |
+| vite | `node node_modules/vite/bin/vite.js --port 8100` | 8100 | online |
+
+**Commands:**
+```bash
+# View status
+npx pm2 list
+
+# View logs
+npx pm2 logs
+
+# Restart all
+npx pm2 restart all
+
+# Auto-save after changes
+npx pm2 save
+```
+
+**Auto-start on reboot:** crontab `@reboot cd /home/user/.openclaw/workspace/navi-os && npx pm2 resurrect`
 
 ---
 

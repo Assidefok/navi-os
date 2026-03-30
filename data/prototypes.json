@@ -1,0 +1,37 @@
+{
+  "prototypes": [
+    {
+      "id": "proto-001",
+      "name": "Navi OS v2",
+      "one-liner": "Personal operating system dashboard with React",
+      "port": 8100,
+      "status": "running",
+      "score": 92,
+      "lastBuild": "2026-03-30T08:00:00Z",
+      "description": "Full React rewrite of the personal OS dashboard. Features module system, persistent memory viewer, and Lab experimentation workspace.",
+      "stack": ["React 19", "Vite", "Lucide Icons"]
+    },
+    {
+      "id": "proto-002",
+      "name": "Cron Manager",
+      "one-liner": "Advanced cron job management and monitoring",
+      "port": 8200,
+      "status": "stopped",
+      "score": 68,
+      "lastBuild": "2026-03-28T15:30:00Z",
+      "description": "GUI for managing all Navi OS cron jobs. Shows last run, next run, error logs, and one-click enable/disable.",
+      "stack": ["React", "Node cron", "Shell scripts"]
+    },
+    {
+      "id": "proto-003",
+      "name": "Memory Bridge",
+      "one-liner": "Session memory synchronization across agents",
+      "port": null,
+      "status": "archived",
+      "score": 45,
+      "lastBuild": "2026-03-20T10:00:00Z",
+      "description": "Attempted to sync memory state between multiple OpenClaw sessions. Design flawed — over-engineered for the actual use case.",
+      "stack": ["Node.js", "JSON files"]
+    }
+  ]
+}

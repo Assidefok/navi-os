@@ -14,56 +14,41 @@
   z-index: 1000;
 }
 
-.tabs-container {
-  display: flex;
-  gap: 12px;
-  overflow-x: auto;
-  max-width: 100%;
-  padding: 6px 0;
-}
-
-.tabs-container::-webkit-scrollbar {
-  display: none;
-}
-
-.tab {
-  background: rgba(255, 255, 255, 0.05);
-  padding: 8px 20px;
-  border-radius: 10px;
-  cursor: grab;
-  user-select: none;
+.topbar-logo {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 10px;
   font-family: 'Ubuntu', sans-serif;
-  font-size: 14px;
-  font-weight: 400;
-  color: var(--text-secondary);
-  white-space: nowrap;
-  transition: all 0.3s ease;
-  border: 1px solid transparent;
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.2s ease;
 }
 
-.tab:hover {
+.topbar-logo:hover {
   background: rgba(255, 255, 255, 0.1);
-  color: var(--text-primary);
+  color: #fff;
 }
 
-.tab.active {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.15);
-  color: var(--text-primary);
+.topbar-logo:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 2px;
 }
 
-.tab:active {
-  cursor: grabbing;
+.topbar-logo svg {
+  color: #6c7aff;
+  transition: filter 0.2s ease;
 }
 
-.tab.dragging {
-  opacity: 0.5;
+.topbar-logo:hover svg {
+  filter: drop-shadow(0 0 8px rgba(108, 122, 255, 0.6));
 }
 
-.tab svg {
-  width: 18px;
-  height: 18px;
+.logo-text {
+  letter-spacing: 0.5px;
 }

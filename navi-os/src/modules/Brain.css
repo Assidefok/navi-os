@@ -186,3 +186,618 @@
   font-size: 14px;
   color: rgba(255, 255, 255, 0.9);
 }
+
+/* ─── Brain Nav ─────────────────────────────────────────────────────────────── */
+
+.brain-nav {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.brain-nav-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 10px 18px;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.brain-nav-btn:hover {
+  background: rgba(0, 180, 216, 0.1);
+  border-color: rgba(0, 180, 216, 0.3);
+  color: #fff;
+}
+
+.brain-nav-btn.active {
+  background: rgba(0, 180, 216, 0.15);
+  border-color: rgba(0, 180, 216, 0.4);
+  color: var(--brain-sky);
+}
+
+.brain-content {
+  min-height: 300px;
+}
+
+/* ─── Memory Viewer ──────────────────────────────────────────────────────────── */
+
+.memory-viewer {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  height: 70vh;
+  gap: 0;
+}
+
+.file-browser {
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.browser-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.browser-header h4 {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.file-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.file-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.file-item:hover {
+  background: rgba(0, 180, 216, 0.1);
+}
+
+.file-item.active {
+  background: rgba(0, 180, 216, 0.15);
+  border: 1px solid rgba(0, 180, 216, 0.2);
+}
+
+.pin-icon {
+  color: var(--brain-sky);
+  flex-shrink: 0;
+}
+
+.file-name {
+  flex: 1;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.file-date {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.35);
+  flex-shrink: 0;
+}
+
+.markdown-preview {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.preview-title {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.preview-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 13px;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.preview-content h2 { font-size: 20px; margin-bottom: 16px; color: #fff; }
+.preview-content h3 { font-size: 16px; margin-bottom: 12px; color: var(--brain-sky); }
+.preview-content h4 { font-size: 14px; margin-bottom: 8px; color: rgba(255, 255, 255, 0.7); }
+.preview-content li { margin-left: 20px; margin-bottom: 4px; }
+.preview-content p { margin-bottom: 8px; }
+.preview-content table { border-collapse: collapse; width: 100%; margin: 12px 0; }
+.preview-content td, .preview-content th { border: 1px solid rgba(255, 255, 255, 0.15); padding: 6px 10px; font-size: 12px; }
+.preview-content th { background: rgba(0, 180, 216, 0.1); color: var(--brain-sky); }
+
+.empty-preview {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.empty-preview p { font-family: 'Ubuntu', sans-serif; font-size: 14px; }
+
+.icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.4);
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s;
+}
+
+.icon-btn:hover { color: #fff; }
+
+/* ─── Briefs Section ────────────────────────────────────────────────────────── */
+
+.briefs-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.section-stats {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.stat {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.briefs-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.brief-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 18px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.brief-card:hover {
+  background: rgba(0, 180, 216, 0.08);
+  border-color: rgba(0, 180, 216, 0.25);
+  transform: translateY(-1px);
+}
+
+.brief-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.brief-date {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.status-badge {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  text-transform: uppercase;
+}
+
+.status-badge.delivered {
+  background: rgba(0, 255, 65, 0.15);
+  color: #00ff41;
+}
+
+.status-badge.pending {
+  background: rgba(255, 184, 0, 0.15);
+  color: #ffb800;
+}
+
+.brief-title {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.brief-preview {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+  line-height: 1.5;
+}
+
+.memory-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+}
+
+.click-to-open {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  padding: 40px;
+  border-radius: 20px;
+  border: 2px dashed rgba(0, 180, 216, 0.3);
+  transition: all 0.3s;
+  text-align: center;
+}
+
+.click-to-open:hover {
+  background: rgba(0, 180, 216, 0.05);
+  border-color: rgba(0, 180, 216, 0.5);
+}
+
+.click-to-open h3 {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 18px;
+  color: #fff;
+}
+
+.click-to-open p {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.open-link {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 12px;
+  color: var(--brain-sky);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ─── Skills Directory ──────────────────────────────────────────────────────── */
+
+.skills-directory {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.tab-bar {
+  display: flex;
+  gap: 8px;
+}
+
+.tab {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 8px 16px;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.tab:hover {
+  background: rgba(0, 180, 216, 0.1);
+  color: #fff;
+}
+
+.tab.active {
+  background: rgba(0, 180, 216, 0.15);
+  border-color: rgba(0, 180, 216, 0.3);
+  color: var(--brain-sky);
+}
+
+.tab-count {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2px 7px;
+  border-radius: 10px;
+  font-size: 10px;
+}
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+.skill-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 16px;
+  transition: all 0.2s;
+}
+
+.skill-card:hover {
+  background: rgba(0, 180, 216, 0.06);
+  border-color: rgba(0, 180, 216, 0.2);
+}
+
+.skill-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.skill-name {
+  flex: 1;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+}
+
+.skill-status {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 5px;
+  text-transform: uppercase;
+}
+
+.skill-status.active {
+  background: rgba(0, 255, 65, 0.12);
+  color: #00ff41;
+}
+
+.skill-status.deprecated {
+  background: rgba(255, 100, 100, 0.12);
+  color: #ff6b6b;
+}
+
+.skill-meta {
+  display: flex;
+  gap: 12px;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.35);
+  flex-wrap: wrap;
+}
+
+/* ─── Cron Dashboard ─────────────────────────────────────────────────────────── */
+
+.cron-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cron-jobs-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+}
+
+.cron-job-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 16px;
+  transition: all 0.2s;
+}
+
+.cron-job-card.healthy {
+  border-left: 3px solid #00ff41;
+}
+
+.cron-job-card.failed {
+  border-left: 3px solid #ff6b6b;
+}
+
+.cron-job-card.disabled {
+  border-left: 3px solid #606070;
+}
+
+.cron-job-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.cron-job-name {
+  flex: 1;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+}
+
+.cron-status-label {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 5px;
+  text-transform: uppercase;
+}
+
+.cron-status-label.healthy { background: rgba(0, 255, 65, 0.12); color: #00ff41; }
+.cron-status-label.failed { background: rgba(255, 100, 100, 0.12); color: #ff6b6b; }
+.cron-status-label.disabled { background: rgba(255, 255, 255, 0.08); color: #a0a0b0; }
+
+.cron-job-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.meta-row {
+  display: flex;
+  gap: 8px;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+}
+
+.meta-label {
+  color: rgba(255, 255, 255, 0.4);
+  min-width: 65px;
+}
+
+.meta-value {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.meta-row.error .meta-value {
+  color: #ff6b6b;
+}
+
+.empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px;
+  color: rgba(255, 255, 255, 0.3);
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 14px;
+}
+
+/* Color helpers */
+.green { color: #00ff41; }
+.amber { color: #ffb800; }
+.red { color: #ff6b6b; }
+.gray { color: #a0a0b0; }
+.sky { color: #00b4d8; }
+.purple { color: #b388ff; }
+
+/* ─── Brain Command Center ───────────────────────────────────────────────────── */
+
+.brain-command-center {
+  padding: 4px 0;
+}
+
+.tiles-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 640px) {
+  .tiles-grid { grid-template-columns: 1fr; }
+}
+
+.brain-tile {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.brain-tile:hover {
+  background: rgba(0, 180, 216, 0.08);
+  border-color: rgba(0, 180, 216, 0.25);
+  transform: translateY(-1px);
+}
+
+.tile-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.tile-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.tile-info h3 {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.tile-count {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.tile-latest {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tile-arrow {
+  color: rgba(255, 255, 255, 0.3);
+  flex-shrink: 0;
+}
