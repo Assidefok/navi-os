@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import {
   ChevronDown, ChevronUp, ChevronRight, Cpu, MessageSquare, Clock, Bot, Sparkles,
   Moon, RefreshCw, CheckCircle2, AlertCircle, Loader2, Wifi, WifiOff,
@@ -41,6 +41,7 @@ function SessionMessage({ message }) {
   const role = message.role || 'unknown'
   const isUser = role === 'user'
   const isToolResult = role === 'toolResult'
+  const [expanded, setExpanded] = useState(!isToolResult)
   
   const getRoleLabel = () => {
     switch (role) {
@@ -59,28 +60,42 @@ function SessionMessage({ message }) {
     } catch { return null }
   }
   
-  // Clean content - truncate if too long
-  const content = typeof message.content === 'string' 
+  // Clean content
+  const rawContent = typeof message.content === 'string' 
     ? message.content.trim()
     : String(message.content || '')
   
-  const displayContent = content.length > 2000 
-    ? content.substring(0, 2000) + '...' 
-    : content
+  // Truncate tool results when collapsed
+  const isLongTool = isToolResult && rawContent.length > 150
+  const displayContent = (!expanded && isLongTool) 
+    ? rawContent.substring(0, 150) + '...'
+    : rawContent
+  
+  const toggleExpand = (e) => {
+    e.stopPropagation()
+    setExpanded(!expanded)
+  }
   
   return (
     <div className={`session-message ${isUser ? 'user' : isToolResult ? 'toolResult' : 'assistant'}`}>
       <div className="message-avatar">
-        {isUser ? <User size={16} /> : isToolResult ? '🔧' : <Bot size={16} />}
+        {isUser ? <User size={16} /> : isToolResult ? <Zap size={14} /> : <Bot size={16} />}
       </div>
       <div className="message-body">
-        <span className="message-role">{getRoleLabel()}</span>
-        <div className="message-content">
+        <div className="message-header">
+          <span className="message-role">{getRoleLabel()}</span>
+          {isToolResult && isLongTool && (
+            <button className="expand-btn" onClick={toggleExpand}>
+              {expanded ? '▲ Reduir' : '▼ Ampliar'}
+            </button>
+          )}
+          {message.timestamp && (
+            <span className="message-timestamp">{formatTimestamp(message.timestamp)}</span>
+          )}
+        </div>
+        <div className={`message-content ${!expanded && isLongTool ? 'truncated' : ''}`}>
           {renderMarkdown(displayContent)}
         </div>
-        {message.timestamp && (
-          <div className="message-timestamp">{formatTimestamp(message.timestamp)}</div>
-        )}
       </div>
     </div>
   )
@@ -91,7 +106,7 @@ function SessionMessage({ message }) {
 function SessionDetail({ session, onBack }) {
   const [messages, setMessages] = useState([])
   const [loading, setLoading] = useState(true)
-  const messagesEndRef = { current: null }
+  const messagesEndRef = useRef(null)
 
   useEffect(() => {
     fetch(`/api/session/${session.id}/messages`)

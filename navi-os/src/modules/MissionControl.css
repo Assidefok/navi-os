@@ -300,18 +300,23 @@
 .session-detail {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 200px);
-  max-height: 700px;
-  min-height: 400px;
+  height: calc(100vh - 180px);
+  max-height: 750px;
+  min-height: 450px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .session-detail-header {
   display: flex;
   align-items: center;
   gap: 14px;
-  padding-bottom: 14px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 14px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 16px 16px 0 0;
 }
 
 .detail-back-btn {
@@ -339,9 +344,17 @@
   align-items: center;
   gap: 10px;
   font-family: 'Ubuntu', sans-serif;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 500;
   color: #fff;
+  flex: 1;
+  min-width: 0;
+}
+
+.session-detail-title span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .session-type-badge {
@@ -352,6 +365,7 @@
   background: rgba(0, 180, 216, 0.15);
   color: #00b4d8;
   text-transform: uppercase;
+  flex-shrink: 0;
 }
 
 .session-type-badge.cron {
@@ -366,19 +380,19 @@
 
 .session-meta-row {
   display: flex;
-  gap: 20px;
+  gap: 16px;
   flex-wrap: wrap;
-  padding: 10px 14px;
-  background: rgba(255, 255, 255, 0.04);
-  border-radius: 10px;
+  padding: 12px 18px;
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
   font-family: 'Ubuntu Mono', monospace;
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.6);
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
   flex-shrink: 0;
 }
 
 .session-meta-row strong {
-  color: #fff;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 /* Chat Messages Area */
@@ -387,13 +401,13 @@
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 16px 0;
+  gap: 12px;
+  padding: 16px 18px;
   scroll-behavior: smooth;
 }
 
 .session-messages::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 
 .session-messages::-webkit-scrollbar-track {
@@ -401,12 +415,12 @@
 }
 
 .session-messages::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
 }
 
 .session-messages::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .session-loading, .session-empty {
@@ -417,6 +431,7 @@
   color: rgba(255, 255, 255, 0.4);
   font-size: 13px;
   padding: 40px;
+  flex-direction: column;
 }
 
 /* Webchat-style Messages */
@@ -555,6 +570,165 @@
   font-size: 9px;
   color: rgba(255, 255, 255, 0.25);
   margin-top: 4px;
+}
+
+/* Expand/Collapse Button */
+.message-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.expand-btn {
+  background: rgba(255, 184, 0, 0.15);
+  border: 1px solid rgba(255, 184, 0, 0.25);
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 10px;
+  color: #ffb800;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-left: auto;
+}
+
+.expand-btn:hover {
+  background: rgba(255, 184, 0, 0.25);
+}
+
+.message-content.truncated {
+  opacity: 0.7;
+}
+
+/* Code blocks in messages - better markdown rendering */
+.message-content h1,
+.message-content h2,
+.message-content h3,
+.message-content h4 {
+  font-family: 'Ubuntu', sans-serif;
+  color: rgba(255, 255, 255, 0.95);
+  margin: 12px 0 8px 0;
+}
+
+.message-content h1 { font-size: 18px; }
+.message-content h2 { font-size: 16px; }
+.message-content h3 { font-size: 14px; }
+.message-content h4 { font-size: 13px; }
+
+.message-content ul,
+.message-content ol {
+  margin: 8px 0;
+  padding-left: 20px;
+}
+
+.message-content li {
+  margin: 4px 0;
+}
+
+.message-content strong {
+  color: #fff;
+  font-weight: 600;
+}
+
+.message-content em {
+  color: rgba(255, 255, 255, 0.8);
+  font-style: italic;
+}
+
+.message-content blockquote {
+  border-left: 3px solid rgba(255, 184, 0, 0.4);
+  margin: 8px 0;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 0 8px 8px 0;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.message-content hr {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin: 12px 0;
+}
+
+.message-content a {
+  color: #00b4d8;
+  text-decoration: none;
+}
+
+.message-content a:hover {
+  text-decoration: underline;
+}
+
+/* Table styles */
+.message-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 8px 0;
+  font-size: 12px;
+}
+
+.message-content th,
+.message-content td {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 6px 10px;
+  text-align: left;
+}
+
+.message-content th {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
+
+/* Better code blocks */
+.message-content pre {
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 14px;
+  overflow-x: auto;
+  margin: 10px 0;
+  font-size: 12px;
+}
+
+.message-content pre code {
+  background: transparent;
+  padding: 0;
+  color: #e0e0e0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.message-content code {
+  background: rgba(0, 0, 0, 0.4);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+  color: #ffb800;
+}
+
+/* Inline code - no background */
+.message-content p > code,
+.message-content li > code {
+  background: rgba(255, 184, 0, 0.1);
+  color: #ffb800;
+}
+
+/* Smooth animations */
+.session-message {
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Model Right indicator */

@@ -628,6 +628,24 @@ app.get('/api/backups', (req, res) => {
   }
 })
 
+app.post('/api/backups/create', (req, res) => {
+  try {
+    const type = String(req.body?.type || 'workspace')
+    const label = String(req.body?.label || 'ui')
+    const safeType = ['navi-os', 'workspace', 'config', 'full'].includes(type) ? type : 'workspace'
+    const safeLabel = label.replace(/[^a-zA-Z0-9._-]/g, '-').slice(0, 40) || 'ui'
+    const script = join(WORKSPACE, 'scripts', '06-backup-create.sh')
+    const prune = join(WORKSPACE, 'scripts', '09-backup-prune.sh')
+    const archive = execSync(`${script} ${safeType} ${safeLabel}`, { encoding: 'utf-8', timeout: 120000 }).trim()
+    if (existsSync(prune)) {
+      execSync(`${prune} 7`, { encoding: 'utf-8', timeout: 30000 })
+    }
+    res.json({ ok: true, archive, type: safeType, label: safeLabel })
+  } catch (err) {
+    res.status(500).json({ ok: false, error: err.message })
+  }
+})
+
 // ─── Serve static React build ─────────────────────────────────────────────────
 
 const distPath = join(__dirname, 'dist')

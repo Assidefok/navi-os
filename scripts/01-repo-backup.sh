@@ -10,6 +10,11 @@ LOG_FILE="$WORKSPACE/memory/$(date +%Y-%m-%d)-backup.md"
 
 cd "$WORKSPACE"
 
+# Create encapsulated checkpoint before git backup
+if [ -x "$WORKSPACE/scripts/10-safe-change-checkpoint.sh" ]; then
+  "$WORKSPACE/scripts/10-safe-change-checkpoint.sh" repo-backup >/dev/null 2>&1 || true
+fi
+
 # Resolve branch to push (handle master->main transition)
 BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "master")
 # Default to master if not on a recognized branch

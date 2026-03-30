@@ -23,6 +23,78 @@
   gap: 8px;
 }
 
+.section-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.backup-actions-inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.backup-select {
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.85);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 12px;
+}
+
+.backup-create-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(48, 209, 88, 0.14);
+  color: #30d158;
+  border: 1px solid rgba(48, 209, 88, 0.25);
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.backup-create-btn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.restore-points-list {
+  margin-top: 8px;
+  display: grid;
+  gap: 8px;
+}
+
+.restore-point-item {
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.restore-point-main {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,255,255,0.9);
+}
+
+.restore-point-meta {
+  margin-top: 4px;
+  font-size: 11px;
+  color: rgba(255,255,255,0.45);
+  font-family: 'Ubuntu Mono', monospace;
+}
+
+.backup-message {
+  color: rgba(255,255,255,0.8);
+}
+
 /* Cards */
 .backup-card, .push-card {
   background: rgba(255, 255, 255, 0.04);

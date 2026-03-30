@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { GitCommit, CheckCircle2, XCircle, AlertCircle, HardDrive, Loader2, Upload, X, FileText, GitBranch } from 'lucide-react'
+import { GitCommit, CheckCircle2, XCircle, AlertCircle, HardDrive, Loader2, Upload, X, FileText, GitBranch, Plus, ArchiveRestore } from 'lucide-react'
 import './Sync.css'
 
 function formatDate(iso) {
@@ -28,8 +28,12 @@ function BackupStatus() {
   const [backup, setBackup] = useState(null)
   const [snapshots, setSnapshots] = useState([])
   const [loading, setLoading] = useState(true)
+  const [creating, setCreating] = useState(false)
+  const [createType, setCreateType] = useState('workspace')
+  const [message, setMessage] = useState('')
 
-  useEffect(() => {
+  const load = () => {
+    setLoading(true)
     Promise.all([
       fetch('/api/backup-status').then(r => r.ok ? r.json() : { status: 'unknown', note: 'No disponible' }),
       fetch('/api/backups').then(r => r.ok ? r.json() : { backups: [] }),
@@ -43,13 +47,52 @@ function BackupStatus() {
         setSnapshots([])
       })
       .finally(() => setLoading(false))
+  }
+
+  useEffect(() => {
+    load()
   }, [])
+
+  const createBackup = async () => {
+    setCreating(true)
+    setMessage('')
+    try {
+      const res = await fetch('/api/backups/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: createType, label: 'ui' })
+      })
+      const data = await res.json()
+      if (!res.ok || !data.ok) throw new Error(data.error || 'Backup failed')
+      setMessage(`Backup creat: ${data.type}`)
+      load()
+    } catch (err) {
+      setMessage(`Error: ${err.message}`)
+    } finally {
+      setCreating(false)
+    }
+  }
 
   if (loading) return <div className="sync-loading"><Loader2 size={16} className="spin" /></div>
 
   return (
     <div className="sync-section">
-      <h3 className="section-title"><HardDrive size={14} /> Backup</h3>
+      <div className="section-title-row">
+        <h3 className="section-title"><HardDrive size={14} /> Backup</h3>
+        <div className="backup-actions-inline">
+          <select value={createType} onChange={e => setCreateType(e.target.value)} className="backup-select">
+            <option value="workspace">workspace</option>
+            <option value="navi-os">navi-os</option>
+            <option value="config">config</option>
+            <option value="full">full</option>
+          </select>
+          <button className="backup-create-btn" onClick={createBackup} disabled={creating}>
+            {creating ? <Loader2 size={14} className="spin" /> : <Plus size={14} />}
+            Crear backup
+          </button>
+        </div>
+      </div>
+
       <div className="backup-card">
         <div className="backup-status-row">
           <span className="backup-label">Estat</span>
@@ -77,13 +120,20 @@ function BackupStatus() {
         {backup?.note && (
           <div className="backup-note">{backup.note}</div>
         )}
+        {message && (
+          <div className="backup-note backup-message">{message}</div>
+        )}
         {snapshots.length > 0 && (
           <div className="backup-note" style={{ marginTop: 12 }}>
             <strong>Restore points:</strong>
-            <div style={{ marginTop: 8, display: 'grid', gap: 6 }}>
-              {snapshots.slice(0, 5).map(s => (
-                <div key={s.name} className="mono" style={{ fontSize: '12px', opacity: 0.9 }}>
-                  {s.createdAt} · {s.type} · {s.size} · {s.name}
+            <div className="restore-points-list">
+              {snapshots.slice(0, 7).map(s => (
+                <div key={s.name} className="restore-point-item">
+                  <div className="restore-point-main">
+                    <ArchiveRestore size={12} />
+                    <span className="mono">{s.name}</span>
+                  </div>
+                  <div className="restore-point-meta">{s.createdAt} · {s.type} · {s.size}</div>
                 </div>
               ))}
             </div>
@@ -93,8 +143,6 @@ function BackupStatus() {
     </div>
   )
 }
-
-// ─── Commit Detail Modal ─────────────────────────────────────────────────────────
 
 function CommitDetail({ commitHash, onClose }) {
   const [detail, setDetail] = useState(null)
@@ -114,7 +162,7 @@ function CommitDetail({ commitHash, onClose }) {
           <h3><GitCommit size={18} /> Commit Detail</h3>
           <button className="commit-detail-close" onClick={onClose}><X size={18} /></button>
         </div>
-        
+
         {loading ? (
           <div className="commit-detail-loading"><Loader2 size={24} className="spin" /></div>
         ) : detail?.error ? (
@@ -162,8 +210,6 @@ function CommitDetail({ commitHash, onClose }) {
     </div>
   )
 }
-
-// ─── GitLog ───────────────────────────────────────────────────────────────────
 
 function GitLog() {
   const [commits, setCommits] = useState([])
