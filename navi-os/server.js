@@ -157,6 +157,7 @@ app.get('/api/sessions', (req, res) => {
           startedAt: data.startedAt,
           endedAt: data.endedAt,
           channel: data.lastChannel || 'unknown',
+          sessionFile: data.sessionFile || null,
         })
       } else if (key.includes(':cron:')) {
         const nameMatch = key.match(/cron:([^:]+)/)
@@ -171,6 +172,7 @@ app.get('/api/sessions', (req, res) => {
           startedAt: data.startedAt,
           endedAt: data.endedAt,
           channel: data.lastChannel || 'system',
+          sessionFile: data.sessionFile || null,
         })
       } else if (key.includes(':main:')) {
         sessions.push({
@@ -184,6 +186,7 @@ app.get('/api/sessions', (req, res) => {
           startedAt: data.startedAt,
           endedAt: data.endedAt,
           channel: data.lastChannel || 'webchat',
+          sessionFile: data.sessionFile || null,
         })
       }
     }
