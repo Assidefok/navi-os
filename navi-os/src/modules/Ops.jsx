@@ -136,6 +136,132 @@ function SystemModules() {
   )
 }
 
+// ─── Health Errors Summary ─────────────────────────────────────────────────────
+
+function HealthErrors() {
+  const [errors, setErrors] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const [cronRes, agentsRes, sessionsRes, auditRes] = await Promise.all([
+          fetch('/api/cron-health').catch(() => null),
+          fetch('/api/agents').catch(() => null),
+          fetch('/api/sessions').catch(() => null),
+          fetch('/api/security-audit').catch(() => null),
+        ])
+
+        const allErrors = []
+
+        // Cron failures
+        if (cronRes?.ok) {
+          const cronData = await cronRes.json()
+          ;(cronData.jobs || []).forEach(j => {
+            if (j.status === 'failed') {
+              allErrors.push({
+                source: 'Cron',
+                name: j.name,
+                message: j.error || 'Job failed',
+                severity: 'error',
+                time: j.lastRun
+              })
+            }
+          })
+        }
+
+        // Agent failures
+        if (agentsRes?.ok) {
+          const agentsData = await agentsRes.json()
+          ;(agentsData.agents || []).forEach(a => {
+            if (a.status === 'error' || a.status === 'failed') {
+              allErrors.push({
+                source: 'Agent',
+                name: a.name || a.id,
+                message: a.error || 'Agent in error state',
+                severity: 'error',
+                time: null
+              })
+            }
+          })
+        }
+
+        // Session errors
+        if (sessionsRes?.ok) {
+          const sessionsData = await sessionsRes.json()
+          ;(sessionsData.sessions || []).forEach(s => {
+            if (s.status === 'error' || s.status === 'failed') {
+              allErrors.push({
+                source: 'Session',
+                name: s.id,
+                message: s.error || 'Session error',
+                severity: 'error',
+                time: s.startedAt
+              })
+            }
+          })
+        }
+
+        // Security audit issues
+        if (auditRes?.ok) {
+          const auditData = await auditRes.json()
+          if (auditData.warn > 0 || auditData.critical > 0) {
+            allErrors.push({
+              source: 'Security',
+              name: 'Security Audit',
+              message: `${auditData.critical} critical, ${auditData.warn} warnings`,
+              severity: auditData.critical > 0 ? 'critical' : 'warn',
+              time: null
+            })
+          }
+        }
+
+        setErrors(allErrors)
+      } catch {}
+      setLoading(false)
+    }
+    load()
+  }, [])
+
+  const formatTime = (iso) => {
+    if (!iso) return '—'
+    try {
+      return new Date(iso).toLocaleString('es-ES', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+    } catch { return '—' }
+  }
+
+  if (loading) return null
+
+  return (
+    <div className="health-errors">
+      <div className="health-errors-header">
+        <AlertCircle size={16} style={{ color: errors.length > 0 ? '#ff453a' : '#30d158' }} />
+        <h3>Resum d'errors</h3>
+        <span className="errors-count">{errors.length} error(s)</span>
+      </div>
+      {errors.length === 0 ? (
+        <div className="health-errors-empty">
+          <CheckCircle2 size={20} style={{ color: '#30d158' }} />
+          <span>Cap error detectat al sistema</span>
+        </div>
+      ) : (
+        <div className="errors-list">
+          {errors.map((err, i) => (
+            <div key={i} className={`error-item ${err.severity}`}>
+              <div className="error-header">
+                <span className="error-source">{err.source}</span>
+                <span className="error-name">{err.name}</span>
+                <span className="error-time">{formatTime(err.time)}</span>
+              </div>
+              <p className="error-message">{err.message}</p>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
 // ─── Main Ops ─────────────────────────────────────────────────────────────────
 
 export default function Ops() {
@@ -211,6 +337,7 @@ export default function Ops() {
       {viewMode === 'hub' && !activePanel && (
         <>
           {(viewMode === 'hub' || viewMode === 'orgchart') && <OvernightSummary />}
+          <HealthErrors />
           <MissionControl />
 
           {/* Real Status and Files panels */}

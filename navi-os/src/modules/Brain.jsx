@@ -4,22 +4,20 @@ import { useState, useEffect, useCallback } from 'react'
 import {
   Brain as BrainIcon, FolderOpen, FileText, Clock, Search, BookOpen,
   ChevronRight, Pin, X, CheckCircle2,
-  AlertCircle, MinusCircle, RefreshCw, Users
+  AlertCircle, MinusCircle, RefreshCw, Users, Shield, ShieldCheck, ShieldAlert, ShieldX,
+  Play, Loader2, Zap, Globe, Lock, Eye, MessageSquare, Sparkles
 } from 'lucide-react'
 import Modal from '../components/ui/Modal'
 import FeatureCard from '../components/ui/FeatureCard'
 import TeamOverview from '../components/TeamOverview'
+import MissionControl from './MissionControl'
 import './Brain.css'
 
 const API_BASE = '/api'
 
 // ─── Markdown Renderer ─────────────────────────────────────────────────────────
 
-// Configure marked for clean output
-marked.setOptions({
-  breaks: true,
-  gfm: true,
-})
+marked.setOptions({ breaks: true, gfm: true })
 
 function renderMarkdown(text) {
   if (!text) return <p className="empty-markdown">No content</p>
@@ -27,9 +25,26 @@ function renderMarkdown(text) {
     const html = marked.parse(text)
     const sanitized = DOMPurify.sanitize(html)
     return <div className="markdown-body" dangerouslySetInnerHTML={{ __html: sanitized }} />
-  } catch {
-    return <p>{text}</p>
+  } catch { return <p>{text}</p> }
+}
+
+// ─── Security Badge ────────────────────────────────────────────────────────────
+
+function SecurityBadge({ level }) {
+  const config = {
+    safe: { icon: ShieldCheck, color: '#30d158', label: 'Segura' },
+    medium: { icon: ShieldAlert, color: '#ffb800', label: 'Mig segura' },
+    unverified: { icon: Shield, color: '#ff9f0a', label: 'No verificada' },
+    unsafe: { icon: ShieldX, color: '#ff453a', label: 'No segura' },
   }
+  const c = config[level] || config.unverified
+  const Icon = c.icon
+  return (
+    <span className="security-badge" style={{ color: c.color, background: `${c.color}20` }} title={c.label}>
+      <Icon size={12} />
+      {c.label}
+    </span>
+  )
 }
 
 // ─── Section: Memory Viewer ────────────────────────────────────────────────────
@@ -46,9 +61,7 @@ function MemoryViewer({ onClose }) {
       const res = await fetch(`${API_BASE}/memory/files`)
       const data = await res.json()
       setFiles(data.files || [])
-    } catch {
-      setFiles([])
-    }
+    } catch { setFiles([]) }
     setLoading(false)
   }, [])
 
@@ -60,9 +73,7 @@ function MemoryViewer({ onClose }) {
       const res = await fetch(`${API_BASE}/memory/file?path=${encodeURIComponent(file.name)}`)
       const data = await res.json()
       setContent(data.content || '')
-    } catch {
-      setContent('# Error loading file\nCould not read file from server.')
-    }
+    } catch { setContent('# Error loading file\nCould not read file from server.') }
   }, [])
 
   const formatDate = (iso) => {
@@ -71,13 +82,10 @@ function MemoryViewer({ onClose }) {
 
   return (
     <div className="memory-viewer">
-      {/* File Browser */}
       <div className="file-browser">
         <div className="browser-header">
           <h4>Memory Files</h4>
-          <button className="icon-btn" onClick={loadFiles} title="Refresh">
-            <RefreshCw size={14} />
-          </button>
+          <button className="icon-btn" onClick={loadFiles} title="Refresh"><RefreshCw size={14} /></button>
         </div>
         <div className="file-list">
           {files.map(file => (
@@ -91,13 +99,9 @@ function MemoryViewer({ onClose }) {
               <span className="file-date">{formatDate(file.modified)}</span>
             </div>
           ))}
-          {files.length === 0 && !loading && (
-            <div className="empty-state">No memory files found</div>
-          )}
+          {files.length === 0 && !loading && <div className="empty-state">No memory files found</div>}
         </div>
       </div>
-
-      {/* Markdown Preview */}
       <div className="markdown-preview">
         {selectedFile ? (
           <>
@@ -106,9 +110,7 @@ function MemoryViewer({ onClose }) {
                 {selectedFile.pinned && <Pin size={14} className="pin-icon" />}
                 {selectedFile.name}
               </span>
-              <button className="icon-btn" onClick={onClose}>
-                <X size={14} />
-              </button>
+              <button className="icon-btn" onClick={onClose}><X size={14} /></button>
             </div>
             <div className="preview-content markdown-content">
               {renderMarkdown(content)}
@@ -125,7 +127,7 @@ function MemoryViewer({ onClose }) {
   )
 }
 
-// ─── Section: Morning Briefs Archive ─────────────────────────────────────────
+// ─── Section: Morning Briefs Archive ──────────────────────────────────────────
 
 function MorningBriefsSection() {
   const [briefs, setBriefs] = useState([])
@@ -147,9 +149,7 @@ function MorningBriefsSection() {
       const res = await fetch(`${API_BASE}/memory/file?path=${encodeURIComponent(brief.id)}`)
       const data = await res.json()
       setBriefContent(data.content || '')
-    } catch {
-      setBriefContent('# Error\nCould not load brief.')
-    }
+    } catch { setBriefContent('# Error\nCould not load brief.') }
     setBriefModal(true)
   }
 
@@ -171,23 +171,16 @@ function MorningBriefsSection() {
           <div key={brief.id} className="brief-card" onClick={() => openBrief(brief)}>
             <div className="brief-card-header">
               <span className="brief-date">{brief.date}</span>
-              <span className={`status-badge ${brief.status}`}>
-                {brief.status === 'delivered' ? 'Delivered' : 'Pending'}
-              </span>
+              <span className={`status-badge ${brief.status}`}>{brief.status === 'delivered' ? 'Delivered' : 'Pending'}</span>
             </div>
             <h4 className="brief-title">{brief.title}</h4>
             {brief.preview && <p className="brief-preview">{brief.preview}...</p>}
           </div>
         ))}
-        {briefs.length === 0 && !loading && (
-          <div className="empty-state">No daily briefs found</div>
-        )}
+        {briefs.length === 0 && !loading && <div className="empty-state">No daily briefs found</div>}
       </div>
-
       <Modal isOpen={briefModal} onClose={() => setBriefModal(false)} title={selectedBrief?.title} width="65%" height="75%">
-        <div className="brief-content markdown-content">
-          {renderMarkdown(briefContent)}
-        </div>
+        <div className="brief-content markdown-content">{renderMarkdown(briefContent)}</div>
       </Modal>
     </div>
   )
@@ -195,10 +188,93 @@ function MorningBriefsSection() {
 
 // ─── Section: Skills Directory ────────────────────────────────────────────────
 
+function SkillDetailModal({ skill, onClose }) {
+  const [content, setContent] = useState('')
+  const [loading, setLoading] = useState(true)
+  const [enabled, setEnabled] = useState(skill.enabled !== false)
+
+  useEffect(() => {
+    fetch(`${API_BASE}/skill-content?name=${encodeURIComponent(skill.name)}`)
+      .then(r => r.ok ? r.text() : '')
+      .then(t => { setContent(t); setLoading(false) })
+      .catch(() => setLoading(false))
+  }, [skill.name])
+
+  const handleToggle = () => {
+    const newVal = !enabled
+    setEnabled(newVal)
+    fetch('/api/skill-toggle', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: skill.name, enabled: newVal })
+    }).catch(() => {})
+  }
+
+  const getSecurityLevel = () => {
+    if (skill.trusted) return 'safe'
+    if (skill.source === 'built-in') return 'medium'
+    if (skill.source === 'clawhub') return 'unverified'
+    return 'unsafe'
+  }
+
+  return (
+    <div className="skill-modal-backdrop" onClick={onClose}>
+      <div className="skill-modal" onClick={e => e.stopPropagation()}>
+        <div className="skill-modal-header">
+          <div className="skill-modal-title">
+            <BookOpen size={20} className={skill.source === 'custom' ? 'green' : 'sky'} />
+            <span>{skill.name}</span>
+          </div>
+          <button className="skill-modal-close" onClick={onClose}><X size={18} /></button>
+        </div>
+        <div className="skill-modal-meta">
+          <SecurityBadge level={getSecurityLevel()} />
+          {skill.updateAvailable && (
+            <span className="update-badge"><RefreshCw size={11} /> Update available</span>
+          )}
+          <span className="skill-source-tag">{skill.source || 'unknown'}</span>
+          <span className="skill-category-tag">{skill.category || '—'}</span>
+        </div>
+        <div className="skill-toggle-row">
+          <span className="toggle-label">{enabled ? 'Habilitada' : 'Deshabilitada'}</span>
+          <button
+            className={`skill-toggle-btn ${enabled ? 'active' : ''}`}
+            onClick={handleToggle}
+            role="switch"
+            aria-checked={enabled}
+          >
+            <span className="toggle-knob" />
+          </button>
+        </div>
+        <div className="skill-modal-body">
+          {loading ? (
+            <div className="skill-loading"><Loader2 size={20} className="spin" /> Carregant descripcio...</div>
+          ) : content ? (
+            <div className="skill-content markdown-body">
+              {(() => {
+                try {
+                  const html = marked.parse(content)
+                  return <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(html) }} />
+                } catch { return <pre>{content}</pre> }
+              })()}
+            </div>
+          ) : (
+            <div className="skill-no-content">
+              <FileText size={32} style={{ opacity: 0.3 }} />
+              <p>No s'ha trobat descripcio per a aquest skill</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function SkillsDirectory() {
   const [skills, setSkills] = useState([])
   const [tab, setTab] = useState('all')
   const [loading, setLoading] = useState(true)
+  const [selectedSkill, setSelectedSkill] = useState(null)
 
   useEffect(() => {
     fetch(`${API_BASE}/skills`)
@@ -206,6 +282,13 @@ function SkillsDirectory() {
       .then(d => { setSkills(d.skills || []); setLoading(false) })
       .catch(() => setLoading(false))
   }, [])
+
+  const getSecurityLevel = (skill) => {
+    if (skill.trusted) return 'safe'
+    if (skill.source === 'built-in') return 'medium'
+    if (skill.source === 'clawhub') return 'unverified'
+    return 'unsafe'
+  }
 
   const filtered = tab === 'all' ? skills : skills.filter(s => s.source === tab)
 
@@ -221,32 +304,138 @@ function SkillsDirectory() {
       </div>
       <div className="skills-grid">
         {filtered.map(skill => (
-          <div key={skill.name} className="skill-card">
+          <div
+            key={skill.name}
+            className="skill-card clickable"
+            onClick={() => setSelectedSkill(skill)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={e => e.key === 'Enter' && setSelectedSkill(skill)}
+          >
             <div className="skill-header">
               <BookOpen size={16} className={skill.source === 'custom' ? 'green' : 'sky'} />
               <span className="skill-name">{skill.name}</span>
-              <span className={`skill-status ${skill.status}`}>{skill.status}</span>
+              <SecurityBadge level={getSecurityLevel(skill)} />
             </div>
             <div className="skill-meta">
-              <span>{skill.category}</span>
-              <span>{skill.owner}</span>
-              <span>{skill.lastUpdated}</span>
+              <span>{skill.category || '—'}</span>
+              <span>{skill.source || 'unknown'}</span>
             </div>
+            {skill.updateAvailable && (
+              <div className="skill-update-indicator">
+                <RefreshCw size={11} /> Update available
+              </div>
+            )}
           </div>
         ))}
         {filtered.length === 0 && !loading && (
           <div className="empty-state">No skills found for this filter</div>
         )}
       </div>
+      {selectedSkill && (
+        <SkillDetailModal skill={selectedSkill} onClose={() => setSelectedSkill(null)} />
+      )}
     </div>
   )
 }
 
 // ─── Section: Cron Health Dashboard ──────────────────────────────────────────
 
+function ForceRunModal({ job, onClose }) {
+  const [running, setRunning] = useState(false)
+  const [result, setResult] = useState(null)
+
+  const handleForceRun = async () => {
+    setRunning(true)
+    setResult(null)
+    try {
+      const res = await fetch('/api/cron-force', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: job.name })
+      })
+      const data = await res.json()
+      setResult({ ok: true, message: data.message || 'Executat correctament' })
+    } catch {
+      setResult({ ok: false, message: 'Error en executar el cron job' })
+    }
+    setRunning(false)
+  }
+
+  const formatDate = (iso) => {
+    if (!iso) return '—'
+    try {
+      return new Date(iso).toLocaleString('es-ES', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+    } catch { return iso }
+  }
+
+  const statusIndicator = () => {
+    if (job.status === 'healthy') return <span className="status-plus ok" title="Executat correctament">+</span>
+    if (job.status === 'failed') return <span className="status-plus error" title="Error">+</span>
+    if (!job.lastRun) return <span className="status-plus pending" title="Mai executat">+</span>
+    return <span className="status-plus idle" title="Inactiu">+</span>
+  }
+
+  return (
+    <div className="cron-modal-backdrop" onClick={onClose}>
+      <div className="cron-modal" onClick={e => e.stopPropagation()}>
+        <div className="cron-modal-header">
+          <div className="cron-modal-title">
+            {statusIndicator()}
+            <span>{job.name}</span>
+          </div>
+          <button className="cron-modal-close" onClick={onClose}><X size={18} /></button>
+        </div>
+        <div className="cron-modal-body">
+          <div className="cron-info-grid">
+            <div className="cron-info-row">
+              <span className="info-label">Estat</span>
+              <span className={`cron-status-label ${job.status}`}>{job.status}</span>
+            </div>
+            <div className="cron-info-row">
+              <span className="info-label">Schedule</span>
+              <span className="info-value">{job.schedule || job.nameLabel || '—'}</span>
+            </div>
+            <div className="cron-info-row">
+              <span className="info-label">Last run</span>
+              <span className="info-value">{formatDate(job.lastRun)}</span>
+            </div>
+            <div className="cron-info-row">
+              <span className="info-label">Next run</span>
+              <span className="info-value">{formatDate(job.nextRun)}</span>
+            </div>
+            {job.error && (
+              <div className="cron-info-row error">
+                <span className="info-label">Error</span>
+                <span className="info-value error">{job.error}</span>
+              </div>
+            )}
+            {job.description && (
+              <div className="cron-info-row">
+                <span className="info-label">Descripcio</span>
+                <span className="info-value">{job.description}</span>
+              </div>
+            )}
+          </div>
+          <button className="force-run-btn" onClick={handleForceRun} disabled={running}>
+            {running ? <><Loader2 size={14} className="spin" /> Executant...</> : <><Play size={14} /> Forçar execució</>}
+          </button>
+          {result && (
+            <div className={`force-result ${result.ok ? 'ok' : 'error'}`}>
+              {result.ok ? <CheckCircle2 size={14} /> : <AlertCircle size={14} />}
+              {result.message}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function CronHealthDashboard() {
   const [jobs, setJobs] = useState([])
   const [loading, setLoading] = useState(true)
+  const [selectedJob, setSelectedJob] = useState(null)
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -263,25 +452,22 @@ function CronHealthDashboard() {
   const stats = {
     healthy: jobs.filter(j => j.status === 'healthy').length,
     failed: jobs.filter(j => j.status === 'failed').length,
+    neverRun: jobs.filter(j => j.status !== 'healthy' && j.status !== 'failed' && !j.lastRun).length,
     disabled: jobs.filter(j => j.status === 'disabled').length,
     total: jobs.length,
   }
 
-  const statusIcon = (status) => {
-    switch (status) {
-      case 'healthy': return <CheckCircle2 size={14} className="green" />
-      case 'failed': return <AlertCircle size={14} className="red" />
-      case 'disabled': return <MinusCircle size={14} className="gray" />
-      default: return <MinusCircle size={14} />
-    }
+  const statusIndicator = (job) => {
+    if (job.status === 'healthy') return <span className="status-plus ok" title="Executat correctament">+</span>
+    if (job.status === 'failed') return <span className="status-plus error" title="Error">+</span>
+    if (!job.lastRun) return <span className="status-plus pending" title="Mai executat">+</span>
+    return <span className="status-plus idle" title="Inactiu">+</span>
   }
 
   const formatDate = (iso) => {
     if (!iso) return '—'
     try {
-      return new Date(iso).toLocaleString('es-ES', {
-        month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
-      })
+      return new Date(iso).toLocaleString('es-ES', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
     } catch { return iso }
   }
 
@@ -290,14 +476,21 @@ function CronHealthDashboard() {
       <div className="section-stats">
         <span className="stat"><CheckCircle2 size={14} className="green" /> {stats.healthy} healthy</span>
         <span className="stat"><AlertCircle size={14} className="red" /> {stats.failed} failed</span>
-        <span className="stat"><MinusCircle size={14} className="gray" /> {stats.disabled} disabled</span>
+        <span className="stat"><MinusCircle size={14} className="amber" /> {stats.neverRun} pendent</span>
         <button className="icon-btn" onClick={load} title="Refresh"><RefreshCw size={14} /></button>
       </div>
       <div className="cron-jobs-list">
         {jobs.map(job => (
-          <div key={job.name} className={`cron-job-card ${job.status}`}>
+          <div
+            key={job.name}
+            className={`cron-job-card ${job.status}`}
+            onClick={() => setSelectedJob(job)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={e => e.key === 'Enter' && setSelectedJob(job)}
+          >
             <div className="cron-job-header">
-              {statusIcon(job.status)}
+              {statusIndicator(job)}
               <span className="cron-job-name">{job.name}</span>
               <span className={`cron-status-label ${job.status}`}>{job.status}</span>
             </div>
@@ -323,6 +516,9 @@ function CronHealthDashboard() {
           <div className="empty-state">No cron jobs found in /workspace/scripts</div>
         )}
       </div>
+      {selectedJob && (
+        <ForceRunModal job={selectedJob} onClose={() => setSelectedJob(null)} />
+      )}
     </div>
   )
 }
@@ -364,7 +560,6 @@ function BrainCommandCenter({ onNavigate }) {
   return (
     <div className="brain-command-center">
       <div className="tiles-grid">
-        {/* Latest Brief Tile */}
         <div className="brain-tile" onClick={() => onNavigate('briefs')}>
           <div className="tile-icon"><Clock size={28} className="sky" /></div>
           <div className="tile-info">
@@ -376,7 +571,7 @@ function BrainCommandCenter({ onNavigate }) {
                   <p className="tile-latest">
                     {todayBrief
                       ? <span className="green">Avui: {latestBrief.title}</span>
-                      : <span className="amber">Pendents: {latestBrief.title}</span>
+                      : <span className="amber">Pendent: {latestBrief.title}</span>
                     }
                   </p>
                 )}
@@ -386,7 +581,6 @@ function BrainCommandCenter({ onNavigate }) {
           <ChevronRight size={18} className="tile-arrow" />
         </div>
 
-        {/* Memory Stats Tile */}
         <div className="brain-tile" onClick={() => onNavigate('memory')}>
           <div className="tile-icon"><FolderOpen size={28} className="green" /></div>
           <div className="tile-info">
@@ -401,7 +595,6 @@ function BrainCommandCenter({ onNavigate }) {
           <ChevronRight size={18} className="tile-arrow" />
         </div>
 
-        {/* Skills Tile */}
         <div className="brain-tile" onClick={() => onNavigate('skills')}>
           <div className="tile-icon"><BookOpen size={28} className="amber" /></div>
           <div className="tile-info">
@@ -416,7 +609,6 @@ function BrainCommandCenter({ onNavigate }) {
           <ChevronRight size={18} className="tile-arrow" />
         </div>
 
-        {/* Cron Health Tile */}
         <div className="brain-tile" onClick={() => onNavigate('cron')}>
           <div className="tile-icon">
             {failedCron > 0
@@ -449,6 +641,7 @@ function BrainCommandCenter({ onNavigate }) {
 
 const SECTIONS = [
   { key: 'command', label: 'Command Center', icon: BrainIcon },
+  { key: 'mission', label: 'Mission Control', icon: Sparkles },
   { key: 'team', label: 'Team', icon: Users },
   { key: 'memory', label: 'Memory', icon: FolderOpen },
   { key: 'briefs', label: 'Briefs', icon: Clock },
@@ -469,7 +662,6 @@ export default function Brain() {
     <div className="module-view brain">
       <h1 className="dashboard-title sky neon-sky">Cervell</h1>
 
-      {/* Section Navigation */}
       <div className="brain-nav">
         {SECTIONS.map(s => (
           <button
@@ -483,7 +675,6 @@ export default function Brain() {
         ))}
       </div>
 
-      {/* Memory Viewer Modal */}
       <Modal
         isOpen={showMemoryViewer}
         onClose={() => setShowMemoryViewer(false)}
@@ -494,9 +685,9 @@ export default function Brain() {
         <MemoryViewer onClose={() => setShowMemoryViewer(false)} />
       </Modal>
 
-      {/* Section Content */}
       <div className="brain-content">
         {activeSection === 'command' && <BrainCommandCenter onNavigate={handleNavigate} />}
+        {activeSection === 'mission' && <MissionControl />}
         {activeSection === 'team' && <TeamOverview />}
         {activeSection === 'memory' && (
           <div className="memory-section" onClick={() => setShowMemoryViewer(true)}>

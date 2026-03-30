@@ -295,3 +295,267 @@
   color: #a0a0b0;
   background: rgba(160, 160, 176, 0.1);
 }
+
+/* Session Detail */
+.session-detail {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.session-detail-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.detail-back-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.detail-back-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.session-detail-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
+}
+
+.session-type-badge {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 5px;
+  background: rgba(0, 180, 216, 0.15);
+  color: #00b4d8;
+  text-transform: uppercase;
+}
+
+.session-type-badge.cron {
+  background: rgba(255, 184, 0, 0.15);
+  color: #ffb800;
+}
+
+.session-type-badge.subagent {
+  background: rgba(108, 122, 255, 0.15);
+  color: #6c7aff;
+}
+
+.session-meta-row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 10px;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.session-meta-row strong {
+  color: #fff;
+}
+
+.session-messages {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.session-loading, .session-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 13px;
+  padding: 40px;
+}
+
+.session-message {
+  display: flex;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  max-width: 85%;
+}
+
+.session-message.user {
+  background: rgba(0, 180, 216, 0.08);
+  border: 1px solid rgba(0, 180, 216, 0.15);
+  align-self: flex-end;
+}
+
+.session-message.agent {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  align-self: flex-start;
+}
+
+.message-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.session-message.user .message-avatar {
+  background: rgba(0, 180, 216, 0.2);
+  color: #00b4d8;
+}
+
+.session-message.agent .message-avatar {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.message-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.message-role {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.4);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.message-content {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.message-content p {
+  margin-bottom: 6px;
+}
+
+.message-content p:last-child {
+  margin-bottom: 0;
+}
+
+/* Model Right indicator */
+.model-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.model-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* Services Grid */
+.services-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.service-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 10px;
+}
+
+.service-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.service-name {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #fff;
+}
+
+.service-url {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.service-status {
+  display: flex;
+  align-items: center;
+}
+
+.service-up, .service-down {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 5px;
+}
+
+.service-up {
+  color: #30d158;
+  background: rgba(48, 209, 88, 0.12);
+}
+
+.service-down {
+  color: #ff453a;
+  background: rgba(255, 69, 58, 0.12);
+}
+
+.subsection-title {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 16px;
+  margin-bottom: 8px;
+}
+
+.session-card.past {
+  opacity: 0.6;
+}
+
+.session-card.past:hover {
+  opacity: 0.85;
+}

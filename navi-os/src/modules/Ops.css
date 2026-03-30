@@ -319,3 +319,104 @@
   background: rgba(255, 255, 255, 0.1);
   color: #fff;
 }
+
+/* Health Errors */
+.health-errors {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  padding: 18px 22px;
+  margin-bottom: 28px;
+}
+
+.health-errors-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.health-errors-header h3 {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+  flex: 1;
+}
+
+.errors-count {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.06);
+  padding: 3px 10px;
+  border-radius: 6px;
+}
+
+.health-errors-empty {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+  background: rgba(48, 209, 88, 0.05);
+  border-radius: 10px;
+  border: 1px solid rgba(48, 209, 88, 0.1);
+}
+
+.errors-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.error-item {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 10px;
+  padding: 12px 16px;
+  border-left: 3px solid;
+}
+
+.error-item.error { border-left-color: #ff453a; }
+.error-item.critical { border-left-color: #ff453a; background: rgba(255, 69, 58, 0.06); }
+.error-item.warn { border-left-color: #ffb800; }
+
+.error-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 5px;
+}
+
+.error-source {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.06);
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+
+.error-name {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  color: #fff;
+  flex: 1;
+}
+
+.error-time {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.error-message {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0;
+}
