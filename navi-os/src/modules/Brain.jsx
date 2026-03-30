@@ -2,10 +2,11 @@ import { useState, useEffect, useCallback } from 'react'
 import {
   Brain as BrainIcon, FolderOpen, FileText, Clock, Search, BookOpen,
   ChevronRight, Pin, X, CheckCircle2,
-  AlertCircle, MinusCircle, RefreshCw
+  AlertCircle, MinusCircle, RefreshCw, Users
 } from 'lucide-react'
 import Modal from '../components/ui/Modal'
 import FeatureCard from '../components/ui/FeatureCard'
+import TeamOverview from '../components/TeamOverview'
 import './Brain.css'
 
 const API_BASE = '/api'
@@ -443,6 +444,7 @@ function BrainCommandCenter({ onNavigate }) {
 
 const SECTIONS = [
   { key: 'command', label: 'Command Center', icon: BrainIcon },
+  { key: 'team', label: 'Team', icon: Users },
   { key: 'memory', label: 'Memory', icon: FolderOpen },
   { key: 'briefs', label: 'Briefs', icon: Clock },
   { key: 'skills', label: 'Skills', icon: BookOpen },
@@ -490,6 +492,7 @@ export default function Brain() {
       {/* Section Content */}
       <div className="brain-content">
         {activeSection === 'command' && <BrainCommandCenter onNavigate={handleNavigate} />}
+        {activeSection === 'team' && <TeamOverview />}
         {activeSection === 'memory' && (
           <div className="memory-section" onClick={() => setShowMemoryViewer(true)}>
             <div className="click-to-open">
