@@ -141,6 +141,22 @@
   color: #ffb800;
 }
 
+.tree-item-up {
+  color: rgba(255, 184, 0, 0.6);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  margin-bottom: 4px;
+  padding-bottom: 6px;
+}
+
+.tree-item-up:hover {
+  color: #ffb800;
+  background: rgba(255, 184, 0, 0.08);
+}
+
+.tree-item-up svg {
+  color: rgba(255, 184, 0, 0.5);
+}
+
 .tree-item span {
   overflow: hidden;
   text-overflow: ellipsis;

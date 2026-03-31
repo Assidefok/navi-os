@@ -2,6 +2,7 @@
 
 - **Name:** Aleix
 - **What to call them:** Aleix
+- **Visible in org chart:** true
 - **Age:** 36
 - **Pronouns:** _(unknown)_
 - **Timezone:** Europe/Madrid (GMT+2)

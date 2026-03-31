@@ -167,6 +167,72 @@ function CronStatus() {
   )
 }
 
+function Pm2Status() {
+  const [pm2, setPm2] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  const fetchPm2 = async () => {
+    setLoading(true)
+    try {
+      const res = await fetch('/api/pm2-status')
+      const data = await res.json()
+      setPm2(data.processes || [])
+    } catch {
+      setPm2([])
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchPm2()
+  }, [])
+
+  if (loading) return <div className="status-loading"><Loader2 size={16} className="spin" /></div>
+
+  const formatBytes = (bytes) => {
+    if (!bytes) return '0 MB'
+    const mb = Math.round(bytes / 1024 / 1024)
+    return `${mb} MB`
+  }
+
+  const formatUptime = (ms) => {
+    if (!ms) return '—'
+    const secs = Math.floor(ms / 1000)
+    const mins = Math.floor(secs / 60)
+    const hours = Math.floor(mins / 60)
+    if (hours > 0) return `${hours}h ${mins % 60}m`
+    if (mins > 0) return `${mins}m`
+    return `${secs}s`
+  }
+
+  return (
+    <div className="status-section">
+      <h3 className="section-title"><Server size={14} /> PM2 Processos</h3>
+      <div className="pm2-list">
+        {pm2.length === 0 && <span className="empty-state">Cap procés PM2</span>}
+        {pm2.map(proc => (
+          <div key={proc.name} className={`pm2-row ${proc.status}`}>
+            <div className="pm2-header">
+              <span className="pm2-name">{proc.name}</span>
+              <span className={`pm2-status-badge ${proc.status}`}>{proc.status}</span>
+            </div>
+            <div className="pm2-metrics">
+              <span>CPU: {proc.cpu}%</span>
+              <span>RAM: {formatBytes(proc.memory)}</span>
+              <span>Reinici: {proc.restarts}</span>
+              <span>Uptime: {formatUptime(proc.uptime)}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+      <button className="refresh-btn" onClick={fetchPm2}>
+        <RefreshCw size={14} /> Actualitzar
+      </button>
+    </div>
+  )
+}
+
 function IntegrationStatus() {
   const [integrations, setIntegrations] = useState([])
   const [loading, setLoading] = useState(true)
@@ -207,6 +273,7 @@ export default function Status() {
 
   const tabs = [
     { id: 'system', label: 'Sistema' },
+    { id: 'pm2', label: 'PM2' },
     { id: 'agents', label: 'Agents' },
     { id: 'sessions', label: 'Sessions' },
     { id: 'cron', label: 'Cron' },
@@ -228,6 +295,7 @@ export default function Status() {
       </div>
       <div className="status-content">
         {activeTab === 'system' && <SystemStatus />}
+        {activeTab === 'pm2' && <Pm2Status />}
         {activeTab === 'agents' && <AgentStatus />}
         {activeTab === 'sessions' && <SessionStatus />}
         {activeTab === 'cron' && <CronStatus />}

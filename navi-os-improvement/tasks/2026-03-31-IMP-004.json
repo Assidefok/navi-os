@@ -1,0 +1,12 @@
+{
+  "id": "IMP-004",
+  "title": "Integrar sistema de proposals amb API",
+  "area": "Proposals.jsx, server.js",
+  "type": "Bug fix",
+  "priority": "Alta",
+  "impact": "Les propostes es guarden en memria local, no es comparteixen entre sessions.",
+  "steps": "1. Afegir endpoint GET/POST /api/proposals a server.js,2. Modificar Proposals.jsx per fer servir API,3. Eliminar localStorage de proposals",
+  "risk": "Baix",
+  "status": "pending",
+  "attempts": 0
+}

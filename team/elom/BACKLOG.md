@@ -32,6 +32,21 @@
 
 ---
 
+## Episode 4 - Automate Agents
+
+**Objectiu:** Agents 24/7 amb self-healing i retry logic
+**Iniciat:** 2026-03-31
+
+### Tasques
+
+| ID | Tasca | Estat | Priority |
+|----|-------|-------|----------|
+| ELOM-004 | **Registrar 4 chiefs a OpenClaw gateway** - Activar heartbeats reals (120/135/150/180 min) per ELOM, WARREN, JEFF, SAM | TODO | CRITICAL |
+| ELOM-005 | **Sistema Self-Healing per cron jobs** - Implementar watchdog que detecti errors en crons i faci restart automàtic (max 3 intents) abans d'alertar | TODO | HIGH |
+| ELOM-006 | **Autonomous Task Router** - Implementar lògica perquè cada chief agafi tasques del seu BACKLOG.md automàticament, les executi i actualitzi l'estat sense intervenció | TODO | HIGH |
+
+---
+
 ## Notes
 
 [Tancat per a notes generals sobre el backlog]

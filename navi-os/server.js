@@ -580,6 +580,24 @@ app.get('/api/system-metrics', (req, res) => {
   }
 })
 
+app.get('/api/pm2-status', (req, res) => {
+  try {
+    const out = execSync('cd /home/user/.openclaw/workspace/navi-os && npx pm2 jlist --silent 2>/dev/null', { encoding: 'utf-8', timeout: 5000 })
+    const processes = JSON.parse(out || '[]')
+    const summary = processes.map(p => ({
+      name: p.name,
+      status: p.pm2_env?.status || 'unknown',
+      memory: p.monit?.memory || 0,
+      cpu: p.monit?.cpu || 0,
+      restarts: p.pm2_env?.restart_time || 0,
+      uptime: p.pm2_env?.pm_uptime ? Date.now() - p.pm2_env.pm_uptime : 0
+    }))
+    res.json({ processes: summary, total: processes.length })
+  } catch (err) {
+    res.json({ processes: [], total: 0, error: err.message })
+  }
+})
+
 app.get('/api/agents', (req, res) => {
   res.json({ agents: [] })
 })
@@ -613,20 +631,63 @@ app.get('/api/gateway-security', (req, res) => {
 
 app.get('/api/security-audit', (req, res) => {
   try {
-    const out = execSync('openclaw security-audit 2>/dev/null | head -30', { encoding: 'utf-8', timeout: 8000 })
+    const out = execSync('openclaw status --no-color 2>/dev/null', { encoding: 'utf-8', timeout: 30000 })
+    
+    // Find the Security audit section
     const lines = out.split('\n')
-    const result = { critical: 0, warn: 0, info: 0, issues: [] }
+    const result = { critical: 0, warn: 0, info: 0, issues: [], raw: '' }
+    let inSecuritySection = false
+    const securityLines = []
 
     for (const line of lines) {
-      const lower = line.toLowerCase()
-      if (lower.includes('critical')) result.critical += 1
-      else if (lower.includes('warn')) result.warn += 1
-      else if (lower.includes('info')) result.info += 1
+      if (line.trim() === 'Security audit') {
+        inSecuritySection = true
+        continue
+      }
+      if (inSecuritySection) {
+        // Stop at next section (Channels or Sessions or empty line after content)
+        if (line.startsWith('Channels') || line.startsWith('Sessions') || line.startsWith('Full report')) {
+          break
+        }
+        securityLines.push(line)
+      }
     }
 
+    result.raw = securityLines.join('\n')
+
+    // Parse summary: "Summary: 0 critical · 4 warn · 1 info"
+    const summaryMatch = result.raw.match(/Summary:\s*(\d+)\s*critical.*?(\d+)\s*warn.*?(\d+)\s*info/i)
+    if (summaryMatch) {
+      result.critical = parseInt(summaryMatch[1], 10) || 0
+      result.warn = parseInt(summaryMatch[2], 10) || 0
+      result.info = parseInt(summaryMatch[3], 10) || 0
+    }
+
+    // Parse individual issues: "  WARN Description" or "  INFO Description"
+    let currentIssue = null
+    for (const line of securityLines) {
+      const warnMatch = line.match(/^\s*WARN\s+(.+?)(?:\s+Fix:|$)/)
+      const infoMatch = line.match(/^\s*INFO\s+(.+?)(?:\s+Fix:|$)/)
+      const fixMatch = line.match(/^\s*Fix:\s+(.+)$/)
+      const detailMatch = line.match(/^\s+gateway\.\S+\s+(.+)$/)
+
+      if (warnMatch) {
+        if (currentIssue) result.issues.push(currentIssue)
+        currentIssue = { severity: 'warn', title: warnMatch[1].trim(), description: '', fix: '' }
+      } else if (infoMatch) {
+        if (currentIssue) result.issues.push(currentIssue)
+        currentIssue = { severity: 'info', title: infoMatch[1].trim(), description: '', fix: '' }
+      } else if (fixMatch && currentIssue) {
+        currentIssue.fix = fixMatch[1].trim()
+      } else if (detailMatch && currentIssue) {
+        currentIssue.description += (currentIssue.description ? ' ' : '') + detailMatch[1].trim()
+      }
+    }
+    if (currentIssue) result.issues.push(currentIssue)
+
     res.json(result)
-  } catch {
-    res.json({ critical: 0, warn: 0, info: 0, issues: [] })
+  } catch (err) {
+    res.json({ critical: 0, warn: 0, info: 0, issues: [], error: err.message })
   }
 })
 

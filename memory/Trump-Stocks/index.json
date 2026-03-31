@@ -1,0 +1,51 @@
+{
+  "entries": [
+    {
+      "date": "2026-03-31",
+      "file": "2026-03-31-trump-stocks.md",
+      "item_count": 10,
+      "tracked_tickers": [
+        "DJT",
+        "WWTR"
+      ],
+      "djt_price": 9.28,
+      "djt_change": "+0.00 (+0.0%)",
+      "generated_at": "2026-03-31 22:03:07"
+    },
+    {
+      "date": "2026-03-31",
+      "file": "2026-03-31-trump-stocks.md",
+      "item_count": 2,
+      "tracked_tickers": [
+        "DJT",
+        "WWTR"
+      ],
+      "djt_price": 9.28,
+      "djt_change": "+0.00 (+0.0%)",
+      "generated_at": "2026-03-31 22:02:16"
+    },
+    {
+      "date": "2026-03-31",
+      "file": "2026-03-31-trump-stocks.md",
+      "item_count": 1,
+      "tracked_tickers": [
+        "DJT",
+        "WWTR",
+        "TRUMP"
+      ],
+      "djt_price": 9.28,
+      "djt_change": "+0.00 (+0.0%)",
+      "generated_at": "2026-03-31 22:01:34"
+    },
+    {
+      "date": "2026-03-31",
+      "file": "2026-03-31-trump-stocks.md",
+      "item_count": 3,
+      "tracked_tickers": [
+        "DJT",
+        "WWTR"
+      ],
+      "generated_at": "2026-03-31 22:00:50"
+    }
+  ]
+}

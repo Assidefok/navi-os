@@ -1,0 +1,12 @@
+{
+  "id": "IMP-003",
+  "title": "Afegir error boundaries a React",
+  "area": "App.jsx",
+  "type": "Millora",
+  "priority": "Mitjana",
+  "impact": "L'app no es trencara completament si un component falla.",
+  "steps": "1. Crear ErrorBoundary component,2. Integrar a App.jsx al voltant de cada modul,3. Mostrar missatge amigable en cas d'error",
+  "risk": "Baix",
+  "status": "pending",
+  "attempts": 0
+}

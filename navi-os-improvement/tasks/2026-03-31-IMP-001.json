@@ -1,0 +1,12 @@
+{
+  "id": "IMP-001",
+  "title": "Connectar TaskPipeline a API Server (eliminar localStorage)",
+  "area": "TaskPipeline.jsx, server.js",
+  "type": "Bug fix",
+  "priority": "Alta",
+  "impact": "Les tasques es guarden localment i es perden en canviar de navegador. L'API server no rep les dades.",
+  "steps": "1. Modificar TaskPipeline.jsx per fer fetch() a /api/pm-board enlloc de localStorage,2. Actualitzar server.js per suportar GET i POST de tasques,3. Eliminar STORAGE_KEY de localStorage,4. Test: crear tasca i recarregar - ha de persistir",
+  "risk": "Baix",
+  "status": "pending",
+  "attempts": 0
+}

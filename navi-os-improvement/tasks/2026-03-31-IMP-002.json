@@ -1,0 +1,12 @@
+{
+  "id": "IMP-002",
+  "title": "Implementar React Router per deep-linking",
+  "area": "App.jsx, package.json",
+  "type": "Nova funcionalitat",
+  "priority": "Mitjana",
+  "impact": "Permet deep-linking i navegacio directa a cada modul sense canviar tab.",
+  "steps": "1. Importar BrowserRouter, Routes, Route a App.jsx,2. Definir rutes: /ops -> Ops, /brain -> Brain, /lab -> Lab,3. Substituir useState tab switching per navegacio de rutes,4. Mantenir Dock com a navegacio",
+  "risk": "Mitjà",
+  "status": "pending",
+  "attempts": 0
+}

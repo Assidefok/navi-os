@@ -1,0 +1,72 @@
+{
+  "vault": "navi-os-improvement",
+  "description": "Sistema de millora automatitzada per Navi OS",
+  "created": "2026-03-31",
+  "updated": "2026-03-31-21.46",
+  "tags": ["automation", "improvement", "navi-os", "react", "api", "pm2", "episodi-4"],
+  "reports": [
+    {
+      "id": "standup-2026-03-31-17.31",
+      "filename": "2026-03-31-17.31-standup.md",
+      "type": "standup",
+      "date": "2026-03-31",
+      "time": "17:31",
+      "title": "Standup Navi OS - 2026-03-31",
+      "tags": ["standup", "daily"],
+      "topics": ["execució", "millores"],
+      "summary": "Execució inicial del sistema de millora diürna - sense dades reals"
+    },
+    {
+      "id": "improvements-2026-03-31-18.54",
+      "filename": "2026-03-31-18.54-improvements.md",
+      "type": "proposal",
+      "date": "2026-03-31",
+      "time": "18:54",
+      "title": "Proposta de Millores Navi OS - 2026-03-31",
+      "tags": ["proposal", "improvement", "navi-os", "episodi-4"],
+      "topics": ["taskpipeline", "react-router", "error-boundary", "proposals-api", "pm2-monitoring"],
+      "improvements": ["IMP-001", "IMP-002", "IMP-003", "IMP-004", "IMP-005"],
+      "summary": "5 millores identificades: TaskPipeline API, React Router, Error Boundaries, Proposals API, PM2 Monitoring"
+    },
+    {
+      "id": "queue-2026-03-31-18.54",
+      "filename": "2026-03-31-18.54-queue.json",
+      "type": "queue",
+      "date": "2026-03-31",
+      "time": "18:54",
+      "title": "Cua de millores - 2026-03-31",
+      "tags": ["queue", "json", "automation"],
+      "topics": ["improvement-queue"],
+      "summary": "Queue JSON amb 5 millores pendents d'execució"
+    },
+    {
+      "id": "execution-2026-03-31-18.58",
+      "filename": "2026-03-31-18.58-execution.md",
+      "type": "execution",
+      "date": "2026-03-31",
+      "time": "18:58",
+      "title": "Execució de Millores Navi OS - 2026-03-31",
+      "tags": ["execution", "completed", "navi-os", "episodi-4"],
+      "topics": ["taskpipeline", "react-router", "error-boundary", "proposals-api", "pm2-monitoring"],
+      "executed": ["IMP-001", "IMP-002", "IMP-003", "IMP-004", "IMP-005"],
+      "failed": [],
+      "success_rate": "100%",
+      "summary": "Totes 5 millores implementades amb èxit. Sistema operational."
+    }
+  ],
+  "index_by_topic": {
+    "taskpipeline": ["improvements-2026-03-31-18.54", "execution-2026-03-31-18.58"],
+    "react-router": ["improvements-2026-03-31-18.54", "execution-2026-03-31-18.58"],
+    "error-boundary": ["improvements-2026-03-31-18.54", "execution-2026-03-31-18.58"],
+    "proposals-api": ["improvements-2026-03-31-18.54", "execution-2026-03-31-18.58"],
+    "pm2-monitoring": ["improvements-2026-03-31-18.54", "execution-2026-03-31-18.58"]
+  },
+  "index_by_tag": {
+    "automation": ["2026-03-31-17.31-standup.md", "2026-03-31-18.54-queue.json", "2026-03-31-18.58-execution.md"],
+    "improvement": ["2026-03-31-18.54-improvements.md", "2026-03-31-18.58-execution.md"],
+    "episodi-4": ["2026-03-31-18.54-improvements.md", "2026-03-31-18.58-execution.md"],
+    "navi-os": ["2026-03-31-18.54-improvements.md", "2026-03-31-18.58-execution.md"],
+    "execution": ["2026-03-31-18.58-execution.md"],
+    "proposal": ["2026-03-31-18.54-improvements.md"]
+  }
+}

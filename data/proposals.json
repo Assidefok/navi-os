@@ -14,7 +14,8 @@
       "description": "Afegeix un panell on puc suggerir millores i tu pots acceptar o rebutjar. Aixi sabem què estem construint junts.",
       "category": "workflow",
       "status": "accepted",
-      "createdAt": "2026-03-31T00:40:00Z"
+      "createdAt": "2026-03-31T00:40:00Z",
+      "updatedAt": "2026-03-31T12:02:29.856Z"
     }
   ]
 }

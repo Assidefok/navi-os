@@ -1,0 +1,69 @@
+{
+  "date": "2026-03-31",
+  "proposedAt": "2026-03-31T18:54:22+02:00",
+  "improvements": [
+    {
+      "id": "IMP-001",
+      "title": "Connectar TaskPipeline a API Server (eliminar localStorage)",
+      "area": "TaskPipeline.jsx, server.js",
+      "type": "Bug fix",
+      "priority": "Alta",
+      "impact": "Les tasques es guarden localment i es perden en canviar de navegador. L'API server no rep les dades.",
+      "steps": "1. Modificar TaskPipeline.jsx per fer fetch() a /api/pm-board enlloc de localStorage,2. Actualitzar server.js per suportar GET i POST de tasques,3. Eliminar STORAGE_KEY de localStorage,4. Test: crear tasca i recarregar - ha de persistir",
+      "risk": "Baix",
+      "status": "pending",
+      "attempts": 0
+    },
+    {
+      "id": "IMP-002",
+      "title": "Implementar React Router per deep-linking",
+      "area": "App.jsx, package.json",
+      "type": "Nova funcionalitat",
+      "priority": "Mitjana",
+      "impact": "Permet deep-linking i navegacio directa a cada modul sense canviar tab.",
+      "steps": "1. Importar BrowserRouter, Routes, Route a App.jsx,2. Definir rutes: /ops -> Ops, /brain -> Brain, /lab -> Lab,3. Substituir useState tab switching per navegacio de rutes,4. Mantenir Dock com a navegacio",
+      "risk": "Mitjà",
+      "status": "pending",
+      "attempts": 0
+    },
+    {
+      "id": "IMP-003",
+      "title": "Afegir error boundaries a React",
+      "area": "App.jsx",
+      "type": "Millora",
+      "priority": "Mitjana",
+      "impact": "L'app no es trencara completament si un component falla.",
+      "steps": "1. Crear ErrorBoundary component,2. Integrar a App.jsx al voltant de cada modul,3. Mostrar missatge amigable en cas d'error",
+      "risk": "Baix",
+      "status": "pending",
+      "attempts": 0
+    },
+    {
+      "id": "IMP-004",
+      "title": "Integrar sistema de proposals amb API",
+      "area": "Proposals.jsx, server.js",
+      "type": "Bug fix",
+      "priority": "Alta",
+      "impact": "Les propostes es guarden en memria local, no es comparteixen entre sessions.",
+      "steps": "1. Afegir endpoint GET/POST /api/proposals a server.js,2. Modificar Proposals.jsx per fer servir API,3. Eliminar localStorage de proposals",
+      "risk": "Baix",
+      "status": "pending",
+      "attempts": 0
+    },
+    {
+      "id": "IMP-005",
+      "title": "Afegir monitoring de PM2 al Navi OS",
+      "area": "Status.jsx, server.js",
+      "type": "Nova funcionalitat",
+      "priority": "Mitjana",
+      "impact": "Permet veure status de PM2 sense obrir terminal.",
+      "steps": "1. Afegir endpoint /api/pm2-status a server.js,2. Modificar Status.jsx per mostrar dades de PM2,3. Integrar al dashboard de Mission Control",
+      "risk": "Baix",
+      "status": "pending",
+      "attempts": 0
+    }
+  ],
+  "executed": [],
+  "failed": [],
+  "errors": []
+}

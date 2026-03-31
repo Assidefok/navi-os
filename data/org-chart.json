@@ -26,9 +26,9 @@
       "workspace": "/home/user/.openclaw/workspace/team/elom",
       "heartbeatInterval": 120,
       "model": "openai-codex/gpt-5.4",
-      "modelReason": "Strategic vision requires deep reasoning and long-term thinking",
+      "modelReason": "Strategic vision needs frontier-level reasoning. Bold 10x decisions require the most capable model.",
       "source": "custom",
-      "description": "Defines vision and strategic direction for 10x growth"
+      "description": "Defines vision and strategic direction"
     },
     {
       "agentId": "warren",
@@ -39,10 +39,10 @@
       "inspiredBy": "Warren Buffett",
       "workspace": "/home/user/.openclaw/workspace/team/warren",
       "heartbeatInterval": 135,
-      "model": "openai-codex/gpt-5.3-codex",
-      "modelReason": "Quality analysis requires methodical, detail-oriented thinking",
+      "model": "openai-codex/gpt-5.4",
+      "modelReason": "Quality audits and risk assessment demand rigorous, careful analysis. Missing details = failed inspections.",
       "source": "custom",
-      "description": "Guarantees quality standards, audits, and risk assessment"
+      "description": "Guarantees quality standards and audits"
     },
     {
       "agentId": "jeff",
@@ -53,10 +53,10 @@
       "inspiredBy": "Jeff Bezos",
       "workspace": "/home/user/.openclaw/workspace/team/jeff",
       "heartbeatInterval": 150,
-      "model": "minimax-portal/MiniMax-M2.7-highspeed",
-      "modelReason": "Operations need fast execution and efficiency",
+      "model": "openai-codex/gpt-5.3-codex",
+      "modelReason": "Execution and process optimization are technical by nature. Codex specialization means better code/script generation.",
       "source": "custom",
-      "description": "Builds scalable systems, eliminates bottlenecks, ensures delivery"
+      "description": "Builds scalable systems and ensures delivery"
     },
     {
       "agentId": "sam",
@@ -67,32 +67,10 @@
       "inspiredBy": "Sam Altman",
       "workspace": "/home/user/.openclaw/workspace/team/sam",
       "heartbeatInterval": 180,
-      "model": "openai-codex/gpt-5.3-codex",
-      "modelReason": "AI architecture requires technical depth and code expertise",
+      "model": "minimax-portal/MiniMax-M2.7",
+      "modelReason": "AI strategy involves high-volume coordination and evaluations. Cost-efficient for daily work; switch to GPT 5.4 for complex architecture decisions.",
       "source": "custom",
-      "description": "Leads AI strategy, automation, and technical architecture"
+      "description": "Leads AI strategy and automation"
     }
-  ],
-  "specialists": {
-    "elom": [
-      { "agentId": "vision-agent", "name": "Vision Agent", "role": "Strategic Vision" },
-      { "agentId": "product-agent", "name": "Product Agent", "role": "Product Strategy" },
-      { "agentId": "innovation-agent", "name": "Innovation Agent", "role": "Innovation Radar" }
-    ],
-    "warren": [
-      { "agentId": "qa-agent", "name": "QA Agent", "role": "Quality Assurance" },
-      { "agentId": "standards-agent", "name": "Standards Agent", "role": "Standards Definition" },
-      { "agentId": "audit-agent", "name": "Audit Agent", "role": "Process Audit" }
-    ],
-    "jeff": [
-      { "agentId": "ops-agent", "name": "Ops Agent", "role": "Day-to-day Operations" },
-      { "agentId": "process-agent", "name": "Process Agent", "role": "Process Design" },
-      { "agentId": "cx-agent", "name": "CX Agent", "role": "Customer Experience" }
-    ],
-    "sam": [
-      { "agentId": "ai-architect-agent", "name": "AI Architect", "role": "AI Architecture" },
-      { "agentId": "automation-agent", "name": "Automation Agent", "role": "Automation Design" },
-      { "agentId": "research-agent", "name": "Research Agent", "role": "Tech Research" }
-    ]
-  }
+  ]
 }

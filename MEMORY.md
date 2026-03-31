@@ -52,6 +52,47 @@ _Last updated: 2026-03-30_
 
 ---
 
+## Memory Vault (Obsidian-style)
+
+El sistema de memòria utilitza estructura estilo Obsidian per a la base de coneixement de notícies.
+
+### Estructura
+```
+memory/
+├── index.md                    # Vault principal
+├── AI-News/
+│   ├── index.md               # Índex categoria (Obsidian)
+│   ├── index.json             # Índex machine-readable
+│   └── YYYY-MM-DD-HH.MM.md   # Entrades individuals
+├── World-News/
+│   ├── index.md
+│   ├── index.json
+│   └── YYYY-MM-DD-HH.MM.md
+└── Iran-War/
+    ├── index.md
+    ├── index.json
+    └── YYYY-MM-DD-HH.MM.md
+```
+
+### Skills de Notícies
+| Skill | Funció |
+|-------|---------|
+| `ai-news` | Notícies IA (HN, TechCrunch, The Verge) |
+| `world-news` | Notícies mundials (BBC, Al Jazeera, Guardian, NYT) |
+| `iran-war-news` | Guerra d'Iran (filtrat per keywords) |
+| `brief-news` | Orquestrador de notícies |
+| `morning-brief` | Compila brief per Telegram |
+
+### Cron News (06:45)
+```
+75a20229-b033-4e82-8a8b-3757d9a781d1 - Brief News Orchestrator
+```
+
+### Retorn de Skills
+- `OK` → Fitxer generat, index actualitzat
+- `ERROR` → Ha fallat
+- `NOT_EXECUTED` → Ja executat aquesta hora
+
 ## Current Projects
 
 ### Project Source of Truth
@@ -66,6 +107,10 @@ _Last updated: 2026-03-30_
 - Port: 8100 (NEVER CHANGE)
 - 3 modules: Ops (⚙️), Brain (🧠), Lab (🧪)
 - Ops té 4 vistes: Mission Control, Org Chart, PM Board (Kanban), Task Manager
+- OrgChart ara llegeix de `src/data/org-chart.js` (en comptes de hardcoded)
+- USER.md té camp `visible` (bool, per defecte false) per controlar visibilitat a l'organigrama
+- Navi ara és clickable a OrgChart (obre modal amb SOUL/IDENTITY/USER)
+- AgentDetailModal i loadAgentDetailsFromWorkspace ara s'exporten de TeamOverview per reutilització
 - Migrated from vanilla JS to React following Aleix's course
 - Episode 1: COMPLETAT
 - Episode 2: COMPLETAT (Mission Control, Org Chart, Task Manager, PM Boards, Brain, Lab)

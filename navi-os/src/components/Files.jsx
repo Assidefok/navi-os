@@ -35,13 +35,24 @@ function buildTree(files) {
   return root
 }
 
-function TreeNode({ node, path, expanded, onToggle, selectedPath, onSelect }) {
+function TreeNode({ node, path, expanded, onToggle, selectedPath, onSelect, onNavUp }) {
   const dirs = Object.values(node.children).sort((a, b) => a.name.localeCompare(b.name))
   const files = [...node.files].sort((a, b) => a.name.localeCompare(b.name))
   const currentPath = path || ''
 
   return (
     <div className="tree-node">
+      {currentPath && (
+        <div
+          className="tree-item tree-item-up"
+          onClick={() => onNavUp(currentPath)}
+          title="Carpeta pare"
+        >
+          <ChevronRight size={14} style={{ transform: 'rotate(-90deg)' }} />
+          <FolderOpen size={15} />
+          <span>..</span>
+        </div>
+      )}
       {dirs.map(dir => {
         const dirPath = currentPath ? `${currentPath}/${dir.name}` : dir.name
         const isExpanded = expanded[dirPath]
@@ -65,6 +76,7 @@ function TreeNode({ node, path, expanded, onToggle, selectedPath, onSelect }) {
                   onToggle={onToggle}
                   selectedPath={selectedPath}
                   onSelect={onSelect}
+                  onNavUp={onNavUp}
                 />
               </div>
             )}
@@ -328,6 +340,16 @@ export default function Files() {
   const tree = buildTree(filteredFiles)
 
   const toggleDir = (path) => setExpanded(prev => ({ ...prev, [path]: !prev[path] }))
+
+  const handleNavUp = (currentPath) => {
+    const parentPath = currentPath.split('/').slice(0, -1).join('/')
+    if (parentPath) {
+      setExpanded(prev => ({ ...prev, [parentPath]: true }))
+    }
+    setSelectedPath(null)
+    setFileContent('')
+    setSavedContent('')
+  }
   return (
     <div className="files-view">
       <ToastContainer toasts={toasts} onRemove={removeToast} />
@@ -361,6 +383,7 @@ export default function Files() {
                 onToggle={toggleDir}
                 selectedPath={selectedPath}
                 onSelect={openFile}
+                onNavUp={handleNavUp}
               />
             </div>
           )}

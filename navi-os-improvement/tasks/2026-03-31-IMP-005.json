@@ -1,0 +1,12 @@
+{
+  "id": "IMP-005",
+  "title": "Afegir monitoring de PM2 al Navi OS",
+  "area": "Status.jsx, server.js",
+  "type": "Nova funcionalitat",
+  "priority": "Mitjana",
+  "impact": "Permet veure status de PM2 sense obrir terminal.",
+  "steps": "1. Afegir endpoint /api/pm2-status a server.js,2. Modificar Status.jsx per mostrar dades de PM2,3. Integrar al dashboard de Mission Control",
+  "risk": "Baix",
+  "status": "pending",
+  "attempts": 0
+}

@@ -1,6 +1,7 @@
 #!/bin/bash
 # Automation: Daily AI News Summary
-# Runs at 07:00 - fetches AI news with real source links
+# Runs at 07:00 - fetches AI news with REAL source links from multiple sources
+# IMPORTANT: Never make up news. Always include source URLs.
 
 set -e
 
@@ -20,75 +21,116 @@ cd "$WORKSPACE"
 echo "## Top AI News - $TODAY" >> "$NEWS_FILE"
 echo "" >> "$NEWS_FILE"
 
-# Use web search to get real news with sources
-get_news() {
-  local query="$1"
-  local url="$2"
-  curl -s --max-time 10 -A "Mozilla/5.0" "$url" 2>/dev/null | grep -oE '(https?://[^"<>]+|title>[^<]+|description>[^<]+)' | head -5 || echo ""
-}
+# ============================================================
+# 1. Hacker News via Algolia API
+# ============================================================
+echo "### Hacker News (AI & ML)" >> "$NEWS_FILE"
+echo "" >> "$NEWS_FILE"
 
-# Fetch from multiple sources for real links
-fetch_with_links() {
-  local search_term="AI artificial intelligence news $(date +%Y-%m-%d)"
-  
-  # Try Hacker News
-  HN_NEWS=$(curl -s --max-time 10 "https://hn.algolia.com/api/v1/search?query=AI&tags=story&hitsPerPage=5" 2>/dev/null || echo "")
-  if [ -n "$HN_NEWS" ]; then
-    echo "$HN_NEWS" | python3 -c "
+HN_NEWS=$(curl -s --max-time 15 "https://hn.algolia.com/api/v1/search?query=AI%20OR%20artificial%20intelligence&tags=story&hitsPerPage=5" 2>/dev/null || echo "")
+
+if [ -n "$HN_NEWS" ]; then
+  HN_OUTPUT=$(echo "$HN_NEWS" | python3 -c "
 import sys, json
 try:
     data = json.load(sys.stdin)
-    for i, hit in enumerate(data.get('hits', [])[:5], 1):
+    hits = data.get('hits', [])
+    if not hits:
+        print('No recent AI stories on Hacker News.')
+    for i, hit in enumerate(hits[:5], 1):
         title = hit.get('title', 'No title')
-        url = hit.get('url', hit.get('_highlightResult', {}).get('title', {}).get('value', ''))
-        if not url or url == title:
-            url = f'https://news.ycombinator.com/item?id={hit.get(\"objectID\", \"\")}'
+        obj_id = hit.get('objectID', '')
+        url = f'https://news.ycombinator.com/item?id={obj_id}'
+        title = title.replace('|', '\\|')
         print(f'{i}. {title}')
-        print(f'   Source: {url}')
+        print(f'   {url}')
         print('')
-except: pass
-" 2>/dev/null || echo "1. AI News unavailable from HN"
-  fi
-}
-
-echo "### Latest from Hacker News (AI)" >> "$NEWS_FILE"
-echo "" >> "$NEWS_FILE"
-HN_OUTPUT=$(fetch_with_links)
-if [ -n "$HN_OUTPUT" ]; then
-  echo "$HN_OUTPUT" | while read line; do echo "$line" >> "$NEWS_FILE"; done
+except Exception as e:
+    print(f'Error parsing HN data: {e}')
+" 2>/dev/null)
+  echo "$HN_OUTPUT" >> "$NEWS_FILE"
 else
-  echo "1. No recent AI stories on HN" >> "$NEWS_FILE"
+  echo "Hacker News unavailable." >> "$NEWS_FILE"
 fi
 echo "" >> "$NEWS_FILE"
 
-# Alternative: fetch from TechCrunch AI RSS
+# ============================================================
+# 2. TechCrunch AI RSS
+# ============================================================
 echo "### TechCrunch AI" >> "$NEWS_FILE"
 echo "" >> "$NEWS_FILE"
-TC_NEWS=$(curl -s --max-time 10 "https://techcrunch.com/category/artificial-intelligence/feed/" 2>/dev/null | grep -oE '<title>[^<]+</title>|<link>[^<]+</link>' | head -12 | sed 's/<[^>]*>//g' || echo "")
-if [ -n "$TC_NEWS" ] && [ "$TC_NEWS" != "TechCrunch AI" ]; then
-  echo "$TC_NEWS" | head -10 | tail -8 | nl -w1 -s '. ' | while read line; do 
-    echo "$line" | sed 's/http/\n   http/g' >> "$NEWS_FILE"
-  done
+
+TC_FEED=$(curl -s --max-time 15 "https://techcrunch.com/category/artificial-intelligence/feed/" 2>/dev/null || echo "")
+
+if [ -n "$TC_FEED" ]; then
+  TC_OUTPUT=$(echo "$TC_FEED" | python3 -c "
+import sys, re
+try:
+    content = sys.stdin.read()
+    items = re.findall(r'<item>(.*?)</item>', content, re.DOTALL)
+    if not items:
+        print('No TechCrunch AI articles found.')
+    for i, item in enumerate(items[:5], 1):
+        title_match = re.search(r'<title>(.*?)</title>', item)
+        link_match = re.search(r'<link>(https?://[^<]+)</link>', item)
+        title = title_match.group(1).replace('|', '\\|') if title_match else 'No title'
+        link = link_match.group(1).strip() if link_match else '#'
+        print(f'{i}. {title}')
+        print(f'   {link}')
+        print('')
+except Exception as e:
+    print(f'Error parsing TC feed: {e}')
+" 2>/dev/null)
+  echo "$TC_OUTPUT" >> "$NEWS_FILE"
 else
-  echo "TechCrunch unavailable, using general AI news" >> "$NEWS_FILE"
+  echo "TechCrunch unavailable." >> "$NEWS_FILE"
 fi
 echo "" >> "$NEWS_FILE"
 
-# Fallback with real sources if scraping fails
-if ! grep -q "http" "$NEWS_FILE"; then
-  echo "### Fallback Sources" >> "$NEWS_FILE"
-  echo "" >> "$NEWS_FILE"
-  echo "1. **Hacker News**: https://news.ycombinator.com (search: AI)" >> "$NEWS_FILE"
-  echo "2. **TechCrunch AI**: https://techcrunch.com/category/artificial-intelligence/" >> "$NEWS_FILE"
-  echo "3. **The Verge AI**: https://www.theverge.com/ai-artificial-intelligence" >> "$NEWS_FILE"
-  echo "4. **ArXiv AI**: https://arxiv.org/list/cs.AI/recent" >> "$NEWS_FILE"
-  echo "5. **MIT Tech Review**: https://www.technologyreview.com/topic/artificial-intelligence/" >> "$NEWS_FILE"
-  echo "" >> "$NEWS_FILE"
-fi
+# ============================================================
+# 3. The Verge via main RSS (AI section not available)
+# ============================================================
+echo "### The Verge" >> "$NEWS_FILE"
+echo "" >> "$NEWS_FILE"
 
+TV_FEED=$(curl -s --max-time 15 "https://www.theverge.com/rss/index.xml" 2>/dev/null || echo "")
+
+if [ -n "$TV_FEED" ]; then
+  TV_OUTPUT=$(echo "$TV_FEED" | python3 -c "
+import sys, re
+try:
+    content = sys.stdin.read()
+    # Atom format uses <entry> instead of <item>
+    items = re.findall(r'<entry>(.*?)</entry>', content, re.DOTALL)
+    if not items:
+        print('No The Verge articles found.')
+    for i, item in enumerate(items[:5], 1):
+        # Title in CDATA within HTML entity
+        title_match = re.search(r'<title type=\"html\"><!\[CDATA\[(.*?)\]\]></title>', item)
+        title = title_match.group(1).replace('|', '\\|') if title_match else 'No title'
+        # Link is in href attribute
+        link_match = re.search(r'<link rel=\"alternate\" type=\"text/html\" href=\"(https?://[^\"]+)\"', item)
+        link = link_match.group(1).strip() if link_match else '#'
+        print(f'{i}. {title}')
+        print(f'   {link}')
+        print('')
+except Exception as e:
+    print(f'Error parsing TV feed: {e}')
+" 2>/dev/null)
+  echo "$TV_OUTPUT" >> "$NEWS_FILE"
+else
+  echo "The Verge unavailable." >> "$NEWS_FILE"
+fi
+echo "" >> "$NEWS_FILE"
+
+# ============================================================
+# Footer with sources
+# ============================================================
 echo "---" >> "$NEWS_FILE"
 echo "" >> "$NEWS_FILE"
-echo "*Sources: Hacker News, TechCrunch, The Verge, ArXiv*" >> "$NEWS_FILE"
-echo "*Generated by Navi OS Daily News Cron*" >> "$NEWS_FILE"
+echo "*News aggregated from real-time feeds. Source URLs provided for each article above.*" >> "$NEWS_FILE"
+echo "*Sources: Hacker News (hn.algolia.com), TechCrunch (techcrunch.com), The Verge (theverge.com)*" >> "$NEWS_FILE"
+echo "*Generated by Navi OS Daily News Cron - $(date '+%Y-%m-%d %H:%M:%S')*" >> "$NEWS_FILE"
 
+echo "" >> "$NEWS_FILE"
 echo "News summary created: $NEWS_FILE"

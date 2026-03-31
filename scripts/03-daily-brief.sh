@@ -1,6 +1,6 @@
 #!/bin/bash
 # Automation 3: Daily Brief
-# Runs at 08:00 - delivers summary: priorities, Cron health, pending items, AI pulse
+# Runs at 07:00 - delivers summary: priorities, news grouped by theme (AI, World, Iran), pulse
 
 set -e
 
@@ -89,7 +89,58 @@ done
 [ $PENDING -eq 0 ] && echo "- Cap item pendent" >> "$BRIEF_FILE"
 echo "" >> "$BRIEF_FILE"
 
-# 5. AI Pulse / News (placeholder)
+# ============================================================
+# 5. AI NEWS (from 06:55 cron)
+# ============================================================
+echo "## AI News (avui)" >> "$BRIEF_FILE"
+echo "" >> "$BRIEF_FILE"
+
+AI_NEWS_FILE="$WORKSPACE/memory/${TODAY}-news.md"
+if [ -f "$AI_NEWS_FILE" ]; then
+  # Extract AI news items
+  grep -A100 "## Top AI News" "$AI_NEWS_FILE" 2>/dev/null | grep -v "^## Top AI News" | head -30 | while read line; do
+    echo "$line" >> "$BRIEF_FILE"
+  done
+else
+  echo "- AI news no disponible (s'executa a les 06:55)" >> "$BRIEF_FILE"
+fi
+echo "" >> "$BRIEF_FILE"
+
+# ============================================================
+# 6. WORLD NEWS (from 06:55 cron)
+# ============================================================
+echo "## Top 10 World News (avui)" >> "$BRIEF_FILE"
+echo "" >> "$BRIEF_FILE"
+
+WORLD_NEWS_FILE="$WORKSPACE/memory/${TODAY}-world-news.md"
+if [ -f "$WORLD_NEWS_FILE" ]; then
+  grep -A100 "## Top 10 World News" "$WORLD_NEWS_FILE" 2>/dev/null | grep -v "^## Top 10 World News" | head -50 | while read line; do
+    echo "$line" >> "$BRIEF_FILE"
+  done
+else
+  echo "- World news no disponible (s'executa a les 06:55)" >> "$BRIEF_FILE"
+fi
+echo "" >> "$BRIEF_FILE"
+
+# ============================================================
+# 7. IRAN WAR NEWS (from 06:55 cron)
+# ============================================================
+echo "## Guerra d Iran - 5 Noticies (avui)" >> "$BRIEF_FILE"
+echo "" >> "$BRIEF_FILE"
+
+IRAN_FILE="$WORKSPACE/memory/${TODAY}-iran-war.md"
+if [ -f "$IRAN_FILE" ]; then
+  grep -A50 "## Top 5 Iran War" "$IRAN_FILE" 2>/dev/null | grep -v "^## Top 5 Iran War" | head -35 | while read line; do
+    echo "$line" >> "$BRIEF_FILE"
+  done
+else
+  echo "- Iran war news no disponible (s'executa a les 06:55)" >> "$BRIEF_FILE"
+fi
+echo "" >> "$BRIEF_FILE"
+
+# ============================================================
+# 8. AI Pulse
+# ============================================================
 echo "## AI Pulse" >> "$BRIEF_FILE"
 echo "" >> "$BRIEF_FILE"
 echo "- **OpenClaw**: Active i en desenvolupament" >> "$BRIEF_FILE"
@@ -97,14 +148,14 @@ echo "- **Navi OS**: v2.0 en produccio" >> "$BRIEF_FILE"
 echo "- **Sector**: Agentes autonomos en creixement" >> "$BRIEF_FILE"
 echo "" >> "$BRIEF_FILE"
 
-# 6. Quick Stats
+# 9. Quick Stats
 echo "## Stats" >> "$BRIEF_FILE"
 echo "" >> "$BRIEF_FILE"
 echo "| Metric | Value |" >> "$BRIEF_FILE"
 echo "|--------|-------|" >> "$BRIEF_FILE"
 echo "| Memory files | $(find $WORKSPACE/memory -name '*.md' 2>/dev/null | wc -l) |" >> "$BRIEF_FILE"
 echo "| Scripts | $(find $WORKSPACE/scripts -name '*.sh' 2>/dev/null | wc -l) |" >> "$BRIEF_FILE"
-echo "| Cron jobs | 4 |" >> "$BRIEF_FILE"
+echo "| Cron jobs | $(openclaw cron list 2>/dev/null | grep -c 'cron ' || echo "-") |" >> "$BRIEF_FILE"
 echo "| Source files | $(find $WORKSPACE/navi-os/src -name '*.jsx' -o -name '*.css' 2>/dev/null | wc -l) |" >> "$BRIEF_FILE"
 echo "" >> "$BRIEF_FILE"
 

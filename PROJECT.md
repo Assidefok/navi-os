@@ -3,7 +3,7 @@
 _Last updated: 2026-03-31 Europe/Madrid_
 
 ## Objectiu actual
-Completar l'Episodi 3 del bootcamp ClearMUd: Sistema Multi-Agent amb 4 Chiefs.
+Completar l'Episodi 4 del bootcamp ClearMUd: Automate Agents - automatitzar tasques dels chiefs perquè treballin de forma autònoma 24/7.
 
 ## Regla operativa
 Aquest fitxer és la font única de veritat per a:
@@ -21,16 +21,16 @@ Altres fitxers serveixen de suport o historial:
 
 ---
 
-## Episodi 3: Sistema Multi-Agent (EN PROGRÉS)
+## Episodi 3: Sistema Multi-Agent (COMPLETAT)
 
 ### Objectius Episodi 3
 - [x] Crear 4 chief workspaces amb SOUL.md, IDENTITY.md, MEMORY.md, AGENTS.md, USER.md, TOOLS.md, BACKLOG.md, HEARTBEAT.md
 - [x] Actualitzar org-chart.json amb els 4 chiefs (ELOM, WARREN, JEFF, SAM)
 - [x] Crear DELEGATION-PLAYBOOK.md
-- [ ] Registrar els 4 chiefs a OpenClaw gateway (heartbeats actius)
-- [ ] Actualitzar PM Board per usar agents reals
-- [ ] Construir sistema de standup autònom
-- [ ] Verificar sistema complet
+- [x] Registrar els 4 chiefs a OpenClaw gateway (heartbeats actius)
+- [x] Actualitzar PM Board per usar agents reals
+- [x] Construir sistema de standup autònom
+- [x] Verificar sistema complet
 
 ### Estructura Creada
 ```
@@ -50,6 +50,27 @@ team/
 | WARREN | warren | 135 min | /home/user/.openclaw/workspace/team/warren |
 | JEFF | jeff | 150 min | /home/user/.openclaw/workspace/team/jeff |
 | SAM | sam | 180 min | /home/user/.openclaw/workspace/team/sam |
+
+---
+
+## Episodi 4: Automate Agents (EN PROGRÉS)
+
+### Objectius Episode 4
+- [x] Sistema de proposta de millores automatitzada (navi-os-improvement)
+- [x] IMP-001: TaskPipeline ara fa servir API Server (localStorage eliminat)
+- [x] IMP-002: React Router implementat per deep-linking (/ops, /brain, /lab)
+- [x] IMP-003: Error Boundaries a React
+- [x] IMP-004: Integrar Proposals amb API
+- [x] IMP-005: PM2 monitoring a Status.jsx
+
+### Millores Implementades avui (2026-03-31)
+| Millora | Estat | Notes |
+|---------|-------|-------|
+| IMP-001: TaskPipeline → API | ✅ Implementada | Ara fa fetch() a /api/pm-board |
+| IMP-002: React Router | ✅ Implementada | URLs /ops, /brain, /lab funcionen |
+| IMP-003: Error Boundaries | ✅ Implementada | ErrorBoundary.jsx envolta cada modul |
+| IMP-004: Proposals API | ✅ Implementada | Ja funcionava amb API, ara verificat |
+| IMP-005: PM2 Monitoring | ✅ Implementada | Nou tab a Status.jsx + endpoint /api/pm2-status |
 
 ---
 
@@ -101,8 +122,8 @@ team/
 |---------|-------|--------|
 | 1 | AI-Powered Dashboard | ✅ Complet |
 | 2 | Full Operating System | ✅ Complet |
-| 3 | Multi-Agent Team | 🔄 En curs |
-| 4 | Automate Agents | 📋 Pendent |
+| 3 | Multi-Agent Team | ✅ Complet |
+| 4 | Automate Agents | 🔄 En curs (SAM: S-005, S-006, S-007) |
 | 5 | Production 24/7 | 📋 Pendent |
 
 ---
