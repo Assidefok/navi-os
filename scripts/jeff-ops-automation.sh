@@ -35,6 +35,7 @@ usage() {
   echo "  restart-all      - Restart all services"
   echo "  backup-workspace - Full workspace backup"
   echo "  clean-logs       - Clean old logs"
+  echo "  stats            - Workspace statistics"
   echo ""
 }
 
@@ -240,15 +241,47 @@ do_clean-logs() {
   log_success "Log cleanup complete!"
 }
 
+# ─── Workspace Stats ───────────────────────────────────────────────────────
+do-workspace-stats() {
+  log_info "=== Workspace Statistics ==="
+  echo ""
+  
+  # Total size
+  echo -e "${CYAN}Size:${NC}"
+  du -sh "$WORKSPACE" 2>/dev/null | head -1
+  echo ""
+  
+  # File counts
+  echo -e "${CYAN}Files:${NC}"
+  MD_COUNT=$(find "$WORKSPACE" -name "*.md" 2>/dev/null | wc -l)
+  JS_COUNT=$(find "$WORKSPACE" -name "*.js" -o -name "*.jsx" 2>/dev/null | wc -l)
+  SH_COUNT=$(find "$WORKSPACE" -name "*.sh" 2>/dev/null | wc -l)
+  log_info "Markdown: $MD_COUNT"
+  log_info "JavaScript: $JS_COUNT"
+  log_info "Shell: $SH_COUNT"
+  echo ""
+  
+  # Backup count
+  BACKUP_DIR="$WORKSPACE/backups/workspace"
+  if [ -d "$BACKUP_DIR" ]; then
+    BACKUP_COUNT=$(find "$BACKUP_DIR" -maxdepth 1 -type d ! -name 'workspace' ! -name '.' | wc -l)
+    log_info "Backups: $BACKUP_COUNT"
+  fi
+  
+  echo ""
+  log_success "Stats complete!"
+}
+
 # ─── Main ──────────────────────────────────────────────────────────────────
 case "$COMMAND" in
-  morning-check)  do_morning-check ;;
-  evening-wrap)   do_evening-wrap ;;
-  deploy-all)     do_deploy-all ;;
-  status-all)     do_status-all ;;
-  restart-all)    do_restart-all ;;
+  morning-check)   do_morning-check ;;
+  evening-wrap)    do_evening-wrap ;;
+  deploy-all)      do_deploy-all ;;
+  status-all)      do_status-all ;;
+  restart-all)     do_restart-all ;;
   backup-workspace) do_backup-workspace ;;
-  clean-logs)     do_clean-logs ;;
-  help|--help|-h) usage ;;
-  *)              log_error "Unknown command: $COMMAND"; usage; exit 1 ;;
+  clean-logs)      do_clean-logs ;;
+  stats)           do_workspace-stats ;;
+  help|--help|-h)  usage ;;
+  *)               log_error "Unknown command: $COMMAND"; usage; exit 1 ;;
 esac

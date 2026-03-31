@@ -3,6 +3,7 @@
 # WARREN: Quality Audit Script
 # ================================================
 # Audits code quality, security, and risk
+# Severity: CRITICAL > HIGH > MEDIUM > LOW
 # ================================================
 
 set -e
@@ -14,6 +15,7 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 CYAN='\033[0;36m'
+ORANGE='\033[0;33m'
 NC='\033[0m'
 
 echo "============================================"
@@ -22,24 +24,34 @@ echo "============================================"
 echo ""
 
 # Track issues
-ISSUES=0
-WARNINGS=0
+CRITICAL=0
+HIGH=0
+MEDIUM=0
+LOW=0
 SUCCESSES=0
 
-log_issue() { 
-  echo -e "${RED}[ISSUE]${NC} $1"
-  ((ISSUES++))
+log_critical() { 
+  echo -e "${RED}[CRITICAL]${NC} $1"
+  ((CRITICAL++))
 }
-log_warn() { 
-  echo -e "${YELLOW}[WARN]${NC} $1"
-  ((WARNINGS++))
+log_high() { 
+  echo -e "${ORANGE}[HIGH]${NC} $1"
+  ((HIGH++))
+}
+log_medium() { 
+  echo -e "${YELLOW}[MEDIUM]${NC} $1"
+  ((MEDIUM++))
+}
+log_low() { 
+  echo -e "${BLUE}[LOW]${NC} $1"
+  ((LOW++))
 }
 log_ok() { 
   echo -e "${GREEN}[OK]${NC} $1"
   ((SUCCESSES++))
 }
 log_info() { 
-  echo -e "${BLUE}[INFO]${NC} $1"
+  echo -e "${CYAN}[INFO]${NC} $1"
 }
 
 # ─── Code Quality Checks ───────────────────────────────────────────────────
@@ -79,7 +91,7 @@ echo -e "${CYAN}--- Security ---${NC}"
 # Check for API keys in code
 API_KEYS=$(grep -r "api_key\|apikey\|API_KEY\|APIKEY" "$NAVI_OS/src" --include="*.js" --include="*.jsx" 2>/dev/null | wc -l)
 if [ "$API_KEYS" -gt 0 ]; then
-  log_issue "Found potential API key references in source"
+  log_critical "Found potential API key references in source"
 else
   log_ok "No API key references found"
 fi
@@ -94,15 +106,15 @@ if [ -f "$NAVI_OS/.gitignore" ]; then
   if grep -q "\.env" "$NAVI_OS/.gitignore"; then
     log_ok ".env is in .gitignore"
   else
-    log_warn ".env may not be in .gitignore"
+    log_medium ".env may not be in .gitignore"
   fi
 else
-  log_issue ".gitignore not found"
+  log_high ".gitignore not found"
 fi
 
 # Check server.js for security issues
 if grep -q "eval\|new Function" "$NAVI_OS/server.js" 2>/dev/null; then
-  log_issue "Potential code injection risk: eval/new Function found"
+  log_high "Potential code injection risk: eval/new Function found"
 else
   log_ok "No eval/new Function found in server.js"
 fi
@@ -115,7 +127,7 @@ echo -e "${CYAN}--- Error Handling ---${NC}"
 # Check for ErrorBoundary usage
 ERROR_BOUNDY_COUNT=$(grep -r "ErrorBoundary" "$NAVI_OS/src" --include="*.jsx" 2>/dev/null | wc -l)
 if [ "$ERROR_BOUNDY_COUNT" -lt 3 ]; then
-  log_warn "Low ErrorBoundary usage ($ERROR_BOUNDY_COUNT found) - consider adding more"
+  log_medium "Low ErrorBoundary usage ($ERROR_BOUNDY_COUNT found) - consider adding more"
 else
   log_ok "ErrorBoundary usage is adequate ($ERROR_BOUNDY_COUNT)"
 fi
@@ -123,7 +135,7 @@ fi
 # Check for try-catch in API calls
 TRY_CATCH_COUNT=$(grep -r "try {" "$NAVI_OS/src" 2>/dev/null | wc -l)
 if [ "$TRY_CATCH_COUNT" -lt 5 ]; then
-  log_warn "Limited try-catch usage ($TRY_CATCH_COUNT found)"
+  log_low "Limited try-catch usage ($TRY_CATCH_COUNT found)"
 else
   log_ok "Try-catch usage is adequate ($TRY_CATCH_COUNT)"
 fi
@@ -206,18 +218,28 @@ echo ""
 echo "============================================"
 echo "📊 Audit Summary"
 echo "============================================"
-echo -e "  ${GREEN}OK:${NC}        $SUCCESSES"
-echo -e "  ${YELLOW}Warnings:${NC} $WARNINGS"
-echo -e "  ${RED}Issues:${NC}   $ISSUES"
+echo -e "  ${GREEN}Passed:${NC}    $SUCCESSES"
+echo -e "  ${BLUE}Low:${NC}       $LOW"
+echo -e "  ${YELLOW}Medium:${NC}   $MEDIUM"
+echo -e "  ${ORANGE}High:${NC}      $HIGH"
+echo -e "  ${RED}Critical:${NC}  $CRITICAL"
 echo ""
 
-if [ "$ISSUES" -gt 0 ]; then
-  echo -e "${RED}Quality issues found - recommend fixing before deployment${NC}"
+TOTAL_ISSUES=$((HIGH + MEDIUM + LOW + CRITICAL))
+
+if [ "$CRITICAL" -gt 0 ]; then
+  echo -e "${RED}CRITICAL issues found - immediate action required${NC}"
   exit 1
-elif [ "$WARNINGS" -gt 5 ]; then
-  echo -e "${YELLOW}Multiple warnings - review recommended${NC}"
+elif [ "$HIGH" -gt 0 ]; then
+  echo -e "${ORANGE}HIGH severity issues found - fix before deployment${NC}"
+  exit 1
+elif [ "$MEDIUM" -gt 0 ]; then
+  echo -e "${YELLOW}MEDIUM severity issues - review recommended${NC}"
+  exit 0
+elif [ "$TOTAL_ISSUES" -gt 0 ]; then
+  echo -e "${BLUE}Low severity issues only - audit passed${NC}"
   exit 0
 else
-  echo -e "${GREEN}Quality audit passed!${NC}"
+  echo -e "${GREEN}Quality audit PASSED - no issues found!${NC}"
   exit 0
 fi

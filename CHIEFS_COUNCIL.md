@@ -130,5 +130,28 @@ Cicle de 5 iteracions amb focus:
 
 ---
 
+## 10. Scripts del Council
+
+| Script | Chief | Propòsit |
+|--------|-------|----------|
+| `scripts/navios-tech-health.sh` | SAM | Tech health check |
+| `scripts/navios-deploy.sh` | JEFF | Deployment automation |
+| `scripts/warren-quality-audit.sh` | WARREN | Quality audits |
+| `scripts/warren-backup-validate.sh` | WARREN | Backup validation |
+| `scripts/jeff-ops-automation.sh` | JEFF | Operations automation |
+| `scripts/01-repo-backup.sh` | JEFF | Repository backup |
+
+---
+
+## 11. Fitxers de Visió
+
+| Fitxer | Chief | Propòsit |
+|--------|-------|----------|
+| `team/elom/STRATEGIC-VISION.md` | ELOM | Roadmap 10x |
+| `CHIEFS_COUNCIL.md` | Tots | Govern del council |
+
+---
+
 _Created: 2026-04-01_
-_Charter version: 1.0_
+_Charter version: 1.1_
+_Last updated: ChItera-4_

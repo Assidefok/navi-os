@@ -5,7 +5,7 @@
 
 ## Perspectiva: Chief Visionary Officer
 
-*"Si no et fa por, no és prou gran."*
+_"Si no et fa por, no és prou gran."_
 
 ---
 
@@ -20,7 +20,33 @@ Navi OS és actualment un dashboard operatiu que:
 
 ---
 
-## 2. Apostes 10x Proposades
+## 2. OKRs (Objectius i Key Results)
+
+### Objectiu Q2 2026: Estabilitzar i Professionalitzar
+| KR | Descripció | Mètrica |
+|----|------------|----------|
+| KR1 | Self-healing ops implementat | 90% uptime |
+| KR2 | Quality audits weekly | 4/4 weeks |
+| KR3 | Client delivery speed | -30% temps |
+| KR4 | Process automation | 7 scripts operacionals |
+
+### Objectiu Q3 2026: Autonomous Agent Pipeline
+| KR | Descripció | Mètrica |
+|----|------------|----------|
+| KR1 | Agent orchestration v1 | 5+ pipelines |
+| KR2 | Decision latency | <5 min |
+| KR3 | Agent success rate | >80% |
+
+### Objectiu Q4 2026: Predictive Intelligence
+| KR | Descripció | Mètrica |
+|----|------------|----------|
+| KR1 | ML model entrenat | 1 model |
+| KR2 | Prediccio accuracy | >70% |
+| KR3 | Auto-recommendations | 10+/day |
+
+---
+
+## 3. Apostes 10x Proposades
 
 ### Apuesta 1: Autonomous Agent Orchestration
 **Visio:** No només monitoritzar agents, sinó permetre que Aleix configuri pipelines d'agents autònoms que prenguin decisions i executin tasques complexes sense intervenció.
@@ -45,7 +71,7 @@ Navi OS és actualment un dashboard operatiu que:
 
 ---
 
-## 3. Fites per 2026
+## 4. Fites per 2026
 
 | Trimestre | Fita | Impacte |
 |-----------|------|---------|
@@ -55,7 +81,7 @@ Navi OS és actualment un dashboard operatiu que:
 
 ---
 
-## 4. Risks Estratègics
+## 5. Risks Estratègics
 
 1. **Dependency Lock-in:** massa acoblament a OpenClaw → diversificar
 2. **Technical Debt:** acumular massa features sense refactoritzar → invert weekly
@@ -63,7 +89,7 @@ Navi OS és actualment un dashboard operatiu que:
 
 ---
 
-## 5. Quan Dissentire
+## 6. Quan Dissentire
 
 - Quan es proposi algo que "funciona pero no escala"
 - Quan el risc no està quantificat
@@ -71,7 +97,7 @@ Navi OS és actualment un dashboard operatiu que:
 
 ---
 
-## 6. Propera Sessio
+## 7. Propera Sessio
 
 Proposta: Discutir Autonomus Agent Orchestration a la propera standup.
 
