@@ -386,3 +386,12 @@
   border-radius: 12px;
   font-family: 'Ubuntu', sans-serif;
 }
+
+.ai-timestamp {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: 12px;
+}

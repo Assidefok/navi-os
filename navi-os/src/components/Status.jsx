@@ -301,11 +301,16 @@ function IntegrationStatus() {
 function AIStatus() {
   const [aiInfo, setAiInfo] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [responseTime, setResponseTime] = useState(null)
 
   useEffect(() => {
+    const start = Date.now()
     fetch('/api/ai-status')
       .then(r => r.json())
-      .then(d => setAiInfo(d))
+      .then(d => {
+        setResponseTime(Date.now() - start)
+        setAiInfo(d)
+      })
       .catch(() => setAiInfo(null))
       .finally(() => setLoading(false))
   }, [])
@@ -316,6 +321,13 @@ function AIStatus() {
   const provider = aiInfo?.provider || 'Unknown'
   const status = aiInfo?.status || 'unknown'
   const skills = aiInfo?.skills || []
+  const timestamp = aiInfo?.timestamp ? new Date(aiInfo.timestamp).toLocaleTimeString() : '—'
+
+  const getLatencyColor = (ms) => {
+    if (ms < 100) return 'green'
+    if (ms < 500) return 'amber'
+    return 'red'
+  }
 
   return (
     <div className="status-section">
@@ -323,11 +335,27 @@ function AIStatus() {
       <div className="metrics-grid">
         <MetricCard icon={Bot} label="Model" value={model} color="violet" />
         <MetricCard icon={Server} label="Provider" value={provider} color="sky" />
-        <MetricCard icon={status === 'connected' ? CheckCircle2 : XCircle} label="Estat" value={status === 'connected' ? 'Connectat' : 'Error'} color={status === 'connected' ? 'green' : 'red'} />
+        <MetricCard 
+          icon={status === 'connected' ? CheckCircle2 : XCircle} 
+          label="Estat" 
+          value={status === 'connected' ? 'Connectat' : 'Error'} 
+          color={status === 'connected' ? 'green' : 'red'} 
+        />
+        {responseTime !== null && (
+          <MetricCard 
+            icon={Activity} 
+            label="Latencia" 
+            value={`${responseTime}ms`} 
+            color={getLatencyColor(responseTime)} 
+          />
+        )}
+      </div>
+      <div className="ai-timestamp">
+        <Clock size={12} /> Actualitzat: {timestamp}
       </div>
       {skills.length > 0 && (
         <div className="skills-list">
-          <span className="skills-label">Skills actives:</span>
+          <span className="skills-label">Skills actives ({skills.length}):</span>
           {skills.map(skill => (
             <span key={skill} className="skill-badge">{skill}</span>
           ))}
