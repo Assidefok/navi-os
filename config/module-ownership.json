@@ -1,0 +1,66 @@
+{
+  "Ops": {
+    "modules": [
+      "navi-os/src/modules/Ops.jsx",
+      "navi-os/src/modules/Ops.css",
+      "navi-os/src/modules/MissionControl.jsx",
+      "navi-os/src/modules/MissionControl.css",
+      "navi-os/src/modules/OrgChart.jsx",
+      "navi-os/src/modules/OrgChart.css"
+    ],
+    "components": [
+      "navi-os/src/components/TaskPipeline.jsx",
+      "navi-os/src/components/TaskPipeline.css",
+      "navi-os/src/components/DeliverableTracker.jsx",
+      "navi-os/src/components/DeliverableTracker.css",
+      "navi-os/src/components/TaskManager.jsx",
+      "navi-os/src/components/TaskManager.css",
+      "navi-os/src/components/Status.jsx",
+      "navi-os/src/components/Status.css",
+      "navi-os/src/components/Files.jsx",
+      "navi-os/src/components/Files.css",
+      "navi-os/src/components/Security.jsx",
+      "navi-os/src/components/Security.css",
+      "navi-os/src/components/Sync.jsx",
+      "navi-os/src/components/Sync.css"
+    ]
+  },
+  "Brain": {
+    "modules": [
+      "navi-os/src/modules/Brain.jsx",
+      "navi-os/src/modules/Brain.css"
+    ],
+    "components": [
+      "navi-os/src/components/Skills.css",
+      "navi-os/src/components/TeamOverview.jsx",
+      "navi-os/src/components/TeamOverview.css",
+      "navi-os/src/components/Proposals.jsx",
+      "navi-os/src/components/Proposals.css",
+      "navi-os/src/components/ui/Modal.jsx",
+      "navi-os/src/components/ui/Modal.css",
+      "navi-os/src/components/ui/FeatureCard.jsx",
+      "navi-os/src/components/ui/FeatureCard.css"
+    ]
+  },
+  "Lab": {
+    "modules": [
+      "navi-os/src/modules/Lab.jsx",
+      "navi-os/src/modules/Lab.css"
+    ],
+    "components": []
+  },
+  "Shared": {
+    "components": [
+      "navi-os/src/App.jsx",
+      "navi-os/src/App.css",
+      "navi-os/src/main.jsx",
+      "navi-os/src/index.css",
+      "navi-os/src/components/TopBar.jsx",
+      "navi-os/src/components/TopBar.css",
+      "navi-os/src/components/Dock.jsx",
+      "navi-os/src/components/Dock.css",
+      "navi-os/src/components/Settings.jsx",
+      "navi-os/src/components/Settings.css"
+    ]
+  }
+}

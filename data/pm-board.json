@@ -1,0 +1,108 @@
+{
+  "meta": {
+    "version": 1,
+    "path": "/home/user/.openclaw/workspace/data/pm-board.json",
+    "updatedAt": "2026-03-31T00:00:00.000Z"
+  },
+  "tasks": [
+    {
+      "id": "pm-gary-1",
+      "title": "Ops audit hardening",
+      "description": "Revisar operativa i health checks",
+      "assignee": "gary-devops",
+      "status": "in-progress",
+      "priority": "alta",
+      "createdDate": "2026-03-31T00:52:00.000Z",
+      "updatedDate": "2026-03-31T00:55:00.000Z",
+      "deliverableLink": "",
+      "notes": [
+        {
+          "at": "2026-03-31T00:55:00.000Z",
+          "by": "Gary",
+          "text": "Gary picked this up in standup"
+        }
+      ],
+      "history": [
+        {
+          "at": "2026-03-31T00:52:00.000Z",
+          "by": "Navi",
+          "action": "created",
+          "to": "todo"
+        },
+        {
+          "at": "2026-03-31T00:55:00.000Z",
+          "by": "Gary",
+          "action": "status-change",
+          "from": "todo",
+          "to": "in-progress"
+        }
+      ]
+    },
+    {
+      "id": "pm-blair-1",
+      "title": "Brain standup structure",
+      "description": "Preparar plantilla de standup per chiefs",
+      "assignee": "blair-brain",
+      "status": "review",
+      "priority": "media",
+      "createdDate": "2026-03-31T00:52:00.000Z",
+      "updatedDate": "2026-03-31T00:55:00.000Z",
+      "deliverableLink": "",
+      "notes": [
+        {
+          "at": "2026-03-31T00:55:00.000Z",
+          "by": "Blair",
+          "text": "Blair moved draft to review"
+        }
+      ],
+      "history": [
+        {
+          "at": "2026-03-31T00:52:00.000Z",
+          "by": "Navi",
+          "action": "created",
+          "to": "todo"
+        },
+        {
+          "at": "2026-03-31T00:55:00.000Z",
+          "by": "Blair",
+          "action": "status-change",
+          "from": "todo",
+          "to": "review"
+        }
+      ]
+    },
+    {
+      "id": "pm-lena-1",
+      "title": "Lab experiment queue",
+      "description": "Organitzar proves del laboratori",
+      "assignee": "lena-lab",
+      "status": "done",
+      "priority": "baixa",
+      "createdDate": "2026-03-31T00:52:00.000Z",
+      "updatedDate": "2026-03-31T00:55:00.000Z",
+      "deliverableLink": "https://example.local/lab-queue",
+      "notes": [
+        {
+          "at": "2026-03-31T00:55:00.000Z",
+          "by": "Lena",
+          "text": "Lena completed the lab queue setup"
+        }
+      ],
+      "history": [
+        {
+          "at": "2026-03-31T00:52:00.000Z",
+          "by": "Navi",
+          "action": "created",
+          "to": "todo"
+        },
+        {
+          "at": "2026-03-31T00:55:00.000Z",
+          "by": "Lena",
+          "action": "status-change",
+          "from": "todo",
+          "to": "done"
+        }
+      ]
+    }
+  ]
+}

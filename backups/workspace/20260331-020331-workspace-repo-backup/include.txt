@@ -1,0 +1,11 @@
+/home/user/.openclaw/workspace/navi-os
+/home/user/.openclaw/workspace/scripts
+/home/user/.openclaw/workspace/docs
+/home/user/.openclaw/workspace/memory
+/home/user/.openclaw/workspace/.learnings
+/home/user/.openclaw/workspace/MEMORY.md
+/home/user/.openclaw/workspace/PROJECT.md
+/home/user/.openclaw/workspace/SOUL.md
+/home/user/.openclaw/workspace/USER.md
+/home/user/.openclaw/workspace/AGENTS.md
+/home/user/.openclaw/workspace/TOOLS.md

@@ -94,7 +94,7 @@ function IdeasGallery() {
   }
 
   useEffect(() => {
-    loadIdeas()
+    Promise.resolve().then(() => loadIdeas())
   }, [])
 
   const acceptIdea = (id) => {

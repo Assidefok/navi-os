@@ -1,0 +1,13 @@
+{
+  "name": "20260331-010223-workspace-ui",
+  "type": "workspace",
+  "label": "ui",
+  "createdAt": "2026-03-31T01:02:23+02:00",
+  "host": "n100",
+  "workspace": "/home/user/.openclaw/workspace",
+  "branch": "master",
+  "commit": "dc9f9d8",
+  "archive": "/home/user/.openclaw/workspace/backups/workspace/20260331-010223-workspace-ui/20260331-010223-workspace-ui.tar.gz",
+  "size": "184K",
+  "sha256": "61f1a16aa38b576057b1577d786d558bcbf62d26aaa38142699eacf8ee54df18"
+}

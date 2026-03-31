@@ -1,0 +1,13 @@
+{
+  "name": "20260331-010227-full-ui",
+  "type": "full",
+  "label": "ui",
+  "createdAt": "2026-03-31T01:02:27+02:00",
+  "host": "n100",
+  "workspace": "/home/user/.openclaw/workspace",
+  "branch": "master",
+  "commit": "dc9f9d8",
+  "archive": "/home/user/.openclaw/workspace/backups/full/20260331-010227-full-ui/20260331-010227-full-ui.tar.gz",
+  "size": "180K",
+  "sha256": "5551774f6a1e019f5ab38b89e22129183c6de609545ea81a00b7d5b7a6f836b2"
+}

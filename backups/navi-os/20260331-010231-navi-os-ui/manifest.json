@@ -1,0 +1,13 @@
+{
+  "name": "20260331-010231-navi-os-ui",
+  "type": "navi-os",
+  "label": "ui",
+  "createdAt": "2026-03-31T01:02:31+02:00",
+  "host": "n100",
+  "workspace": "/home/user/.openclaw/workspace",
+  "branch": "master",
+  "commit": "dc9f9d8",
+  "archive": "/home/user/.openclaw/workspace/backups/navi-os/20260331-010231-navi-os-ui/20260331-010231-navi-os-ui.tar.gz",
+  "size": "160K",
+  "sha256": "2315a3d22c0ed87d723eaaadbd81dc5e68c2b0668ca7c3aa0425df4211fc654f"
+}

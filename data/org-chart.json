@@ -1,0 +1,88 @@
+{
+  "human": {
+    "name": "Aleix",
+    "role": "Human Owner",
+    "emoji": "🧑‍💼",
+    "chatId": "267107022"
+  },
+  "orchestrator": {
+    "agentId": "navi",
+    "name": "Navi",
+    "emoji": "🧚",
+    "role": "Chief of Staff / Orchestrator",
+    "source": "built-in",
+    "workspace": "/home/user/.openclaw/workspace"
+  },
+  "chiefs": [
+    {
+      "agentId": "elom",
+      "name": "ELOM",
+      "emoji": "🚀",
+      "role": "Chief Visionary Officer",
+      "department": "Strategy & Vision",
+      "inspiredBy": "Elon Musk",
+      "workspace": "/home/user/.openclaw/workspace/team/elom",
+      "heartbeatInterval": 120,
+      "model": "minimax-portal/MiniMax-M2.7",
+      "source": "custom"
+    },
+    {
+      "agentId": "warren",
+      "name": "WARREN",
+      "emoji": "📊",
+      "role": "Chief Quality Officer",
+      "department": "Quality & Standards",
+      "inspiredBy": "Warren Buffett",
+      "workspace": "/home/user/.openclaw/workspace/team/warren",
+      "heartbeatInterval": 135,
+      "model": "minimax-portal/MiniMax-M2.7",
+      "source": "custom"
+    },
+    {
+      "agentId": "jeff",
+      "name": "JEFF",
+      "emoji": "⚡",
+      "role": "Chief Operations Officer",
+      "department": "Operations & Execution",
+      "inspiredBy": "Jeff Bezos",
+      "workspace": "/home/user/.openclaw/workspace/team/jeff",
+      "heartbeatInterval": 150,
+      "model": "minimax-portal/MiniMax-M2.7",
+      "source": "custom"
+    },
+    {
+      "agentId": "sam",
+      "name": "SAM",
+      "emoji": "🤖",
+      "role": "Chief AI Officer / CTO d'IA",
+      "department": "AI & Technology",
+      "inspiredBy": "Sam Altman",
+      "workspace": "/home/user/.openclaw/workspace/team/sam",
+      "heartbeatInterval": 180,
+      "model": "minimax-portal/MiniMax-M2.7",
+      "source": "custom"
+    }
+  ],
+  "specialists": {
+    "elom": [
+      { "agentId": "vision-agent", "name": "Vision Agent", "role": "Strategic Vision" },
+      { "agentId": "product-agent", "name": "Product Agent", "role": "Product Strategy" },
+      { "agentId": "innovation-agent", "name": "Innovation Agent", "role": "Innovation Radar" }
+    ],
+    "warren": [
+      { "agentId": "qa-agent", "name": "QA Agent", "role": "Quality Assurance" },
+      { "agentId": "standards-agent", "name": "Standards Agent", "role": "Standards Definition" },
+      { "agentId": "audit-agent", "name": "Audit Agent", "role": "Process Audit" }
+    ],
+    "jeff": [
+      { "agentId": "ops-agent", "name": "Ops Agent", "role": "Day-to-day Operations" },
+      { "agentId": "process-agent", "name": "Process Agent", "role": "Process Design" },
+      { "agentId": "cx-agent", "name": "CX Agent", "role": "Customer Experience" }
+    ],
+    "sam": [
+      { "agentId": "ai-architect-agent", "name": "AI Architect", "role": "AI Architecture" },
+      { "agentId": "automation-agent", "name": "Automation Agent", "role": "Automation Design" },
+      { "agentId": "research-agent", "name": "Research Agent", "role": "Tech Research" }
+    ]
+  }
+}
