@@ -625,6 +625,35 @@ app.get('/api/integrations', (req, res) => {
   })
 })
 
+app.get('/api/ai-status', (req, res) => {
+  // SAM: AI status endpoint - returns model info, provider, and active skills
+  try {
+    const defaultModel = process.env.OPENCLAW_MODEL || 'minimax-portal/MiniMax-M2'
+    const provider = defaultModel.includes('openai') ? 'OpenAI' :
+                     defaultModel.includes('anthropic') ? 'Anthropic' :
+                     defaultModel.includes('minimax') ? 'MiniMax' : 'Unknown'
+    
+    // Get installed skills
+    let skills = []
+    try {
+      const skillsDir = join(WORKSPACE, 'skills')
+      if (existsSync(skillsDir)) {
+        skills = readdirSync(skillsDir).filter(f => !f.startsWith('.'))
+      }
+    } catch {}
+
+    res.json({
+      model: defaultModel,
+      provider: provider,
+      status: 'connected',
+      skills: skills.slice(0, 10), // Limit to 10 skills
+      timestamp: new Date().toISOString()
+    })
+  } catch (err) {
+    res.status(500).json({ error: err.message, status: 'error' })
+  }
+})
+
 app.get('/api/gateway-security', (req, res) => {
   try {
     const out = execSync('openclaw status 2>/dev/null | grep -E "Gateway|bind|auth|password" | head -10', { encoding: 'utf-8', timeout: 5000 })

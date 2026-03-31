@@ -298,12 +298,52 @@ function IntegrationStatus() {
   )
 }
 
+function AIStatus() {
+  const [aiInfo, setAiInfo] = useState(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetch('/api/ai-status')
+      .then(r => r.json())
+      .then(d => setAiInfo(d))
+      .catch(() => setAiInfo(null))
+      .finally(() => setLoading(false))
+  }, [])
+
+  if (loading) return <div className="status-loading"><Loader2 size={16} className="spin" /></div>
+
+  const model = aiInfo?.model || 'Unknown'
+  const provider = aiInfo?.provider || 'Unknown'
+  const status = aiInfo?.status || 'unknown'
+  const skills = aiInfo?.skills || []
+
+  return (
+    <div className="status-section">
+      <h3 className="section-title"><Bot size={14} /> IA / Model</h3>
+      <div className="metrics-grid">
+        <MetricCard icon={Bot} label="Model" value={model} color="violet" />
+        <MetricCard icon={Server} label="Provider" value={provider} color="sky" />
+        <MetricCard icon={status === 'connected' ? CheckCircle2 : XCircle} label="Estat" value={status === 'connected' ? 'Connectat' : 'Error'} color={status === 'connected' ? 'green' : 'red'} />
+      </div>
+      {skills.length > 0 && (
+        <div className="skills-list">
+          <span className="skills-label">Skills actives:</span>
+          {skills.map(skill => (
+            <span key={skill} className="skill-badge">{skill}</span>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function Status() {
   const [activeTab, setActiveTab] = useState('system')
 
   const tabs = [
     { id: 'system', label: 'Sistema' },
     { id: 'pm2', label: 'PM2' },
+    { id: 'ai', label: 'IA' },
     { id: 'agents', label: 'Agents' },
     { id: 'sessions', label: 'Sessions' },
     { id: 'cron', label: 'Cron' },
@@ -326,6 +366,7 @@ export default function Status() {
       <div className="status-content">
         {activeTab === 'system' && <SystemStatus />}
         {activeTab === 'pm2' && <Pm2Status />}
+        {activeTab === 'ai' && <AIStatus />}
         {activeTab === 'agents' && <AgentStatus />}
         {activeTab === 'sessions' && <SessionStatus />}
         {activeTab === 'cron' && <CronStatus />}
