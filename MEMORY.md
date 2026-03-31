@@ -158,15 +158,19 @@ cron list
 cron run <jobId>
 
 # Check run history
-cron runs <jobId>
+cron runs --id <jobId>
 ```
 
 | Job | Cron ID | Schedule | Purpose |
 |-----|---------|----------|---------|
 | Repo Backup | `546fb0ef-986e-4298-9b52-e7ef1796c596` | Daily 02:00 | Git push to private repo |
 | Overnight Audit | `9a7ceea6-bcd7-4999-a2d5-d735ee78ed20` | Daily 03:00 | Self-improvement audit |
+| Daily AI News | `dc4e5c01-6ea5-4317-8905-039f008aade1` | Daily 07:00 | AI news digest |
 | Daily Brief | `4182fba8-0791-4016-a2b1-08fb81064fdb` | Daily 08:00 | Morning summary |
+| Daily Standup | `1296613a-de11-4046-8944-2bd7b20fc71a` | Mon-Fri 08:30 | Multi-agent standup |
 | Rolling Docs | `d7a060a0-dc95-4d6a-814a-6398248610b7` | Daily 23:00 | Update system docs |
+| Navi OS Proposta | `ac451081-9ec2-40ff-b17c-4fbcc393c358` | Daily 23:00 | Propose improvements |
+| Navi OS Execucio | `96af6cc3-b6aa-4d53-9ea8-6ea5ac0c6187` | Mon-Fri 09:00 | Execute improvements |
 
 ---
 
