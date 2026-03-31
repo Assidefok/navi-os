@@ -1,6 +1,6 @@
 # MEMORY.md - ELOM
 
-_Last updated: 2026-03-31T15:15:00.000Z_
+_Last updated: 2026-03-31T23:26:00.000Z_
 
 ---
 
@@ -64,6 +64,13 @@ _Primera setmana d'operacions — no hi ha lliçons enregistrades encara._
 |------|----------|-------|
 | pm-navi-4 (Scalable OS) | pm-elom-1 + pm-sam-1 | BLOQUEJAT |
 | Strategic decisions | pm-elom-1 | Pendent |
+
+---
+
+## Open Issues
+- Strategic vision document (pm-elom-1) — pending Aleix approval
+- JEFF blocked on pm-elom-1 + pm-sam-1 for Scalable OS
+- Need 3 big 10x bets defined for 2026
 
 ---
 

@@ -1,0 +1,104 @@
+[2026-03-31 21:08:23] Proposals Watcher - INICIANT
+[2026-03-31 21:08:23] ==================================================
+[2026-03-31 21:08:23] Vigilant: /home/user/.openclaw/workspace/data/proposals.json
+[2026-03-31 21:08:23] ==================================================
+[2026-03-31 21:08:23] ✅ Watcher actiu
+[2026-03-31 21:08:23] Esperant canvis...
+[2026-03-31 21:08:41] Canvi detectat: change
+[2026-03-31 21:08:42] Processant 1 proposta(es) canviada(es)
+[2026-03-31 21:09:00] Canvi detectat: change
+[2026-03-31 21:09:00] Canvi detectat: change
+[2026-03-31 21:09:00] Processant 1 proposta(es) canviada(es)
+[2026-03-31 21:09:00] Telegram token no trobat, provant via openclaw...
+[2026-03-31 21:09:04] Error enviant Telegram: Command failed: openclaw telegram send "Aleix" "🧚 *CANVI A PROPOSTES*
+
+S'han modificat *1* proposta(es):
+
+🤖 *🤖* (1 canvi):
+  ⏳ TEST - Nova proposta de prova
+
+_Notificant chiefs en cadena (ELOM → WARREN → JEFF → SAM)..._" 2>/dev/null
+[2026-03-31 21:20:01] ==================================================
+[2026-03-31 21:20:01] Proposals Watcher - INICIANT
+[2026-03-31 21:20:01] Vigilant: /home/user/.openclaw/workspace/data/proposals.json
+[2026-03-31 21:20:01] ==================================================
+[2026-03-31 21:20:01] ✅ Watcher actiu
+[2026-03-31 21:20:01] Esperant canvis...
+[2026-03-31 21:20:10] Canvi detectat: change
+[2026-03-31 21:20:10] Canvi detectat però cap proposta recent
+[2026-03-31 21:20:34] Canvi detectat: change
+[2026-03-31 21:20:34] Telegram token no trobat, provant via openclaw...
+[2026-03-31 21:20:38] Error enviant Telegram: Command failed: openclaw telegram send "Aleix" "🧚 *CANVI A PROPOSTES*
+
+S'han modificat *1* proposta(es):
+
+🤖 *SAM* (1 canvi):
+  ⏳ TEST - Nova proposta de prova
+
+_Notificant chiefs en cadena (ELOM → WARREN → JEFF → SAM)..._" 2>/dev/null
+[2026-03-31 21:20:34] Processant 1 proposta(es) canviada(es)
+[2026-03-31 21:21:59] ==================================================
+[2026-03-31 21:21:59] Proposals Watcher - INICIANT
+[2026-03-31 21:21:59] Vigilant: /home/user/.openclaw/workspace/data/proposals.json
+[2026-03-31 21:21:59] ==================================================
+[2026-03-31 21:21:59] ✅ Watcher actiu
+[2026-03-31 21:21:59] Esperant canvis...
+[2026-03-31 21:22:06] Canvi detectat: change
+[2026-03-31 21:22:06] Canvi detectat: change
+[2026-03-31 21:22:07] Processant 1 proposta(es) canviada(es)
+[2026-03-31 21:22:07] Telegram token no trobat
+[2026-03-31 21:22:38] ==================================================
+[2026-03-31 21:22:38] Proposals Watcher - INICIANT
+[2026-03-31 21:22:38] Vigilant: /home/user/.openclaw/workspace/data/proposals.json
+[2026-03-31 21:22:38] ==================================================
+[2026-03-31 21:22:38] ✅ Watcher actiu
+[2026-03-31 21:22:38] Esperant canvis...
+[2026-03-31 21:22:47] Canvi detectat: change
+[2026-03-31 21:22:47] Canvi detectat: change
+[2026-03-31 21:22:47] Processant 2 proposta(es) canviada(es)
+[2026-03-31 21:22:48] Missatge Telegram enviat
+[2026-03-31 21:23:09] Canvi detectat: change
+[2026-03-31 21:23:09] Canvi detectat: change
+[2026-03-31 21:23:09] Processant 1 proposta(es) canviada(es)
+[2026-03-31 21:23:09] Canvi detectat però cap chief afectat
+[2026-03-31 21:25:33] ==================================================
+[2026-03-31 21:25:33] Proposals Watcher - INICIANT
+[2026-03-31 21:25:33] Vigilant: /home/user/.openclaw/workspace/data/proposals.json
+[2026-03-31 21:25:33] ==================================================
+[2026-03-31 21:25:33] ✅ Watcher actiu
+[2026-03-31 21:25:33] Esperant canvis...
+[2026-03-31 21:26:41] Canvi detectat: change
+[2026-03-31 21:26:41] Canvi detectat: rename
+[2026-03-31 21:26:41] Canvi detectat: rename
+[2026-03-31 21:26:41] Processant 2 proposta(es) canviada(es)
+[2026-03-31 21:26:42] Missatge Telegram enviat
+[2026-03-31 22:01:59] ==================================================
+[2026-03-31 22:01:59] Proposals Watcher - INICIANT
+[2026-03-31 22:01:59] Vigilant: /home/user/.openclaw/workspace/data/proposals.json
+[2026-03-31 22:01:59] ==================================================
+[2026-03-31 22:01:59] ✅ Watcher actiu
+[2026-03-31 22:01:59] Esperant canvis...
+[2026-03-31 22:02:21] Canvi detectat: change
+[2026-03-31 22:02:21] Canvi detectat: change
+[2026-03-31 22:02:22] Processant 1 proposta(es) canviada(es)
+[2026-03-31 22:02:22] Missatge Telegram enviat
+[2026-03-31 22:10:52] Proposals Watcher - INICIANT
+[2026-03-31 22:10:52] ==================================================
+[2026-03-31 22:10:52] Vigilant: /home/user/.openclaw/workspace/data/proposals.json
+[2026-03-31 22:10:52] ==================================================
+[2026-03-31 22:10:52] ✅ Watcher actiu
+[2026-03-31 22:10:52] Esperant canvis...
+[2026-03-31 22:50:52] ==================================================
+[2026-03-31 22:50:52] Proposals Watcher - INICIANT
+[2026-03-31 22:50:52] ==================================================
+[2026-03-31 22:50:52] Vigilant: /home/user/.openclaw/workspace/data/proposals.json
+[2026-03-31 22:50:52] ✅ Watcher actiu
+[2026-03-31 22:50:52] Esperant canvis...
+[2026-03-31 22:52:19] Canvi detectat: change
+[2026-03-31 22:52:19] Canvi detectat: change
+[2026-03-31 22:52:19] Canvi detectat: change
+[2026-03-31 22:52:20] Missatge Telegram enviat
+[2026-03-31 22:52:20] Processant 1 proposta(es) canviada(es)
+[2026-03-31 22:53:15] Canvi detectat: change
+[2026-03-31 22:53:15] Processant 1 proposta(es) canviada(es)
+[2026-03-31 22:53:15] Missatge Telegram enviat

@@ -1135,7 +1135,7 @@ export default function Brain() {
         {activeSection === 'command' && <BrainCommandCenter onNavigate={handleNavigate} />}
         {activeSection === 'mission' && <MissionControl />}
         {activeSection === 'team' && <TeamOverview />}
-        {activeSection === 'memory' && (
+        {activeSection === 'memory' && !showMemoryViewer && (
           <div className="memory-section" onClick={() => setShowMemoryViewer(true)}>
             <div className="click-to-open">
               <FolderOpen size={40} className="sky" />

@@ -1,22 +1,30 @@
 {
   "entries": [
     {
+      "filename": "2026-03-31-23.00.md",
+      "headlines": [
+        "Bill Gates\u2019 Latest Portfolio: Is FedEx (FDX) The Best Stock to Buy?",
+        "Coinbase Rises 3%, Bitmine Jumps 4%: Is the Crypto Rally Back?",
+        "Stock market bulls, don't forget this one: Oil price shocks usually lead to a re",
+        "Negative Sentiment Around Insurance-Related Companies Pressured Arthur J Gallagh",
+        "Food Industry is 'Crazy and Wild' as Costs, Prices Rise, Says Stew Leonard's CEO"
+      ],
+      "topics": [
+        "US Markets",
+        "Global Markets",
+        "Finance"
+      ],
+      "tags": [
+        "stocks",
+        "markets",
+        "finance",
+        "investing"
+      ],
       "date": "2026-03-31",
-      "file": "2026-03-31-market.md",
-      "item_count": 10,
-      "generated_at": "2026-03-31 21:59:48"
-    },
-    {
-      "date": "2026-03-31",
-      "file": "2026-03-31-market.md",
-      "item_count": 10,
-      "generated_at": "2026-03-31 21:59:00"
-    },
-    {
-      "date": "2026-03-31",
-      "file": "2026-03-31-market.md",
-      "item_count": 10,
-      "generated_at": "2026-03-31 21:58:18"
+      "hour": "23",
+      "timestamp": "2026-03-31 23:47:33",
+      "item_count": 5
     }
-  ]
+  ],
+  "last_updated": "2026-03-31 23:47:33"
 }

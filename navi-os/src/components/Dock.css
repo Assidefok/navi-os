@@ -69,19 +69,19 @@
   filter: drop-shadow(0 0 8px rgba(255, 184, 0, 0.5));
 }
 
-/* Brain - sky glow */
-.dock-item:nth-child(2):hover .dock-icon-wrap {
-  filter: drop-shadow(0 0 10px rgba(0, 180, 216, 0.6));
-}
-.dock-item:nth-child(2).active .dock-icon-wrap {
-  filter: drop-shadow(0 0 8px rgba(0, 180, 216, 0.5));
-}
-
-/* Lab - green glow */
+/* Proposals - amber glow (3rd) */
 .dock-item:nth-child(3):hover .dock-icon-wrap {
-  filter: drop-shadow(0 0 10px rgba(0, 255, 65, 0.6));
+  filter: drop-shadow(0 0 10px rgba(255, 184, 0, 0.6));
 }
 .dock-item:nth-child(3).active .dock-icon-wrap {
+  filter: drop-shadow(0 0 8px rgba(255, 184, 0, 0.5));
+}
+
+/* Lab - green glow (4th) */
+.dock-item:nth-child(4):hover .dock-icon-wrap {
+  filter: drop-shadow(0 0 10px rgba(0, 255, 65, 0.6));
+}
+.dock-item:nth-child(4).active .dock-icon-wrap {
   filter: drop-shadow(0 0 8px rgba(0, 255, 65, 0.5));
 }
 

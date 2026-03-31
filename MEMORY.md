@@ -116,6 +116,13 @@ memory/
 - Episode 2: COMPLETAT (Mission Control, Org Chart, Task Manager, PM Boards, Brain, Lab)
 - Status: Active development
 
+### Trump Jr. Stock Tracker (FUTUR)
+- Projecte guardat a: `/home/user/.openclaw/workspace/projects/trump-jr-tracker/`
+- Objectiu:监控系统 i analitzar moviments bursàtils de Donald Trump Jr.
+- Estat: PROPOSAT (31/03/2026)
+- Analisi feta per ELOM + WARREN
+- Veure README del projecte per detalls complets
+
 ### OpenClaw Implementation Business
 - Aleix wants to build a business implementing OpenClaw for clients
 - Looking for work in AI sector

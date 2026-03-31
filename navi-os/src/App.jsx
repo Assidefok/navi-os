@@ -7,6 +7,7 @@ import ErrorBoundary from './components/ErrorBoundary'
 import Ops from './modules/Ops'
 import Brain from './modules/Brain'
 import Lab from './modules/Lab'
+import ProposalsBoard from './modules/Proposals/ProposalsBoard'
 import './App.css'
 
 // Inner app component that uses routing hooks
@@ -18,7 +19,7 @@ function AppContent() {
   // Determine active tab from URL path
   const getActiveTab = () => {
     const path = location.pathname.replace('/', '') || 'ops'
-    if (['ops', 'brain', 'lab'].includes(path)) return path
+    if (['ops', 'brain', 'lab', 'proposals'].includes(path)) return path
     return 'ops'
   }
 
@@ -27,7 +28,8 @@ function AppContent() {
   const ActiveModule = {
     ops: Ops,
     brain: Brain,
-    lab: Lab
+    lab: Lab,
+    proposals: ProposalsBoard,
   }[activeTab] || Ops
 
   const handleTabChange = (tab) => {
@@ -61,6 +63,7 @@ function App() {
           <Route path="/ops" element={<AppContent />} />
           <Route path="/brain" element={<AppContent />} />
           <Route path="/lab" element={<AppContent />} />
+          <Route path="/proposals" element={<AppContent />} />
         </Routes>
       </BrowserRouter>
     </ErrorBoundary>

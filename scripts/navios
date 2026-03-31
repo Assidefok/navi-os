@@ -1,0 +1,26 @@
+#!/bin/bash
+# Navi OS Control Script
+# Usage: navios [start|stop|restart|status]
+
+case "$1" in
+  start)
+    echo "🚀 Starting Navi OS..."
+    cd /home/user/.openclaw/workspace/navi-os && npx pm2 resurrect
+    ;;
+  stop)
+    echo "⏹️  Stopping Navi OS..."
+    npx pm2 stop vite navi-os-api 2>/dev/null
+    ;;
+  restart)
+    echo "🔄 Restarting Navi OS..."
+    npx pm2 restart vite navi-os-api
+    ;;
+  status)
+    echo "📊 Navi OS Status:"
+    npx pm2 list
+    ;;
+  *)
+    echo "Usage: navios {start|stop|restart|status}"
+    exit 1
+    ;;
+esac

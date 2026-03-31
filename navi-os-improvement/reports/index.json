@@ -2,7 +2,7 @@
   "vault": "navi-os-improvement",
   "description": "Sistema de millora automatitzada per Navi OS",
   "created": "2026-03-31",
-  "updated": "2026-03-31-21.46",
+  "updated": "2026-03-31T21:00:00Z",
   "tags": ["automation", "improvement", "navi-os", "react", "api", "pm2", "episodi-4"],
   "reports": [
     {
@@ -52,6 +52,29 @@
       "failed": [],
       "success_rate": "100%",
       "summary": "Totes 5 millores implementades amb èxit. Sistema operational."
+    },
+    {
+      "id": "improvements-2026-03-31-21.00",
+      "filename": "2026-03-31-improvements.md",
+      "type": "proposal",
+      "date": "2026-03-31",
+      "time": "21:00",
+      "title": "Proposta de Millores Navi OS - 2026-03-31 (Nit)",
+      "tags": ["proposal", "improvement", "navi-os", "night-proposal", "brain-refactor", "design-tokens", "async-exec"],
+      "topics": ["brain-jsx", "duplicate-api", "execSync", "design-tokens", "polling", "cron-health", "system-metrics"],
+      "improvements": ["navios-2026-03-31-01", "navios-2026-03-31-02", "navios-2026-03-31-03", "navios-2026-03-31-04", "navios-2026-03-31-05"],
+      "summary": "5 millores proposades: Brain.jsx refactor (extreure subcomponents), Fix duplicate /api/ideas, Async system-metrics, CSS design tokens, Polling a Status/Cron"
+    },
+    {
+      "id": "queue-2026-03-31-21.00",
+      "filename": "2026-03-31-queue.json",
+      "type": "queue",
+      "date": "2026-03-31",
+      "time": "21:00",
+      "title": "Cua de millores - 2026-03-31 (Nit)",
+      "tags": ["queue", "json", "night", "automation"],
+      "topics": ["improvement-queue", "brain-refactor", "api-fix", "async-exec", "css-tokens", "polling"],
+      "summary": "Queue JSON amb 5 millores pendents: brain-jsx, duplicate-api, execSync, design-tokens, polling"
     }
   ],
   "index_by_topic": {
@@ -59,14 +82,24 @@
     "react-router": ["improvements-2026-03-31-18.54", "execution-2026-03-31-18.58"],
     "error-boundary": ["improvements-2026-03-31-18.54", "execution-2026-03-31-18.58"],
     "proposals-api": ["improvements-2026-03-31-18.54", "execution-2026-03-31-18.58"],
-    "pm2-monitoring": ["improvements-2026-03-31-18.54", "execution-2026-03-31-18.58"]
+    "pm2-monitoring": ["improvements-2026-03-31-18.54", "execution-2026-03-31-18.58"],
+    "brain-jsx": ["improvements-2026-03-31-21.00"],
+    "duplicate-api": ["improvements-2026-03-31-21.00"],
+    "execSync": ["improvements-2026-03-31-21.00"],
+    "design-tokens": ["improvements-2026-03-31-21.00"],
+    "polling": ["improvements-2026-03-31-21.00"],
+    "cron-health": ["improvements-2026-03-31-21.00"],
+    "system-metrics": ["improvements-2026-03-31-21.00"]
   },
   "index_by_tag": {
-    "automation": ["2026-03-31-17.31-standup.md", "2026-03-31-18.54-queue.json", "2026-03-31-18.58-execution.md"],
-    "improvement": ["2026-03-31-18.54-improvements.md", "2026-03-31-18.58-execution.md"],
+    "automation": ["2026-03-31-17.31-standup.md", "2026-03-31-18.54-queue.json", "2026-03-31-18.58-execution.md", "2026-03-31-21.00-queue.json"],
+    "improvement": ["2026-03-31-18.54-improvements.md", "2026-03-31-18.58-execution.md", "2026-03-31-improvements.md"],
     "episodi-4": ["2026-03-31-18.54-improvements.md", "2026-03-31-18.58-execution.md"],
-    "navi-os": ["2026-03-31-18.54-improvements.md", "2026-03-31-18.58-execution.md"],
+    "navi-os": ["2026-03-31-18.54-improvements.md", "2026-03-31-18.58-execution.md", "2026-03-31-improvements.md"],
     "execution": ["2026-03-31-18.58-execution.md"],
-    "proposal": ["2026-03-31-18.54-improvements.md"]
+    "proposal": ["2026-03-31-18.54-improvements.md", "2026-03-31-improvements.md"],
+    "night-proposal": ["2026-03-31-improvements.md"],
+    "brain-refactor": ["2026-03-31-improvements.md"],
+    "queue": ["2026-03-31-18.54-queue.json", "2026-03-31-queue.json"]
   }
 }

@@ -5,8 +5,8 @@
 When SAM wakes up:
 
 1. **Read SOUL.md** - Who am I, what's my mission
-2. **Read IDENTITY.md** - My responsibilities and scope
-3. **Read MEMORY.md** - Active AI projects and automations
+2. **Read MEMORY.md** - Active AI projects and automations ← second!
+3. **Read IDENTITY.md** - My responsibilities and scope
 4. **Check BACKLOG.md** - Pending technical tasks
 5. **Review PM-BOARD** - Tech tasks, automations status
 

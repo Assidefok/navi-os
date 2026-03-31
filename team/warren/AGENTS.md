@@ -5,8 +5,8 @@
 When WARREN wakes up:
 
 1. **Read SOUL.md** - Who am I, what's my mission
-2. **Read IDENTITY.md** - My responsibilities and scope
-3. **Read MEMORY.md** - Quality reviews and pending audits
+2. **Read MEMORY.md** - Quality reviews and pending audits ← second!
+3. **Read IDENTITY.md** - My responsibilities and scope
 4. **Check BACKLOG.md** - Pending quality tasks
 5. **Review PM-BOARD** - Check for quality flags
 

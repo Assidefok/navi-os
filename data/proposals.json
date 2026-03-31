@@ -1,21 +1,47 @@
 {
   "proposals": [
     {
+      "id": "proposal-1774997595008",
+      "title": "Idea → Debat amb el Chief assignat",
+      "description": "Quan s'accepta una idea al Lab, crea automàticament una proposta de debat i assigna al chief proposat per gestionar-la",
+      "author": "navi",
+      "assignee": null,
+      "status": "debate",
+      "priority": "alta",
+      "track": "B",
+      "createdAt": "2026-03-31T22:53:15.007Z",
+      "updatedAt": "2026-03-31T22:53:15.007Z",
+      "source": "automation",
+      "sourceAutomation": "auto-idea-debat",
+      "debateOutcome": null,
+      "debateNotes": []
+    },
+    {
       "id": "prop-001",
-      "title": "Millora PM Board - Drag & Drop de tasques",
-      "description": "Permetre arrossegar tasques entre columnes del Kanban per canviar el seu estat mes intuitivament.",
+      "title": "Millora PM Board - Drag & Drop",
+      "description": "Permetre arrossegar tasques entre columnes del Kanban.",
       "category": "ux",
       "status": "accepted",
-      "createdAt": "2026-03-30T10:00:00Z"
+      "createdAt": "2026-03-30T10:00:00Z",
+      "updatedAt": "2026-03-31T21:22:30.000Z"
     },
     {
       "id": "prop-002",
       "title": "Sistema de propostes de millora",
-      "description": "Afegeix un panell on puc suggerir millores i tu pots acceptar o rebutjar. Aixi sabem què estem construint junts.",
+      "description": "Afegeix un panell on puc suggerir millores i tu pots acceptar o rebutjar.",
       "category": "workflow",
       "status": "accepted",
       "createdAt": "2026-03-31T00:40:00Z",
       "updatedAt": "2026-03-31T12:02:29.856Z"
+    },
+    {
+      "id": "prop-003",
+      "title": "TEST - Proposta AUTOMATICA",
+      "category": "ai",
+      "chiefId": "sam",
+      "status": "rejected",
+      "createdAt": "2026-03-31T21:05:00Z",
+      "updatedAt": "2026-03-31T22:52:19.665Z"
     }
   ]
 }

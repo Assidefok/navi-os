@@ -1,71 +1,63 @@
 # MEMORY.md - JEFF
 
-_Last updated: 2026-03-31_
+_Last updated: 2026-03-31T23:26:00.000Z_
 
 ---
 
 ## Active Projects
-
-### Projectes Operatius
-
-| Projecte | Estat | Eficiència | Darrera Revisió |
-|----------|-------|------------|------------------|
-| [Nom] | [Actiu/Pendent] | [%] | YYYY-MM-DD |
+| Project | Status | Last Update | Notes |
+|---------|--------|-------------|-------|
+| OpenClaw Implementation Operations | IN-PROGRESS | 2026-03-31 | Building operational playbook |
 
 ---
 
-## Processos Clau
-
-| Procés | Versió | Eficiència | Revisió Pròxima |
-|--------|--------|------------|-----------------|
-| [Nom] | v1.0 | [%] | YYYY-MM-DD |
-
----
-
-## Ineficiències Detectades
-
-| Coll d'Ampolla | Impacte | Solució Implementada | Estat |
-|----------------|---------|---------------------|-------|
-| [Nom] | [Alto/Medium] | [Solució] | [Fix/Pendent] |
+## Decisions Log
+| Date | Decision | Impact | Status |
+|------|---------|--------|--------|
+| 2026-03-31 | JEFF owns operational efficiency and process design | Alto | Vigent |
 
 ---
 
-## Automatitzacions
+## Process Efficiency
 
-| Procés | Automatitzat | Eficiència Guanyada |
-|--------|--------------|---------------------|
-| [Nom] | ✓/✗ | [%] |
-
----
-
-## Decisions Operatives
-
-| Data | decisió | Impacte | Resultat |
-|------|---------|---------|---------|
-| YYYY-MM-DD | [Descripció] | [Mètrica] | [Resultat] |
+| Process | Efficiency | Last Review | Status |
+|---------|------------|-------------|--------|
 
 ---
 
-## Lliçons Apreses
-
-### Lliçó 1
-**Data:** YYYY-MM-DD
-**Context:** [Situació]
-**Lliçó:** [Què vam aprendre]
-**Canvi Implementat:** [Com s'ha millorat]
+## Inefficiencies Detected
+| Bottleneck | Impact | Solution | Status |
+|------------|--------|----------|--------|
 
 ---
 
-## Revisió Operativa
-
-### Coll d'Ampolla Actius
-- [Coll 1]
-- [Coll 2]
-
-### Millores en Curs
-- [Millora 1]
-- [Millora 2]
+## Automations
+| Process | Automated | Efficiency Gain | Status |
+|---------|-----------|-----------------|--------|
 
 ---
 
-_JEFF mideix el púlso operatiu. Cada ineficiència és una oportunitat._
+## Lessons Learned
+
+### Lesson 1
+**Date:** 2026-03-31
+**Trigger:** First week of chief operations
+**Lesson:** Need to track operational metrics from day one, not retroactively
+**Change:** Populating this MEMORY.md with structure; commit to updating on each operational event
+
+---
+
+## Open Issues
+- Missing operational metrics tracking — need to define KPIs
+- No efficiency baseline established yet — pending first client engagement
+
+---
+
+## Heartbeat Log
+| Timestamp (UTC) | Status | Notes |
+|-----------------|--------|-------|
+| 2026-03-31T21:47:00Z | OK | PM board stale (14h since last update). No critical blockers. JEFF task pm-navi-5 (MEMORY/BACKLOG population) needs completion. |
+
+---
+
+_JEFF measures the operational pulse. Every inefficiency is an opportunity._

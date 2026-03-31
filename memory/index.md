@@ -1,7 +1,7 @@
 ---
 type: vault-index
 name: Navi OS Memory Vault
-created: 2026-03-31 22:06
+created: 2026-03-31 23:47
 ---
 
 # 🧚 Navi OS Memory Vault
@@ -34,6 +34,14 @@ Iran war and Middle East conflict news
 - **Darrera entrada:** 2026-03-31
 - **Tags:** #iran #middle-east #war #conflict
 
+## 📈 [[Stock-Market/index.md|Borsa]]
+
+Stock market and finance news
+
+- **Entrades totals:** 1
+- **Darrera entrada:** 2026-03-31
+- **Tags:** #stocks #markets #finance #investing
+
 
 ## Estructura
 
@@ -58,4 +66,4 @@ memory/
 - #iran #middle-east #war
 
 ---
-*Generat per Navi OS | 2026-03-31 22:06*
+*Generat per Navi OS | 2026-03-31 23:47*

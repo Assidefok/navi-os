@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
-import { Activity, Zap, Link, FolderSync, Shield, Database, Users, Bot, MessageSquare, Moon, CheckCircle2, AlertCircle, Clock, LayoutList, LayoutDashboard, FileCode, Server } from 'lucide-react'
+import { Activity, Zap, Link, FolderSync, Shield, Database, Users, LayoutList, LayoutDashboard, Server, Moon, CheckCircle2, AlertCircle, MessageSquare } from 'lucide-react'
 import TaskPipeline from '../components/TaskPipeline'
+import ChiefsCouncil from './Ops/ChiefsCouncil/ChiefsCouncil'
 import DeliverableTracker from '../components/DeliverableTracker'
 import TaskManager from '../components/TaskManager'
-import FeatureCard from '../components/ui/FeatureCard'
 import MissionControl from './MissionControl'
 import OrgChart from './OrgChart'
 import Status from '../components/Status'
@@ -11,16 +11,8 @@ import Files from '../components/Files'
 import Security from '../components/Security'
 import Sync from '../components/Sync'
 import Proposals from '../components/Proposals'
+import AutomationsBoard from './Ops/Automations/AutomationsBoard'
 import './Ops.css'
-
-const FEATURES = [
-  { icon: Activity, name: 'Status', desc: 'Estat del sistema' },
-  { icon: Zap, name: 'Automation', desc: 'Automatitzacions' },
-  { icon: Link, name: 'Integrations', desc: 'Connexions externes' },
-  { icon: FolderSync, name: 'Files', desc: 'Gestio d\'arxius' },
-  { icon: Shield, name: 'Security', desc: 'Seguretat' },
-  { icon: Database, name: 'Sync', desc: 'Sincronitzacio' }
-]
 
 // ─── Overnight Summary ─────────────────────────────────────────────────────────
 
@@ -191,9 +183,21 @@ function HealthErrors() {
 
 // ─── Main Ops ─────────────────────────────────────────────────────────────────
 
+// ─── Placeholder Views ────────────────────────────────────────────────────────
+
+function IntegrationView() {
+  return (
+    <div className="placeholder-view">
+      <div className="placeholder-icon"><Link size={48} className="amber" /></div>
+      <h2>Integrations</h2>
+      <p>En desenvolupament</p>
+      <p>Connexions externes: API, webhooks, serveis de tercers.</p>
+    </div>
+  )
+}
+
 export default function Ops() {
   const [viewMode, setViewMode] = useState('hub')
-  const [activePanel, setActivePanel] = useState(null)
 
   return (
     <div className="module-view ops">
@@ -203,131 +207,87 @@ export default function Ops() {
       <div className="ops-toggles">
         <button
           className={`toggle-btn ${viewMode === 'hub' ? 'active' : ''}`}
-          onClick={() => { setViewMode('hub'); setActivePanel(null) }}
+          onClick={() => setViewMode('hub')}
         >
           <LayoutDashboard size={15} />
           Mission Control
         </button>
         <button
           className={`toggle-btn ${viewMode === 'orgchart' ? 'active' : ''}`}
-          onClick={() => { setViewMode('orgchart'); setActivePanel(null) }}
+          onClick={() => setViewMode('orgchart')}
         >
           <Users size={15} />
           Org Chart
         </button>
         <button
           className={`toggle-btn ${viewMode === 'pipeline' ? 'active' : ''}`}
-          onClick={() => { setViewMode('pipeline'); setActivePanel(null) }}
+          onClick={() => setViewMode('pipeline')}
         >
           <LayoutList size={15} />
           PM Board
         </button>
         <button
           className={`toggle-btn ${viewMode === 'manager' ? 'active' : ''}`}
-          onClick={() => { setViewMode('manager'); setActivePanel(null) }}
+          onClick={() => setViewMode('manager')}
         >
           <Activity size={15} />
           Task Manager
         </button>
+        <button
+          className={`toggle-btn ${viewMode === 'files' ? 'active' : ''}`}
+          onClick={() => setViewMode('files')}
+        >
+          <FolderSync size={15} />
+          Files
+        </button>
+        <button
+          className={`toggle-btn ${viewMode === 'sync' ? 'active' : ''}`}
+          onClick={() => setViewMode('sync')}
+        >
+          <Database size={15} />
+          Sync
+        </button>
+        <button
+          className={`toggle-btn ${viewMode === 'security' ? 'active' : ''}`}
+          onClick={() => setViewMode('security')}
+        >
+          <Shield size={15} />
+          Security
+        </button>
+        <button
+          className={`toggle-btn ${viewMode === 'automation' ? 'active' : ''}`}
+          onClick={() => setViewMode('automation')}
+        >
+          <Zap size={15} />
+          Automations
+        </button>
+        <button
+          className={`toggle-btn ${viewMode === 'integration' ? 'active' : ''}`}
+          onClick={() => setViewMode('integration')}
+        >
+          <Link size={15} />
+          Integrations
+        </button>
+        <button
+          className={`toggle-btn ${viewMode === 'chiefs' ? 'active' : ''}`}
+          onClick={() => setViewMode('chiefs')}
+        >
+          <MessageSquare size={15} />
+          Chiefs Council
+        </button>
       </div>
 
-      {/* Full-screen panel views */}
-      {activePanel === 'status' && (
-        <div className="panel-fullscreen">
-          <button className="panel-back-btn" onClick={() => setActivePanel(null)}>← Enrere</button>
-          <Status />
-        </div>
-      )}
-
-      {activePanel === 'files' && (
-        <div className="panel-fullscreen">
-          <button className="panel-back-btn" onClick={() => setActivePanel(null)}>← Enrere</button>
-          <Files />
-        </div>
-      )}
-
-      {activePanel === 'security' && (
-        <div className="panel-fullscreen">
-          <button className="panel-back-btn" onClick={() => setActivePanel(null)}>← Enrere</button>
-          <Security />
-        </div>
-      )}
-
-      {activePanel === 'sync' && (
-        <div className="panel-fullscreen">
-          <button className="panel-back-btn" onClick={() => setActivePanel(null)}>← Enrere</button>
-          <Sync />
-        </div>
-      )}
-
       {/* Hub View */}
-      {viewMode === 'hub' && !activePanel && (
+      {viewMode === 'hub' && (
         <>
-          {(viewMode === 'hub' || viewMode === 'orgchart') && <OvernightSummary />}
+          <OvernightSummary />
           <HealthErrors />
           <MissionControl />
-
-          {/* Real Status and Files panels */}
-          <div className="ops-panel-row">
-            <div className="ops-real-panel" onClick={() => setActivePanel('status')}>
-              <div className="panel-header">
-                <Activity size={16} className="panel-icon amber" />
-                <span>Status</span>
-              </div>
-              <div className="panel-body">
-                <p>Estat del sistema, agents i sessions</p>
-                <span className="panel-link">Obrir →</span>
-              </div>
-            </div>
-            <div className="ops-real-panel" onClick={() => setActivePanel('files')}>
-              <div className="panel-header">
-                <FolderSync size={16} className="panel-icon amber" />
-                <span>Files</span>
-              </div>
-              <div className="panel-body">
-                <p>Explorador de fitxers + editor integrat</p>
-                <span className="panel-link">Obrir →</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="ops-panel-row">
-            <div className="ops-real-panel" onClick={() => setActivePanel('security')}>
-              <div className="panel-header">
-                <Shield size={16} className="panel-icon amber" />
-                <span>Seguretat</span>
-              </div>
-              <div className="panel-body">
-                <p>Skills, tools, gateway i audit de seguretat</p>
-                <span className="panel-link">Obrir →</span>
-              </div>
-            </div>
-            <div className="ops-real-panel" onClick={() => setActivePanel('sync')}>
-              <div className="panel-header">
-                <Database size={16} className="panel-icon amber" />
-                <span>Sync</span>
-              </div>
-              <div className="panel-body">
-                <p>Backup, git history i push status</p>
-                <span className="panel-link">Obrir →</span>
-              </div>
-            </div>
-          </div>
-
+          <Status />
+          <Files />
+          <Security />
+          <Sync />
           <SystemModules />
-
-          <div className="ops-section-title">Automatitzacio i Integracions</div>
-          <div className="features-grid">
-            {FEATURES.filter(f => f.name === 'Automation' || f.name === 'Integrations').map((f, i) => (
-              <FeatureCard
-                key={i}
-                icon={f.icon}
-                title={f.name}
-                description={f.desc}
-                colorClass="amber"
-              />
-            ))}
-          </div>
         </>
       )}
 
@@ -350,6 +310,24 @@ export default function Ops() {
           <TaskManager />
         </>
       )}
+
+      {/* Files View */}
+      {viewMode === 'files' && <Files />}
+
+      {/* Sync View */}
+      {viewMode === 'sync' && <Sync />}
+
+      {/* Security View */}
+      {viewMode === 'security' && <Security />}
+
+      {/* Automation View */}
+      {viewMode === 'automation' && <AutomationsBoard />}
+
+      {/* Integration View */}
+      {viewMode === 'integration' && <IntegrationView />}
+
+      {/* Chiefs Council View */}
+      {viewMode === 'chiefs' && <ChiefsCouncil />}
     </div>
   )
 }

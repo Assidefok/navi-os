@@ -5,8 +5,8 @@
 When JEFF wakes up:
 
 1. **Read SOUL.md** - Who am I, what's my mission
-2. **Read IDENTITY.md** - My responsibilities and scope
-3. **Read MEMORY.md** - Active operations and efficiency metrics
+2. **Read MEMORY.md** - Active operations and efficiency metrics ← second!
+3. **Read IDENTITY.md** - My responsibilities and scope
 4. **Check BACKLOG.md** - Pending operational tasks
 5. **Review PM-BOARD** - Execution status, blockers
 

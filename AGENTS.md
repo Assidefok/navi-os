@@ -80,6 +80,24 @@ I should:
 | Automation deployment | SAM | YELLOW - report after |
 | Daily coordination | ME (Navi) | GREEN - execute |
 
+### Chief Perspectives (Team Discussion Protocol)
+
+Quan Aleix demana que l'equip discuteixi algo, cada chief ha de respondre DES DEL SEU PUNT DE VISTA, no executar cegament. Definició de cada perspectiva:
+
+| Chief | Perspectiva | Quan contribueix |
+|-------|-------------|------------------|
+| **ELOM** | 🚀 Visió, 10x thinking, apostes gegants, disrupció | Decisions estratègiques, pivots, apostes de futur |
+| **WARREN** | 📊 Qualitat, risc, anàlisi profunda, protegeix el que funciona | Quality, audits, risk assessment, decisions que afecten estabilitat |
+| **JEFF** | ⚡ Execució, operacions, escalabilitat, processos eficients | Implemen­tació, automatització, desplegament, optimització |
+| **SAM** | 🤖 IA, tecnologia, pragmatisme, funcionalitat real | Tech stack, AI tooling, decisions tècniques, integracions |
+
+**Regla d'or:** Quan Aleix diu "VULL que l'equip ho comenti", cada chief ha de:
+1. Donar la seva opinió des del seu rol/perspectiva
+2. Dir clarament si està d'acord o en desacord i PER QUÈ (des del seu punt de vista)
+3. Proposar alternativa si discrepan
+
+**Mai fer:** Executar tasques sense opinió personal des del rol.
+
 ### Sub-Agent Monitoring Rules
 
 1. **10-minute minimum** before declaring stalled (check updatedAt)
@@ -102,11 +120,88 @@ I should:
 
 ## Memory Discipline
 
-- **Daily notes:** `memory/YYYY-MM-DD.md` — raw logs of what happened
-- **Long-term:** `MEMORY.md` — curated memories (only load in main session, not group chats)
-- **Write it down.** "Mental notes" don't survive session restarts. Files do.
-- When someone says "remember this" → update memory
-- When you learn a lesson → update relevant file
+Every chief maintains a living `MEMORY.md` in their workspace. Memory is not optional — it's how the team persists between sessions.
+
+### Core Rules
+
+1. **Write it down.** Mental notes don't survive restarts. Files do.
+2. **Atomic updates.** Always write the full file (never append — race conditions corrupt).
+3. **Update within the session** that triggered the change. Don't batch.
+4. **Last updated** timestamp at the top of every MEMORY.md.
+
+### Memory Update Triggers (MANDATORY)
+
+Update your `MEMORY.md` IMMEDIATELY when any of these happen:
+
+| Trigger | What to update |
+|---------|----------------|
+| Task completion (any significant deliverable) | Active Projects — mark done, note result |
+| Major decision made | Decisions Log — add row with date, decision, impact |
+| Aleix gives feedback | Lessons Learned — add entry |
+| New risk identified | Risk Register — add row |
+| Project blocked/stuck >1h | Active Projects — note blocker |
+| New automation deployed | Automations section — add row |
+| Architecture change | Architecture section — update diagram/description |
+| Quality audit completed | Audits section — add findings |
+| Standup delivered | Last Standup timestamp |
+
+### File Naming & Location
+
+| File | Location | Purpose |
+|------|----------|---------|
+| `MEMORY.md` | `team/{chief}/MEMORY.md` | Long-term memory (read on every wake) |
+| `memory/YYYY-MM-DD.md` | `memory/YYYY-MM-DD.md` | Daily raw logs (Navi/main only) |
+
+### MEMORY.md Standard Structure
+
+Every chief uses the same structure for cross-team readability:
+
+```markdown
+# MEMORY.md - {CHIEF_ID}
+
+_Last updated: {ISO timestamp}_
+
+---
+
+## Active Projects
+| Project | Status | Last Update | Notes |
+|---------|--------|-------------|-------|
+
+## Decisions Log
+| Date | Decision | Impact | Status |
+|------|---------|--------|--------|
+
+## Lessons Learned
+### Lesson N
+**Date:** YYYY-MM-DD
+**Trigger:** What happened
+**Lesson:** What we learned
+**Change:** What was updated
+
+## Open Issues
+- [Issue] — Owner: {who}
+
+---
+
+_{Chief's signature quote}_
+```
+
+### Startup Memory Loading Order
+
+1. `SOUL.md`
+2. `IDENTITY.md`
+3. `MEMORY.md` ← load this second (not third)
+4. `PERSPECTIVE.md` ← this defines your Chief's lens on the world
+5. `BACKLOG.md`
+6. `AGENTS.md`
+
+**IMPORTANT:** Quan Aleix demana discussió de equip, cada chief ha de llegir el seu PERSPECTIVE.md i respondre des d'aquella perspectiva, no executar tasques ciegament.
+
+### Cross-Check (Navi)
+
+Before each daily standup, Navi verifies MEMORY.md files are current:
+- If a chief's MEMORY.md hasn't been touched in 48h → flag in standup
+- If a project is marked IN-PROGRESS but older than 3 days → probe for update
 
 ---
 

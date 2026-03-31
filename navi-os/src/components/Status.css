@@ -183,7 +183,7 @@
   min-width: 100px;
 }
 
-.agent-role, .agent-uptime, .session-model, .session-duration {
+.agent-role, .agent-uptime, .session-model, .session-channel, .session-duration {
   color: rgba(255, 255, 255, 0.5);
   font-size: 12px;
 }
@@ -195,6 +195,74 @@
   min-width: 80px;
 }
 
+.session-filter-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.session-filter-tab {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 5px 12px;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.session-filter-tab:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.session-filter-tab.active {
+  background: rgba(0, 180, 216, 0.15);
+  border-color: rgba(0, 180, 216, 0.4);
+  color: #00b4d8;
+}
+
+.session-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 10px;
+  font-size: 13px;
+}
+
+.session-row-subagent {
+  background: rgba(0, 180, 216, 0.08);
+  border: 1px solid rgba(0, 180, 216, 0.2);
+}
+
+.session-label {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: #00b4d8;
+  min-width: 120px;
+}
+
+.session-type-badge {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.session-type-badge.main { background: rgba(255, 184, 0, 0.12); color: #ffb800; }
+.session-type-badge.subagent { background: rgba(0, 180, 216, 0.15); color: #00b4d8; }
+.session-type-badge.cron { background: rgba(138, 43, 226, 0.15); color: #bb86fc; }
+.session-type-badge.unknown { background: rgba(255, 255, 255, 0.08); color: rgba(255, 255, 255, 0.5); }
+
 .session-status {
   margin-left: auto;
   font-size: 11px;
@@ -204,6 +272,7 @@
 }
 
 .session-status.active { background: rgba(48, 209, 88, 0.15); color: #30d158; }
+.session-status.done { background: rgba(48, 209, 88, 0.15); color: #30d158; }
 .session-status.error { background: rgba(255, 69, 58, 0.15); color: #ff453a; }
 
 .cron-summary {

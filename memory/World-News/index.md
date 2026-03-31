@@ -4,7 +4,7 @@ category: World News
 icon: 🌍
 description: Top world news from international sources
 tags: ['world', 'politics', 'international']
-created: 2026-03-31 22:06
+created: 2026-03-31 23:47
 ---
 
 # 🌍 World News
@@ -14,7 +14,7 @@ Top world news from international sources
 ## Meta
 - **Carpeta:** `memory/World-News/`
 - **Total entrades:** 2
-- **Darrer update:** 2026-03-31 22:06
+- **Darrer update:** 2026-03-31 23:47
 
 ## Tags
 #world #politics #international

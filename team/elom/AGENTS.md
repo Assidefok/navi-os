@@ -5,8 +5,8 @@
 When ELOM wakes up:
 
 1. **Read SOUL.md** - Who am I, what's my mission
-2. **Read IDENTITY.md** - My responsibilities and scope
-3. **Read MEMORY.md** - Active projects and pending decisions
+2. **Read MEMORY.md** - Active projects and pending decisions ← second!
+3. **Read IDENTITY.md** - My responsibilities and scope
 4. **Check BACKLOG.md** - What needs my attention
 5. **Read PM-BOARD** - Status of all initiatives
 

@@ -1,0 +1,182 @@
+{
+  "meta": {
+    "version": 1,
+    "createdAt": "2026-03-31T21:58:00.000Z",
+    "updatedAt": "2026-03-31T22:53:15.008Z",
+    "path": "/home/user/.openclaw/workspace/data/automations.json"
+  },
+  "automations": [
+    {
+      "id": "auto-idea-debat",
+      "name": "Idea → Debat amb el Chief assignat",
+      "description": "Quan s'accepta una idea al Lab, crea automàticament una proposta de debat i assigna al chief proposat per gestionar-la",
+      "enabled": true,
+      "trigger": {
+        "type": "idea.accepted",
+        "label": "Idea acceptada al Lab"
+      },
+      "conditions": [],
+      "actions": [
+        {
+          "type": "proposal.create",
+          "label": "Crear proposta de debat",
+          "params": {
+            "track": "B",
+            "priority": "alta",
+            "status": "debate",
+            "notifyAuthor": true
+          }
+        }
+      ],
+      "lastTriggered": "2026-03-31T22:53:15.007Z",
+      "triggerCount": 1
+    },
+    {
+      "id": "auto-debat-approved-to-pm",
+      "name": "Debat aprovat → Tasca PM per l'agent",
+      "description": "Quan un debat s'aprova, crea una tasca al PM Board assignada a l'agent corresponent i l'afegeix al seu BACKLOG",
+      "enabled": true,
+      "trigger": {
+        "type": "debate.approved",
+        "label": "Debat aprovat"
+      },
+      "conditions": [],
+      "actions": [
+        {
+          "type": "pm_board.create_task",
+          "label": "Crear tasca al PM Board",
+          "params": {}
+        },
+        {
+          "type": "backlog.add",
+          "label": "Afegir al BACKLOG de l'agent",
+          "params": {}
+        }
+      ],
+      "lastTriggered": null,
+      "triggerCount": 0
+    },
+    {
+      "id": "auto-debat-rejected",
+      "name": "Debat refusat → Proposta rebutjada",
+      "description": "Quan un debat es rebutja, marca la proposta com a rebutjada i notifica el proponent",
+      "enabled": true,
+      "trigger": {
+        "type": "debate.rejected",
+        "label": "Debat rebutjat"
+      },
+      "conditions": [],
+      "actions": [
+        {
+          "type": "proposal.update_status",
+          "label": "Marcar com rebutjada",
+          "params": {
+            "status": "rejected"
+          }
+        },
+        {
+          "type": "notification.send",
+          "label": "Notificar proponent",
+          "params": {
+            "channel": "telegram",
+            "message": "La teva proposta ha estat refusada al debat. Revisa els comentaris."
+          }
+        }
+      ],
+      "lastTriggered": "2026-03-31T22:52:19.665Z",
+      "triggerCount": 1
+    },
+    {
+      "id": "auto-pm-board-agent-notify",
+      "name": "Nova tasca PM → Notificar agent",
+      "description": "Quan es crea una tasca al PM Board assignada a un agent, notifica'l automàticament",
+      "enabled": true,
+      "trigger": {
+        "type": "pm_board.task_assigned",
+        "label": "Tasca assignada a un agent"
+      },
+      "conditions": [],
+      "actions": [
+        {
+          "type": "message.send",
+          "label": "Enviar missatge a l'agent",
+          "params": {
+            "template": "Nova tasca assignada: {title}. Prioritat: {priority}. Data límit: {dueDate}"
+          }
+        }
+      ],
+      "lastTriggered": "2026-03-31T22:53:10.601Z",
+      "triggerCount": 1
+    }
+  ],
+  "executionLog": [
+    {
+      "automationId": "auto-debat-rejected",
+      "automationName": "Debat refusat → Proposta rebutjada",
+      "trigger": "debate.rejected",
+      "triggerData": {
+        "proposalId": "prop-003",
+        "proposalTitle": "TEST - Proposta AUTOMATICA",
+        "debateNotes": []
+      },
+      "results": [
+        {
+          "action": "proposal.update_status",
+          "success": true,
+          "result": {
+            "proposalId": "prop-003",
+            "newStatus": "rejected"
+          }
+        },
+        {
+          "action": "notification.send",
+          "success": true,
+          "result": {
+            "notification": "La teva proposta ha estat refusada al debat. Revisa els comentaris.",
+            "channel": "telegram",
+            "sent": true
+          }
+        }
+      ],
+      "executedAt": "2026-03-31T22:52:19.665Z",
+      "success": true
+    },
+    {
+      "automationId": "auto-pm-board-agent-notify",
+      "automationName": "Nova tasca PM → Notificar agent",
+      "trigger": "pm_board.task_assigned",
+      "triggerData": {},
+      "results": [
+        {
+          "action": "message.send",
+          "success": true,
+          "result": {
+            "message": "Nova tasca assignada: . Prioritat: . Data límit: {dueDate}",
+            "sent": true,
+            "channel": "internal"
+          }
+        }
+      ],
+      "executedAt": "2026-03-31T22:53:10.601Z",
+      "success": true
+    },
+    {
+      "automationId": "auto-idea-debat",
+      "automationName": "Idea → Debat amb el Chief assignat",
+      "trigger": "idea.accepted",
+      "triggerData": {},
+      "results": [
+        {
+          "action": "proposal.create",
+          "success": true,
+          "result": {
+            "proposalId": "proposal-1774997595008",
+            "status": "debate"
+          }
+        }
+      ],
+      "executedAt": "2026-03-31T22:53:15.007Z",
+      "success": true
+    }
+  ]
+}

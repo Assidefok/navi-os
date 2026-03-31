@@ -29,7 +29,8 @@ This file is the central registry of all skills available to Navi.
 | outreach | Navi | active | business | 2026-03-30 |
 | proposals | Navi | active | business | 2026-03-30 |
 | reporting | Navi | active | business | 2026-03-30 |
+| stock-market | Navi | active | finance | 2026-03-31 |
 
 ---
 
-_Last sync: 2026-03-30_
+_Last sync: 2026-03-31_

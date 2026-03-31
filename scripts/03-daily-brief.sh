@@ -18,6 +18,11 @@ echo "" >> "$BRIEF_FILE"
 
 cd "$WORKSPACE"
 
+latest_today_file() {
+  local dir="$1"
+  find "$dir" -maxdepth 1 -type f -name "${TODAY}*.md" 2>/dev/null | sort | tail -1
+}
+
 # 1. Header
 echo "## Bon dia, Aleix" >> "$BRIEF_FILE"
 echo "" >> "$BRIEF_FILE"
@@ -90,51 +95,67 @@ done
 echo "" >> "$BRIEF_FILE"
 
 # ============================================================
-# 5. AI NEWS (from 06:55 cron)
+# 5. AI NEWS (from 06:45 cron - subdirectory)
 # ============================================================
 echo "## AI News (avui)" >> "$BRIEF_FILE"
 echo "" >> "$BRIEF_FILE"
 
-AI_NEWS_FILE="$WORKSPACE/memory/${TODAY}-news.md"
-if [ -f "$AI_NEWS_FILE" ]; then
-  # Extract AI news items
-  grep -A100 "## Top AI News" "$AI_NEWS_FILE" 2>/dev/null | grep -v "^## Top AI News" | head -30 | while read line; do
+# Find most recent AI News file for today
+AI_NEWS_FILE=$(find "$WORKSPACE/memory/AI-News" -name "${TODAY}-*.md" 2>/dev/null | sort -r | head -1)
+if [ -n "$AI_NEWS_FILE" ] && [ -f "$AI_NEWS_FILE" ]; then
+  grep -A100 "## Top" "$AI_NEWS_FILE" 2>/dev/null | grep -v "^## Top" | head -30 | while read line; do
     echo "$line" >> "$BRIEF_FILE"
   done
 else
-  echo "- AI news no disponible (s'executa a les 06:55)" >> "$BRIEF_FILE"
+  echo "- AI news no disponible (s'executa a les 06:45)" >> "$BRIEF_FILE"
 fi
 echo "" >> "$BRIEF_FILE"
 
 # ============================================================
-# 6. WORLD NEWS (from 06:55 cron)
+# 6. WORLD NEWS (from 06:45 cron - subdirectory)
 # ============================================================
 echo "## Top 10 World News (avui)" >> "$BRIEF_FILE"
 echo "" >> "$BRIEF_FILE"
 
-WORLD_NEWS_FILE="$WORKSPACE/memory/${TODAY}-world-news.md"
-if [ -f "$WORLD_NEWS_FILE" ]; then
-  grep -A100 "## Top 10 World News" "$WORLD_NEWS_FILE" 2>/dev/null | grep -v "^## Top 10 World News" | head -50 | while read line; do
+WORLD_NEWS_FILE=$(find "$WORKSPACE/memory/World-News" -name "${TODAY}-*.md" 2>/dev/null | sort -r | head -1)
+if [ -n "$WORLD_NEWS_FILE" ] && [ -f "$WORLD_NEWS_FILE" ]; then
+  grep -A100 "## Top" "$WORLD_NEWS_FILE" 2>/dev/null | grep -v "^## Top" | head -50 | while read line; do
     echo "$line" >> "$BRIEF_FILE"
   done
 else
-  echo "- World news no disponible (s'executa a les 06:55)" >> "$BRIEF_FILE"
+  echo "- World news no disponible (s'executa a les 06:45)" >> "$BRIEF_FILE"
 fi
 echo "" >> "$BRIEF_FILE"
 
 # ============================================================
-# 7. IRAN WAR NEWS (from 06:55 cron)
+# 7. IRAN WAR NEWS (from 06:45 cron - subdirectory)
 # ============================================================
 echo "## Guerra d Iran - 5 Noticies (avui)" >> "$BRIEF_FILE"
 echo "" >> "$BRIEF_FILE"
 
-IRAN_FILE="$WORKSPACE/memory/${TODAY}-iran-war.md"
-if [ -f "$IRAN_FILE" ]; then
-  grep -A50 "## Top 5 Iran War" "$IRAN_FILE" 2>/dev/null | grep -v "^## Top 5 Iran War" | head -35 | while read line; do
+IRAN_FILE=$(find "$WORKSPACE/memory/Iran-War" -name "${TODAY}-*.md" 2>/dev/null | sort -r | head -1)
+if [ -n "$IRAN_FILE" ] && [ -f "$IRAN_FILE" ]; then
+  grep -A50 "## Top" "$IRAN_FILE" 2>/dev/null | grep -v "^## Top" | head -35 | while read line; do
     echo "$line" >> "$BRIEF_FILE"
   done
 else
-  echo "- Iran war news no disponible (s'executa a les 06:55)" >> "$BRIEF_FILE"
+  echo "- Iran war news no disponible (s'executa a les 06:45)" >> "$BRIEF_FILE"
+fi
+echo "" >> "$BRIEF_FILE"
+
+# ============================================================
+# 7. STOCK MARKET NEWS (from 06:45 cron)
+# ============================================================
+echo "## Borsa - 5 Noticies (avui)" >> "$BRIEF_FILE"
+echo "" >> "$BRIEF_FILE"
+
+STOCK_FILE=$(find "$WORKSPACE/memory/Stock-Market" -name "${TODAY}-*.md" 2>/dev/null | sort -r | head -1)
+if [ -n "$STOCK_FILE" ] && [ -f "$STOCK_FILE" ]; then
+  grep -A50 "## Top" "$STOCK_FILE" 2>/dev/null | grep -v "^## Top" | head -30 | while read line; do
+    echo "$line" >> "$BRIEF_FILE"
+  done
+else
+  echo "- Stock market news no disponible (s'executa a les 06:45)" >> "$BRIEF_FILE"
 fi
 echo "" >> "$BRIEF_FILE"
 

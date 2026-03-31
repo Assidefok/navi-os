@@ -1,10 +1,11 @@
-import { Settings, Brain, FlaskConical } from 'lucide-react'
+import { Settings, Brain, FlaskConical, Lightbulb } from 'lucide-react'
 import './Dock.css'
 
 const dockItems = [
-  { id: 'ops', label: 'Operacions', icon: Settings },
-  { id: 'brain', label: 'Cervell', icon: Brain },
-  { id: 'lab', label: 'Laboratori', icon: FlaskConical },
+  { id: 'ops',       label: 'Operacions', icon: Settings },
+  { id: 'brain',     label: 'Cervell',    icon: Brain },
+  { id: 'proposals', label: 'Propostes',  icon: Lightbulb },
+  { id: 'lab',       label: 'Laboratori', icon: FlaskConical },
 ]
 
 export default function Dock({ activeTab, setActiveTab }) {

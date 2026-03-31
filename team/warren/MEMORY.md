@@ -1,6 +1,6 @@
 # MEMORY.md - WARREN
 
-_Last updated: 2026-03-31_
+_Last updated: 2026-03-31T23:26:00.000Z_
 
 ---
 
@@ -97,6 +97,13 @@ _Last updated: 2026-03-31_
 ### Millores Pendents
 - Automated quality gate per cron jobs
 - Delivery health monitoring
+
+---
+
+## Open Issues
+- Fix 02-overnight-audit.sh import checker (false positive for .jsx files)
+- Verify port 8100 exposure is intentional
+- BBQ Brand cron resource usage verification pending
 
 ---
 

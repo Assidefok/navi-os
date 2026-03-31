@@ -1,0 +1,727 @@
+/* ─── AutomationsBoard ───────────────────────────────────────────────────────── */
+
+.automations-board {
+  padding: 0;
+}
+
+.ab-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.ab-header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ab-title {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 22px;
+  font-weight: 500;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+}
+
+.ab-stats {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.ab-stats .stat {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.ab-header-right {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.ab-add-btn {
+  background: rgba(255, 184, 0, 0.15);
+  border: 1px solid rgba(255, 184, 0, 0.4);
+  border-radius: 10px;
+  padding: 9px 16px;
+  color: #ffb800;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.ab-add-btn:hover {
+  background: rgba(255, 184, 0, 0.25);
+  border-color: rgba(255, 184, 0, 0.6);
+}
+
+.log-toggle-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 9px 14px;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.log-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+/* ─── Automation Cards ─────────────────────────────────────────────────────── */
+
+.automations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.automation-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 16px 18px;
+  transition: all 0.2s;
+}
+
+.automation-card.enabled {
+  border-left: 3px solid #ffb800;
+}
+
+.automation-card.disabled {
+  border-left: 3px solid #404050;
+  opacity: 0.65;
+}
+
+.automation-card:hover {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.automation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  gap: 12px;
+}
+
+.automation-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.automation-header-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.auto-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.auto-status-dot.on {
+  background: #00ff41;
+  box-shadow: 0 0 6px #00ff4180;
+}
+
+.auto-status-dot.off {
+  background: #404050;
+}
+
+.automation-name {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.automation-trigger-badge {
+  background: rgba(255, 184, 0, 0.1);
+  border: 1px solid rgba(255, 184, 0, 0.2);
+  border-radius: 8px;
+  padding: 2px 8px;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 10px;
+  color: rgba(255, 184, 0, 0.8);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.automation-description {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+  margin: 8px 0 0 28px;
+  line-height: 1.5;
+}
+
+.trigger-count,
+.last-triggered {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  white-space: nowrap;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.4);
+  padding: 5px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.icon-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.icon-btn.danger:hover {
+  background: rgba(255, 69, 58, 0.15);
+  color: #ff453a;
+}
+
+.icon-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.expand-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  padding: 2px;
+  border-radius: 4px;
+  transition: color 0.15s;
+}
+
+.expand-btn:hover {
+  color: #fff;
+}
+
+/* ─── Test Result ─────────────────────────────────────────────────────────── */
+
+.test-result {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  margin-left: 28px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+}
+
+.test-result.success {
+  background: rgba(0, 255, 65, 0.1);
+  color: #00ff41;
+}
+
+.test-result.error {
+  background: rgba(255, 69, 58, 0.1);
+  color: #ff453a;
+}
+
+/* ─── Automation Details (expanded) ───────────────────────────────────────── */
+
+.automation-details {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.detail-section h4 {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 6px 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.trigger-config {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.trigger-config code {
+  background: rgba(255, 184, 0, 0.1);
+  border: 1px solid rgba(255, 184, 0, 0.2);
+  border-radius: 5px;
+  padding: 3px 8px;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+  color: #ffb800;
+}
+
+.trigger-config span {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.actions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.action-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.6);
+  padding: 4px 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 6px;
+}
+
+.action-icon {
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.action-label {
+  font-weight: 500;
+}
+
+.action-custom-label {
+  color: rgba(255, 255, 255, 0.4);
+  font-style: italic;
+}
+
+/* ─── Execution Log ─────────────────────────────────────────────────────────── */
+
+.exec-log {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.log-header {
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.log-header h4 {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.log-entries {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.log-empty {
+  padding: 20px;
+  text-align: center;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.2);
+}
+
+.log-entry {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  padding: 8px 14px;
+}
+
+.log-entry:last-child {
+  border-bottom: none;
+}
+
+.log-entry-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.log-status-icon {
+  flex-shrink: 0;
+}
+
+.log-status-icon.ok {
+  color: #00ff41;
+}
+
+.log-status-icon.err {
+  color: #ff453a;
+}
+
+.log-auto-name {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: #fff;
+  flex: 1;
+}
+
+.log-trigger-type {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 10px;
+  color: rgba(255, 184, 0, 0.7);
+  background: rgba(255, 184, 0, 0.08);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.log-time {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.log-action-result {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.4);
+  padding: 2px 0 2px 20px;
+}
+
+.log-action-result.error {
+  color: #ff453a;
+}
+
+/* ─── Form ──────────────────────────────────────────────────────────────────── */
+
+.auto-form-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+  padding: 20px;
+}
+
+.auto-form {
+  border-radius: 20px;
+  overflow: hidden;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.auto-form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.auto-form-header h3 {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.auto-form-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.auto-form-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 16px 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-field label {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.form-field input,
+.form-field textarea,
+.form-field select {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: #fff;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 13px;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.form-field input:focus,
+.form-field textarea:focus,
+.form-field select:focus {
+  border-color: rgba(255, 184, 0, 0.5);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.form-field select {
+  cursor: pointer;
+}
+
+/* Trigger select grid */
+.trigger-select-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 6px;
+}
+
+.trigger-option {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 8px 10px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  transition: all 0.15s;
+  text-align: left;
+}
+
+.trigger-option:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.trigger-option.active {
+  background: rgba(255, 184, 0, 0.12);
+  border-color: rgba(255, 184, 0, 0.4);
+}
+
+.trigger-option-icon {
+  font-size: 14px;
+}
+
+.trigger-option-label {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  color: #fff;
+}
+
+.trigger-option-cat {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* Action rows */
+.action-form-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.action-form-row select {
+  flex: 1;
+  min-width: 0;
+}
+
+.action-form-row input {
+  flex: 2;
+}
+
+.add-action-btn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  padding: 8px;
+  color: rgba(255, 255, 255, 0.4);
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  transition: all 0.15s;
+}
+
+.add-action-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+/* Form buttons */
+.cancel-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 9px 18px;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cancel-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.submit-btn {
+  background: rgba(255, 184, 0, 0.2);
+  border: 1px solid rgba(255, 184, 0, 0.4);
+  border-radius: 8px;
+  padding: 9px 18px;
+  color: #ffb800;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.submit-btn:hover {
+  background: rgba(255, 184, 0, 0.3);
+  border-color: rgba(255, 184, 0, 0.6);
+}
+
+/* ─── Empty / Loading ─────────────────────────────────────────────────────── */
+
+.ab-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 60px;
+  color: rgba(255, 255, 255, 0.3);
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 13px;
+}
+
+.ab-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 60px 40px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px dashed rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+}
+
+.ab-empty h3 {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.4);
+  margin: 0;
+}
+
+.ab-empty p {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.3);
+  margin: 0;
+  max-width: 400px;
+  line-height: 1.6;
+}
+
+/* Spin animation */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.spin { animation: spin 1s linear infinite; }
+
+.green { color: #00ff41; }
+.amber { color: #ffb800; }

@@ -101,6 +101,7 @@ function AgentStatus() {
 function SessionStatus() {
   const [sessions, setSessions] = useState([])
   const [loading, setLoading] = useState(true)
+  const [sessionFilter, setSessionFilter] = useState('all')
 
   useEffect(() => {
     fetch('/api/sessions')
@@ -110,17 +111,46 @@ function SessionStatus() {
       .finally(() => setLoading(false))
   }, [])
 
+  const filterTabs = [
+    { id: 'all', label: 'Totes' },
+    { id: 'main', label: 'Main' },
+    { id: 'subagent', label: 'Subagents' },
+    { id: 'cron', label: 'Cron' },
+  ]
+
+  const filteredSessions = sessionFilter === 'all'
+    ? sessions
+    : sessions.filter(s => s.type === sessionFilter)
+
   if (loading) return <div className="status-loading"><Loader2 size={16} className="spin" /></div>
 
   return (
     <div className="status-section">
       <h3 className="section-title"><Activity size={14} /> Sessions</h3>
+      <div className="session-filter-tabs">
+        {filterTabs.map(ft => (
+          <button
+            key={ft.id}
+            className={`session-filter-tab ${sessionFilter === ft.id ? 'active' : ''}`}
+            onClick={() => setSessionFilter(ft.id)}
+          >
+            {ft.label}
+          </button>
+        ))}
+      </div>
       <div className="sessions-list">
-        {sessions.length === 0 && <span className="empty-state">Cap sessio activa</span>}
-        {sessions.map(s => (
-          <div key={s.id} className="session-row">
-            <span className="session-id">{s.id?.slice(0, 8) || '—'}</span>
+        {filteredSessions.length === 0 && <span className="empty-state">Cap sessio activa</span>}
+        {filteredSessions.map(s => (
+          <div key={s.id} className={`session-row ${s.type === 'subagent' ? 'session-row-subagent' : ''}`}>
+            {s.type === 'subagent' && (
+              <span className="session-label">{s.label || '—'}</span>
+            )}
+            {s.type !== 'subagent' && (
+              <span className="session-id">{s.id?.slice(0, 12) || '—'}</span>
+            )}
+            <span className={`session-type-badge ${s.type}`}>{s.type || 'main'}</span>
             <span className="session-model">{s.model || '—'}</span>
+            <span className="session-channel">{s.channel || '—'}</span>
             <span className="session-duration">{s.duration || s.elapsed || '—'}</span>
             <span className={`session-status ${s.status}`}>{s.status || 'active'}</span>
           </div>

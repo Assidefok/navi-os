@@ -4,7 +4,7 @@ category: AI News
 icon: 🤖
 description: Artificial Intelligence and Machine Learning news
 tags: ['ai', 'ml', 'llm', 'openai', 'anthropic', 'startups']
-created: 2026-03-31 22:06
+created: 2026-03-31 23:47
 ---
 
 # 🤖 AI News
@@ -14,7 +14,7 @@ Artificial Intelligence and Machine Learning news
 ## Meta
 - **Carpeta:** `memory/AI-News/`
 - **Total entrades:** 2
-- **Darrer update:** 2026-03-31 22:06
+- **Darrer update:** 2026-03-31 23:47
 
 ## Tags
 #ai #ml #llm #openai #anthropic #startups

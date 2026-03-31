@@ -16,6 +16,7 @@ const SKILLS_DIR = join(WORKSPACE, 'skills')
 const DATA_DIR = join(WORKSPACE, 'data')
 const ORG_CHART_FILE = join(DATA_DIR, 'org-chart.json')
 const PM_BOARD_FILE = join(DATA_DIR, 'pm-board.json')
+const CHIEFS_COUNCIL_FILE = join(WORKSPACE, 'navi-os', 'src', 'data', 'chiefs-council.json')
 
 const app = express()
 app.use(cors())
@@ -63,20 +64,32 @@ function savePmBoard(board) {
 app.get('/api/memory/files', (req, res) => {
   try {
     const files = []
-    if (existsSync(MEMORY_DIR)) {
-      const entries = readdirSync(MEMORY_DIR).filter(f => f.endsWith('.md'))
-      for (const f of entries) {
-        const fullPath = join(MEMORY_DIR, f)
-        const stat = statSync(fullPath)
-        files.push({
-          name: f,
-          path: fullPath,
-          modified: stat.mtime.toISOString(),
-          size: stat.size,
-          pinned: ['MEMORY.md', 'BACKLOG.md'].includes(f),
-        })
+    
+    // Recursive function to get all .md files
+    const scanDir = (dir, basePath = '') => {
+      if (!existsSync(dir)) return
+      const entries = readdirSync(dir, { withFileTypes: true })
+      for (const entry of entries) {
+        const fullPath = join(dir, entry.name)
+        if (entry.isDirectory()) {
+          // Scan subdirectories but exclude certain folders
+          if (!['node_modules', '.git', '__pycache__'].includes(entry.name)) {
+            scanDir(fullPath, basePath + entry.name + '/')
+          }
+        } else if (entry.name.endsWith('.md')) {
+          const stat = statSync(fullPath)
+          files.push({
+            name: basePath + entry.name,
+            path: fullPath,
+            modified: stat.mtime.toISOString(),
+            size: stat.size,
+            pinned: ['MEMORY.md', 'BACKLOG.md'].includes(entry.name),
+          })
+        }
       }
     }
+    
+    scanDir(MEMORY_DIR)
     // Sort: pinned first, then by date descending
     files.sort((a, b) => {
       if (a.pinned && !b.pinned) return -1
@@ -909,26 +922,11 @@ app.post('/api/backups/create', (req, res) => {
   }
 })
 
-// ─── Ideas API ──────────────────────────────────────────────────────────────────
-
-app.get('/api/ideas', (req, res) => {
-  try {
-    const dataFile = join(WORKSPACE, 'navi-os/src/data/ideas.json')
-    if (!existsSync(dataFile)) {
-      return res.json({ ideas: [] })
-    }
-    const data = JSON.parse(readFileSync(dataFile, 'utf-8'))
-    res.json(data)
-  } catch (err) {
-    res.status(500).json({ error: err.message, ideas: [] })
-  }
-})
-
 app.post('/api/ideas/:id/accept', (req, res) => {
   try {
     const { id } = req.params
-    const ideasFile = join(WORKSPACE, 'navi-os/src/data/ideas.json')
-    const proposalsFile = join(WORKSPACE, 'data/proposals.json')
+    const ideasFile = join(DATA_DIR, 'ideas.json')
+    const proposalsFile = join(DATA_DIR, 'proposals.json')
     
     // Load ideas
     const ideasData = existsSync(ideasFile) ? JSON.parse(readFileSync(ideasFile, 'utf-8')) : { ideas: [] }
@@ -937,26 +935,53 @@ app.post('/api/ideas/:id/accept', (req, res) => {
       return res.status(404).json({ error: 'Idea not found' })
     }
     const idea = ideasData.ideas[ideaIdx]
+    const now = new Date().toISOString()
     
     // Remove from ideas
     ideasData.ideas.splice(ideaIdx, 1)
     writeFileSync(ideasFile, JSON.stringify(ideasData, null, 2))
     
-    // Add to proposals
+    // Add to proposals — status: debate (waiting for chief assigned to manage)
     const proposalsData = existsSync(proposalsFile) ? JSON.parse(readFileSync(proposalsFile, 'utf-8')) : { proposals: [] }
     const newProposal = {
       id: `prop-${Date.now()}`,
       title: idea.title,
       description: idea.description,
       category: idea.category,
-      status: 'pending',
+      author: idea.author || 'navi',
+      assignee: idea.proposedTo || idea.assignee || null,
+      status: 'debate',
+      priority: idea.priority || 'media',
+      track: idea.track || 'B',
       source: 'idea',
       originalId: idea.id,
-      createdAt: new Date().toISOString()
+      debateOutcome: null,
+      debateNotes: [],
+      createdAt: now,
+      updatedAt: now
     }
     proposalsData.proposals = proposalsData.proposals || []
     proposalsData.proposals.unshift(newProposal)
     writeFileSync(proposalsFile, JSON.stringify(proposalsData, null, 2))
+    
+    // Fire automations for idea.accepted
+    try {
+      fetch('http://localhost:3001/api/internal/automations/fire', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          triggerType: 'idea.accepted',
+          triggerData: {
+            ideaTitle: idea.title,
+            ideaDescription: idea.description,
+            ideaAuthor: idea.author,
+            assignee: newProposal.assignee,
+            proposalId: newProposal.id,
+            priority: newProposal.priority
+          }
+        })
+      }).catch(() => {})
+    } catch (_) {}
     
     res.json({ success: true, proposal: newProposal })
   } catch (err) {
@@ -967,7 +992,7 @@ app.post('/api/ideas/:id/accept', (req, res) => {
 app.post('/api/ideas/:id/reject', (req, res) => {
   try {
     const { id } = req.params
-    const ideasFile = join(WORKSPACE, 'navi-os/src/data/ideas.json')
+    const ideasFile = join(DATA_DIR, 'ideas.json')
     
     const ideasData = existsSync(ideasFile) ? JSON.parse(readFileSync(ideasFile, 'utf-8')) : { ideas: [] }
     const ideaIdx = ideasData.ideas.findIndex(i => i.id === id)
@@ -975,8 +1000,22 @@ app.post('/api/ideas/:id/reject', (req, res) => {
       return res.status(404).json({ error: 'Idea not found' })
     }
     
+    const idea = ideasData.ideas[ideaIdx]
     ideasData.ideas[ideaIdx].status = 'rejected'
     writeFileSync(ideasFile, JSON.stringify(ideasData, null, 2))
+    
+    // Fire automations for idea.rejected
+    try {
+      fetch('http://localhost:3001/api/internal/automations/fire', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          triggerType: 'idea.rejected',
+          triggerData: { ideaTitle: idea.title, ideaAuthor: idea.author }
+        })
+      }).catch(() => {})
+    } catch (_) {}
+    
     res.json({ success: true })
   } catch (err) {
     res.status(500).json({ error: err.message })
@@ -1002,12 +1041,16 @@ app.post('/api/proposals', (req, res) => {
   try {
     const dataFile = join(WORKSPACE, 'data', 'proposals.json')
     const data = existsSync(dataFile) ? JSON.parse(readFileSync(dataFile, 'utf-8')) : { proposals: [] }
+    const VALID_STATUSES = ['pending', 'debate', 'accepted', 'processing', 'done', 'rejected']
     
     const newProposal = {
       id: `prop-${Date.now()}`,
       ...req.body,
       createdAt: new Date().toISOString(),
-      status: 'pending'
+      updatedAt: new Date().toISOString(),
+      status: VALID_STATUSES.includes(req.body?.status) ? req.body.status : 'pending',
+      debateOutcome: null,
+      debateNotes: []
     }
     
     data.proposals = data.proposals || []
@@ -1031,9 +1074,488 @@ app.patch('/api/proposals/:id', (req, res) => {
       return res.status(404).json({ error: 'Proposal not found' })
     }
     
+    const oldProposal = data.proposals[idx]
+    const oldStatus = oldProposal.status
+    const newStatus = req.body.status
+    
     data.proposals[idx] = { ...data.proposals[idx], ...req.body, updatedAt: new Date().toISOString() }
     writeFileSync(dataFile, JSON.stringify(data, null, 2))
+    
+    // Fire automations based on status transitions
+    if (newStatus && newStatus !== oldStatus) {
+      const triggerType = `debate.${newStatus === 'accepted' ? 'approved' : newStatus === 'rejected' ? 'rejected' : 'status_changed'}`
+      if (['debate.approved', 'debate.rejected', 'debate.status_changed'].includes(triggerType)) {
+        try {
+          fetch('http://localhost:3001/api/internal/automations/fire', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              triggerType,
+              triggerData: {
+                proposalId: id,
+                proposalTitle: oldProposal.title,
+                description: oldProposal.description,
+                author: oldProposal.author,
+                assignee: oldProposal.assignee,
+                priority: oldProposal.priority,
+                debateNotes: req.body.debateNotes || []
+              }
+            })
+          }).catch(() => {})
+        } catch (_) {}
+      }
+    }
+    
     res.json(data.proposals[idx])
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
+
+app.delete('/api/proposals/:id', (req, res) => {
+  try {
+    const { id } = req.params
+    const dataFile = join(WORKSPACE, 'data', 'proposals.json')
+    const data = existsSync(dataFile) ? JSON.parse(readFileSync(dataFile, 'utf-8')) : { proposals: [] }
+    
+    const idx = data.proposals.findIndex(p => p.id === id)
+    if (idx === -1) {
+      return res.status(404).json({ error: 'Proposal not found' })
+    }
+    
+    data.proposals.splice(idx, 1)
+    writeFileSync(dataFile, JSON.stringify(data, null, 2))
+    res.json({ ok: true })
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
+
+// ─── Chiefs Council ───────────────────────────────────────────────────────────
+
+function getChiefsCouncil() {
+  return readJsonSafe(CHIEFS_COUNCIL_FILE, {
+    meta: { version: 1, path: CHIEFS_COUNCIL_FILE, updatedAt: new Date().toISOString() },
+    topics: [],
+  })
+}
+
+function saveChiefsCouncil(data) {
+  data.meta = { ...(data.meta || {}), version: 1, path: CHIEFS_COUNCIL_FILE, updatedAt: new Date().toISOString() }
+  writeJsonSafe(CHIEFS_COUNCIL_FILE, data)
+}
+
+// GET /api/chiefs-council — list all topics
+app.get('/api/chiefs-council', (req, res) => {
+  try {
+    const data = getChiefsCouncil()
+    res.json({ topics: data.topics || [] })
+  } catch (err) {
+    res.status(500).json({ error: err.message, topics: [] })
+  }
+})
+
+// GET /api/chiefs-council/:id — get single topic
+app.get('/api/chiefs-council/:id', (req, res) => {
+  try {
+    const data = getChiefsCouncil()
+    const topic = (data.topics || []).find(t => t.id === req.params.id)
+    if (!topic) return res.status(404).json({ error: 'Topic not found' })
+    res.json(topic)
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
+
+// POST /api/chiefs-council — create a new topic (Navi initiates)
+app.post('/api/chiefs-council', (req, res) => {
+  try {
+    const { title, description } = req.body || {}
+    if (!title || !String(title).trim()) {
+      return res.status(400).json({ error: 'title is required' })
+    }
+    const data = getChiefsCouncil()
+    const now = new Date().toISOString()
+    const topic = {
+      id: `topic-${Date.now()}`,
+      title: String(title).trim(),
+      description: String(description || '').trim(),
+      createdAt: now,
+      responses: [],
+    }
+    data.topics = [topic, ...(data.topics || [])]
+    saveChiefsCouncil(data)
+    res.json(topic)
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
+
+// POST /api/chiefs-council/:id/responses — chief responds
+app.post('/api/chiefs-council/:id/responses', (req, res) => {
+  try {
+    const { chiefId, text } = req.body || {}
+    const VALID_CHIEF_IDS = ['elom', 'warren', 'jeff', 'sam']
+    if (!chiefId || !VALID_CHIEF_IDS.includes(chiefId)) {
+      return res.status(400).json({ error: 'valid chiefId required (elom, warren, jeff, sam)' })
+    }
+    if (!text || !String(text).trim()) {
+      return res.status(400).json({ error: 'text is required' })
+    }
+    const data = getChiefsCouncil()
+    const topicIdx = (data.topics || []).findIndex(t => t.id === req.params.id)
+    if (topicIdx === -1) return res.status(404).json({ error: 'Topic not found' })
+
+    const topic = { ...data.topics[topicIdx] }
+    topic.responses = [...(topic.responses || [])]
+
+    // Remove existing response for this chief if any
+    topic.responses = topic.responses.filter(r => r.chiefId !== chiefId)
+    topic.responses.push({
+      chiefId,
+      text: String(text).trim(),
+      timestamp: new Date().toISOString(),
+    })
+
+    data.topics[topicIdx] = topic
+    saveChiefsCouncil(data)
+    res.json(topic)
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
+
+// ─── Automations Engine ───────────────────────────────────────────────────────
+
+const AUTOMATIONS_FILE = join(DATA_DIR, 'automations.json')
+
+function getAutomations() {
+  return readJsonSafe(AUTOMATIONS_FILE, {
+    meta: { version: 1, path: AUTOMATIONS_FILE, updatedAt: new Date().toISOString() },
+    automations: [],
+    executionLog: []
+  })
+}
+
+function saveAutomations(data) {
+  data.meta = { ...(data.meta || {}), version: 1, path: AUTOMATIONS_FILE, updatedAt: new Date().toISOString() }
+  writeJsonSafe(AUTOMATIONS_FILE, data)
+}
+
+// GET /api/automations — list all automations
+app.get('/api/automations', (req, res) => {
+  try {
+    const data = getAutomations()
+    res.json({
+      automations: data.automations || [],
+      meta: data.meta
+    })
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
+
+// GET /api/automations/:id — get single automation
+app.get('/api/automations/:id', (req, res) => {
+  try {
+    const data = getAutomations()
+    const auto = (data.automations || []).find(a => a.id === req.params.id)
+    if (!auto) return res.status(404).json({ error: 'Automation not found' })
+    res.json(auto)
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
+
+// POST /api/automations — create new automation
+app.post('/api/automations', (req, res) => {
+  try {
+    const data = getAutomations()
+    const body = req.body || {}
+    const now = new Date().toISOString()
+    
+    if (!body.name || !body.trigger || !body.actions) {
+      return res.status(400).json({ error: 'name, trigger and actions are required' })
+    }
+
+    const automation = {
+      id: body.id || `auto-${Date.now()}`,
+      name: String(body.name).trim(),
+      description: String(body.description || '').trim(),
+      enabled: body.enabled !== false,
+      trigger: body.trigger,
+      conditions: Array.isArray(body.conditions) ? body.conditions : [],
+      actions: Array.isArray(body.actions) ? body.actions : [],
+      lastTriggered: null,
+      triggerCount: 0,
+      createdAt: now
+    }
+
+    data.automations = [...(data.automations || []), automation]
+    saveAutomations(data)
+    res.json({ ok: true, automation })
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
+
+// PATCH /api/automations/:id — update automation
+app.patch('/api/automations/:id', (req, res) => {
+  try {
+    const data = getAutomations()
+    const idx = (data.automations || []).findIndex(a => a.id === req.params.id)
+    if (idx === -1) return res.status(404).json({ error: 'Automation not found' })
+
+    data.automations[idx] = {
+      ...data.automations[idx],
+      ...req.body,
+      id: req.params.id // immutable
+    }
+    saveAutomations(data)
+    res.json(data.automations[idx])
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
+
+// DELETE /api/automations/:id
+app.delete('/api/automations/:id', (req, res) => {
+  try {
+    const data = getAutomations()
+    const idx = (data.automations || []).findIndex(a => a.id === req.params.id)
+    if (idx === -1) return res.status(404).json({ error: 'Automation not found' })
+
+    data.automations.splice(idx, 1)
+    saveAutomations(data)
+    res.json({ ok: true })
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
+
+// POST /api/automations/:id/toggle — enable/disable
+app.post('/api/automations/:id/toggle', (req, res) => {
+  try {
+    const data = getAutomations()
+    const idx = (data.automations || []).findIndex(a => a.id === req.params.id)
+    if (idx === -1) return res.status(404).json({ error: 'Automation not found' })
+
+    data.automations[idx].enabled = !data.automations[idx].enabled
+    saveAutomations(data)
+    res.json({ ok: true, enabled: data.automations[idx].enabled })
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
+
+// POST /api/automations/:id/trigger — manually trigger an automation (for testing)
+app.post('/api/automations/:id/trigger', (req, res) => {
+  try {
+    const data = getAutomations()
+    const automation = (data.automations || []).find(a => a.id === req.params.id)
+    if (!automation) return res.status(404).json({ error: 'Automation not found' })
+    if (!automation.enabled) return res.status(400).json({ error: 'Automation is disabled' })
+
+    const result = executeAutomation(automation, req.body || {}, data)
+    saveAutomations(data)
+    res.json({ ok: true, result })
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
+
+// GET /api/automations/log — get execution log
+app.get('/api/automations/log', (req, res) => {
+  try {
+    const data = getAutomations()
+    const log = (data.executionLog || []).slice(-100) // last 100 entries
+    res.json({ log })
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
+
+// ─── Automation Execution Engine ──────────────────────────────────────────────
+
+async function executeAutomation(automation, triggerData = {}, globalData) {
+  const now = new Date().toISOString()
+  const results = []
+
+  for (const action of automation.actions) {
+    try {
+      let result = null
+      switch (action.type) {
+        case 'proposal.create': {
+          // Create a proposal from trigger data
+          const proposalsFile = join(DATA_DIR, 'proposals.json')
+          const proposalsData = existsSync(proposalsFile) ? JSON.parse(readFileSync(proposalsFile, 'utf-8')) : { proposals: [] }
+          const newProposal = {
+            id: `proposal-${Date.now()}`,
+            title: triggerData.ideaTitle || triggerData.title || automation.name,
+            description: triggerData.ideaDescription || triggerData.description || automation.description || '',
+            author: triggerData.author || triggerData.ideaAuthor || 'navi',
+            assignee: triggerData.assignee || automation.trigger?.assignee || null,
+            status: action.params?.status || 'debate',
+            priority: action.params?.priority || 'media',
+            track: action.params?.track || 'B',
+            createdAt: now,
+            updatedAt: now,
+            source: 'automation',
+            sourceAutomation: automation.id,
+            debateOutcome: null,
+            debateNotes: []
+          }
+          proposalsData.proposals = proposalsData.proposals || []
+          proposalsData.proposals.unshift(newProposal)
+          writeFileSync(proposalsFile, JSON.stringify(proposalsData, null, 2))
+          result = { proposalId: newProposal.id, status: newProposal.status }
+          break
+        }
+
+        case 'pm_board.create_task': {
+          const pmFile = PM_BOARD_FILE
+          const pmData = readJsonSafe(pmFile, { meta: {}, tasks: [] })
+          const newTask = {
+            id: `pm-auto-${Date.now()}`,
+            title: triggerData.title || triggerData.proposalTitle || automation.name,
+            description: triggerData.description || '',
+            assignee: triggerData.assignee || triggerData.author || 'sam',
+            status: 'todo',
+            priority: triggerData.priority || 'media',
+            createdDate: now,
+            updatedDate: now,
+            deliverableLink: '',
+            notes: [`Creat automàticament per: ${automation.name}`],
+            history: [{ at: now, by: 'automation', action: 'created', to: 'todo' }]
+          }
+          pmData.tasks = [...(pmData.tasks || []), newTask]
+          savePmBoard(pmData)
+          result = { taskId: newTask.id }
+          break
+        }
+
+        case 'backlog.add': {
+          const agentId = triggerData.assignee || triggerData.author || 'sam'
+          const backlogFile = join(WORKSPACE, 'team', agentId, 'BACKLOG.md')
+          if (existsSync(backlogFile)) {
+            const taskText = `\n## TASCA: ${triggerData.title || triggerData.proposalTitle || automation.name}\n**Data:** ${now}\n**Source:** ${automation.id}\n${triggerData.description || ''}\n`
+            const existing = readFileSync(backlogFile, 'utf-8')
+            const updated = existing + taskText
+            writeFileSync(backlogFile, updated, 'utf-8')
+            result = { agentId, added: true }
+          } else {
+            result = { agentId, added: false, error: 'Backlog file not found' }
+          }
+          break
+        }
+
+        case 'message.send': {
+          // For now, just log it — actual messaging would go through OpenClaw
+          const template = action.params?.template || 'Notificació: {title}'
+          const message = template
+            .replace('{title}', triggerData.title || '')
+            .replace('{description}', triggerData.description || '')
+            .replace('{priority}', triggerData.priority || '')
+          result = { message, sent: true, channel: action.params?.channel || 'internal' }
+          break
+        }
+
+        case 'proposal.update_status': {
+          const proposalsFile = join(DATA_DIR, 'proposals.json')
+          const proposalsData = existsSync(proposalsFile) ? JSON.parse(readFileSync(proposalsFile, 'utf-8')) : { proposals: [] }
+          const targetId = triggerData.proposalId || triggerData.id
+          const idx = (proposalsData.proposals || []).findIndex(p => p.id === targetId)
+          if (idx !== -1) {
+            proposalsData.proposals[idx].status = action.params?.status || 'done'
+            proposalsData.proposals[idx].updatedAt = now
+            writeFileSync(proposalsFile, JSON.stringify(proposalsData, null, 2))
+            result = { proposalId: targetId, newStatus: action.params?.status }
+          } else {
+            result = { error: 'Proposal not found' }
+          }
+          break
+        }
+
+        case 'notification.send': {
+          // Log notification for now
+          result = {
+            notification: action.params?.message || 'Notification sent',
+            channel: action.params?.channel || 'telegram',
+            sent: true
+          }
+          break
+        }
+
+        case 'debate.set_outcome': {
+          // Set debate outcome on a proposal
+          const proposalsFile = join(DATA_DIR, 'proposals.json')
+          const proposalsData = existsSync(proposalsFile) ? JSON.parse(readFileSync(proposalsFile, 'utf-8')) : { proposals: [] }
+          const targetId = triggerData.proposalId || triggerData.id
+          const idx = (proposalsData.proposals || []).findIndex(p => p.id === targetId)
+          if (idx !== -1) {
+            proposalsData.proposals[idx].debateOutcome = action.params?.outcome || 'approved'
+            proposalsData.proposals[idx].debateNotes = triggerData.debateNotes || []
+            proposalsData.proposals[idx].updatedAt = now
+            writeFileSync(proposalsFile, JSON.stringify(proposalsData, null, 2))
+            result = { proposalId: targetId, outcome: action.params?.outcome }
+          }
+          break
+        }
+
+        default:
+          result = { error: `Unknown action type: ${action.type}` }
+      }
+
+      results.push({ action: action.type, success: true, result })
+    } catch (err) {
+      results.push({ action: action.type, success: false, error: err.message })
+    }
+  }
+
+  // Update automation stats
+  automation.lastTriggered = now
+  automation.triggerCount = (automation.triggerCount || 0) + 1
+
+  // Log execution
+  globalData.executionLog = globalData.executionLog || []
+  globalData.executionLog.push({
+    automationId: automation.id,
+    automationName: automation.name,
+    trigger: automation.trigger?.type,
+    triggerData,
+    results,
+    executedAt: now,
+    success: results.every(r => r.success)
+  })
+  // Keep last 200 log entries
+  if (globalData.executionLog.length > 200) {
+    globalData.executionLog = globalData.executionLog.slice(-200)
+  }
+
+  return results
+}
+
+// ─── Fire automations on events ───────────────────────────────────────────────
+
+// Hook: idea accepted (called by the ideas endpoint)
+app.post('/api/internal/automations/fire', async (req, res) => {
+  try {
+    const { triggerType, triggerData } = req.body || {}
+    if (!triggerType) return res.status(400).json({ error: 'triggerType required' })
+
+    const data = getAutomations()
+    const matching = (data.automations || []).filter(a =>
+      a.enabled && a.trigger?.type === triggerType
+    )
+
+    const results = []
+    for (const automation of matching) {
+      const result = await executeAutomation(automation, triggerData, data)
+      results.push({ automationId: automation.id, result })
+    }
+    saveAutomations(data)
+
+    res.json({ fired: results.length, results })
   } catch (err) {
     res.status(500).json({ error: err.message })
   }

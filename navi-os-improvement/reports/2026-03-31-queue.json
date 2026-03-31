@@ -1,0 +1,96 @@
+{
+  "report": "2026-03-31-improvements.md",
+  "generatedAt": "2026-03-31T21:00:00Z",
+  "queue": [
+    {
+      "id": "navios-2026-03-31-01",
+      "title": "Refactoritzar Brain.jsx: extreure subcomponents",
+      "area": "Brain module",
+      "type": "refactor",
+      "priority": 1,
+      "impact": "Molt alt — facilita tota la resta de millores",
+      "effort": "2-3h",
+      "risK": "Baix",
+      "status": "pending",
+      "implementationSteps": [
+        "Identificar subcomponents independents dins Brain.jsx (MarkdownRenderer, FuzzySearch, MemoryFileItem, BriefCard, SessionMessage, CommitDetail, GitLogEntry)",
+        "Moure cada subcomponent a fitxer propi a src/components/ui/ o src/modules/brain/",
+        "Importar i usar des de Brain.jsx original",
+        "Validar amb npm run build"
+      ]
+    },
+    {
+      "id": "navios-2026-03-31-02",
+      "title": "Eliminar duplicacio d'endpoint /api/ideas a server.js",
+      "area": "server.js",
+      "type": "bug",
+      "priority": 2,
+      "impact": "Mitjà — comporta comportament erratic amb ideas",
+      "effort": "30 min",
+      "risK": "Molt baix",
+      "status": "pending",
+      "implementationSteps": [
+        "Buscar les dues definicions de app.get('/api/ideas') a server.js",
+        "Unificar en una sola que llegeixi de workspace/data/ideas.json",
+        "Eliminar la definicio redundant",
+        "Verificar que Proposals.jsx i Brain.jsx segueixin funcionant"
+      ]
+    },
+    {
+      "id": "navios-2026-03-31-03",
+      "title": "Convertir system-metrics a exec async (eliminar execSync)",
+      "area": "server.js /api/system-metrics",
+      "type": "optimization",
+      "priority": 3,
+      "impact": "Mitjà — millora responsivitat de Status",
+      "effort": "1h",
+      "risK": "Baix",
+      "status": "pending",
+      "implementationSteps": [
+        "Substituir execSync per exec amb Promise",
+        "Executar top, free, df en paral·lel amb Promise.all",
+        "Afegir timeout de 3s per comando",
+        "Afegir polling cada 30s a Status.jsx useEffect"
+      ]
+    },
+    {
+      "id": "navios-2026-03-31-04",
+      "title": "Sistema de design tokens CSS (CSS custom properties)",
+      "area": "App.css + globals",
+      "type": "optimization",
+      "priority": 4,
+      "impact": "Alt — facilita canvis de tema i consistència",
+      "effort": "1-2h",
+      "risK": "Baix",
+      "status": "pending",
+      "implementationSteps": [
+        "Crear seccio :root{} a index.css o App.css amb variables de color, espai, tipografia",
+        "Substituir colors hardcoded a Brain.css primer (el ms gran)",
+        "Substituir progressivament a la resta de components",
+        "No cal substituir-ho tot de cop"
+      ]
+    },
+    {
+      "id": "navios-2026-03-31-05",
+      "title": "Implementar polling per a dades de Status i Cron Health",
+      "area": "Status.jsx, Security.jsx",
+      "type": "feature",
+      "priority": 5,
+      "impact": "Mitjà — l'usuari no ha de fer refresh manual",
+      "effort": "1h",
+      "risK": "Molt baix",
+      "status": "pending",
+      "implementationSteps": [
+        "Afegir useEffect + setInterval per cada seccio de Status",
+        "Sistema: 10s, PM2: 15s, Agents: 30s, Sessions: 15s, Cron: 60s",
+        "Netejar intervals amb clearInterval al cleanup",
+        "Mantenir boto manual Actualitzar"
+      ]
+    }
+  ],
+  "stats": {
+    "totalImprovements": 5,
+    "byType": { "bug": 1, "refactor": 1, "optimization": 2, "feature": 1 },
+    "estimatedHours": "6-7.5h"
+  }
+}
