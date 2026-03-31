@@ -16,7 +16,7 @@ echo "" >> "$LOG_FILE"
 
 cd "$WORKSPACE"
 
-# Module to audit (cycles through: navi-os/src/modules/Ops, Brain, Lab)
+# Module to audit (cycles through: Ops, Brain, Lab - as .jsx files)
 MODULES=("Ops" "Brain" "Lab")
 AUDIT_INDEX=$(($(date +%s) / 86400 % 3))
 AUDIT_MODULE="${MODULES[$AUDIT_INDEX]}"
@@ -26,14 +26,13 @@ echo "" >> "$LOG_FILE"
 
 # 1. Module Audit
 echo "### Module Audit: $AUDIT_MODULE" >> "$LOG_FILE"
-MODULE_PATH="$WORKSPACE/navi-os/src/modules/$AUDIT_MODULE"
-if [ -d "$MODULE_PATH" ]; then
-  FILE_COUNT=$(find "$MODULE_PATH" -name "*.jsx" -o -name "*.css" 2>/dev/null | wc -l)
-  echo "- Files found: $FILE_COUNT" >> "$LOG_FILE"
-  echo "- Last modified: $(find "$MODULE_PATH" -type f -name "*.jsx" -mtime -1 2>/dev/null | head -1)" >> "$LOG_FILE"
+MODULE_PATH="$WORKSPACE/navi-os/src/modules/${AUDIT_MODULE}.jsx"
+if [ -f "$MODULE_PATH" ]; then
+  echo "- Module file exists: yes" >> "$LOG_FILE"
+  echo "- Last modified: $(stat -c %y "$MODULE_PATH" 2>/dev/null || ls -l "$MODULE_PATH" | awk '{print $6,$7,$8}')" >> "$LOG_FILE"
   
   # Check for TODO/FIXME
-  TODOS=$(grep -r "TODO\|FIXME" "$MODULE_PATH" 2>/dev/null | head -5 || true)
+  TODOS=$(grep "TODO\|FIXME" "$MODULE_PATH" 2>/dev/null | head -5 || true)
   if [ -n "$TODOS" ]; then
     echo "- TODOs/FIXMEs found:" >> "$LOG_FILE"
     echo "$TODOS" | while read t; do echo "  $t" >> "$LOG_FILE"; done

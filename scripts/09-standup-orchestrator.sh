@@ -11,7 +11,7 @@ MEETINGS_DIR="$WORKSPACE/team/meetings"
 DATE=$(date +%Y-%m-%d)
 TIME=$(date +%H-%M)
 STANDUP_FILE="$MEETINGS_DIR/${DATE}-daily-standup.md"
-LOG_FILE="$WORKINGS_DIR/logs/${DATE}-standup.log"
+LOG_FILE="$WORKSPACE/logs/${DATE}-standup.log"
 
 # Ensure directories exist
 mkdir -p "$MEETINGS_DIR"

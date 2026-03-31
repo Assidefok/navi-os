@@ -1,10 +1,277 @@
 {
   "meta": {
-    "version": 1,
+    "version": 2,
     "path": "/home/user/.openclaw/workspace/data/pm-board.json",
-    "updatedAt": "2026-03-31T00:00:00.000Z"
+    "updatedAt": "2026-03-31T07:28:00.000Z"
   },
   "tasks": [
+    {
+      "id": "pm-elom-1",
+      "title": "Definir visió estratègica 2026",
+      "description": "Crear document de visió i direcció estratègica per al negoci d'implementació OpenClaw. Identificar els 3 apostes gegants per aquest any.",
+      "assignee": "elom",
+      "status": "in-progress",
+      "priority": "critica",
+      "createdDate": "2026-03-31T07:25:00.000Z",
+      "updatedDate": "2026-03-31T07:25:00.000Z",
+      "deliverableLink": "",
+      "notes": [
+        {
+          "at": "2026-03-31T07:25:00.000Z",
+          "by": "Navi",
+          "text": "ELOM ha pres aquesta tasca com a prioritat estratègica"
+        }
+      ],
+      "history": [
+        {
+          "at": "2026-03-31T07:25:00.000Z",
+          "by": "Navi",
+          "action": "created",
+          "to": "todo"
+        },
+        {
+          "at": "2026-03-31T07:25:00.000Z",
+          "by": "ELOM",
+          "action": "status-change",
+          "from": "todo",
+          "to": "in-progress"
+        }
+      ]
+    },
+    {
+      "id": "pm-warren-1",
+      "title": "Auditoria de qualitat del sistema",
+      "description": "Revisar els processos actuals i identificar àrees de millora de qualitat. Crear estàndards de qualitat per al negoci.",
+      "assignee": "warren",
+      "status": "in-progress",
+      "priority": "alta",
+      "createdDate": "2026-03-31T07:26:00.000Z",
+      "updatedDate": "2026-03-31T07:26:00.000Z",
+      "deliverableLink": "",
+      "notes": [],
+      "history": [
+        {
+          "at": "2026-03-31T07:26:00.000Z",
+          "by": "Navi",
+          "action": "created",
+          "to": "todo"
+        }
+      ]
+    },
+    {
+      "id": "pm-jeff-1",
+      "title": "Disseny sistema operatiu escalable",
+      "description": "Disseny del sistema operatiu per entregar projectes OpenClaw de manera consistent. Processos, templates, i checklist.",
+      "assignee": "jeff",
+      "status": "in-progress",
+      "priority": "alta",
+      "createdDate": "2026-03-31T07:26:00.000Z",
+      "updatedDate": "2026-03-31T07:26:00.000Z",
+      "deliverableLink": "",
+      "notes": [],
+      "history": [
+        {
+          "at": "2026-03-31T07:26:00.000Z",
+          "by": "Navi",
+          "action": "created",
+          "to": "todo"
+        }
+      ]
+    },
+    {
+      "id": "pm-sam-1",
+      "title": "Arquitectura multi-agent Navi OS",
+      "description": "Disseny de l'arquitectura multi-agent per a Navi OS. Com els 4 chiefs es comuniquen, es coordinen, i reporten.",
+      "assignee": "sam",
+      "status": "review",
+      "priority": "alta",
+      "createdDate": "2026-03-31T07:27:00.000Z",
+      "updatedDate": "2026-03-31T07:27:00.000Z",
+      "deliverableLink": "",
+      "notes": [
+        {
+          "at": "2026-03-31T07:27:00.000Z",
+          "by": "SAM",
+          "text": "Primera versió del disseny llesta per revisió"
+        },
+        {
+          "at": "2026-03-31T06:30:00.000Z",
+          "by": "Navi",
+          "text": "Standup: SAM_commit avui — ship pm-sam-1 after Warren sign-off. WARREN needs formal doc access."
+        }
+      ],
+      "history": [
+        {
+          "at": "2026-03-31T07:27:00.000Z",
+          "by": "Navi",
+          "action": "created",
+          "to": "todo"
+        },
+        {
+          "at": "2026-03-31T07:27:00.000Z",
+          "by": "SAM",
+          "action": "status-change",
+          "from": "todo",
+          "to": "review"
+        }
+      ]
+    },
+    {
+      "id": "pm-navi-1",
+      "title": "First automation prototype",
+      "description": "SAM: crear primera automatització útil per Aleix (no demo — algo real)",
+      "assignee": "sam",
+      "status": "todo",
+      "priority": "alta",
+      "createdDate": "2026-03-31T06:30:00.000Z",
+      "updatedDate": "2026-03-31T06:30:00.000Z",
+      "deliverableLink": "",
+      "notes": [
+        {
+          "at": "2026-03-31T06:30:00.000Z",
+          "by": "Navi",
+          "text": "From daily standup — SAM commitment"
+        }
+      ],
+      "history": [
+        {
+          "at": "2026-03-31T06:30:00.000Z",
+          "by": "Navi",
+          "action": "created",
+          "to": "todo"
+        }
+      ]
+    },
+    {
+      "id": "pm-navi-2",
+      "title": "Risk register inicial",
+      "description": "WARREN: capturar top 3 riscos de l'estat actual de l'organització",
+      "assignee": "warren",
+      "status": "todo",
+      "priority": "media",
+      "createdDate": "2026-03-31T06:30:00.000Z",
+      "updatedDate": "2026-03-31T06:30:00.000Z",
+      "deliverableLink": "",
+      "notes": [
+        {
+          "at": "2026-03-31T06:30:00.000Z",
+          "by": "Navi",
+          "text": "From daily standup — WARREN commitment"
+        }
+      ],
+      "history": [
+        {
+          "at": "2026-03-31T06:30:00.000Z",
+          "by": "Navi",
+          "action": "created",
+          "to": "todo"
+        }
+      ]
+    },
+    {
+      "id": "pm-navi-3",
+      "title": "Quality audit framework",
+      "description": "WARREN: definir quality audit framework (scope: handoff quality, output consistency, decision documentation)",
+      "assignee": "warren",
+      "status": "todo",
+      "priority": "alta",
+      "createdDate": "2026-03-31T06:30:00.000Z",
+      "updatedDate": "2026-03-31T06:30:00.000Z",
+      "deliverableLink": "",
+      "notes": [
+        {
+          "at": "2026-03-31T06:30:00.000Z",
+          "by": "Navi",
+          "text": "From daily standup — WARREN commitment. Triggered by sequence risk on strategy."
+        }
+      ],
+      "history": [
+        {
+          "at": "2026-03-31T06:30:00.000Z",
+          "by": "Navi",
+          "action": "created",
+          "to": "todo"
+        }
+      ]
+    },
+    {
+      "id": "pm-navi-4",
+      "title": "Scalable OS v0.1",
+      "description": "JEFF: draft v0.1 del scalable OS design (process templates, checklists, delivery workflow)",
+      "assignee": "jeff",
+      "status": "todo",
+      "priority": "alta",
+      "createdDate": "2026-03-31T06:30:00.000Z",
+      "updatedDate": "2026-03-31T06:30:00.000Z",
+      "deliverableLink": "",
+      "notes": [
+        {
+          "at": "2026-03-31T06:30:00.000Z",
+          "by": "Navi",
+          "text": "From daily standup — JEFF commitment. Blocked on SAM (pm-sam-1) and ELOM (pm-elom-1 draft)"
+        }
+      ],
+      "history": [
+        {
+          "at": "2026-03-31T06:30:00.000Z",
+          "by": "Navi",
+          "action": "created",
+          "to": "todo"
+        }
+      ]
+    },
+    {
+      "id": "pm-navi-5",
+      "title": "JEFF MEMORY/BACKLOG population",
+      "description": "JEFF: populate BACKLOG.md from pm-board.json + establish baseline metrics in MEMORY.md",
+      "assignee": "jeff",
+      "status": "todo",
+      "priority": "media",
+      "createdDate": "2026-03-31T06:30:00.000Z",
+      "updatedDate": "2026-03-31T06:30:00.000Z",
+      "deliverableLink": "",
+      "notes": [
+        {
+          "at": "2026-03-31T06:30:00.000Z",
+          "by": "Navi",
+          "text": "From daily standup — JEFF commitment"
+        }
+      ],
+      "history": [
+        {
+          "at": "2026-03-31T06:30:00.000Z",
+          "by": "Navi",
+          "action": "created",
+          "to": "todo"
+        }
+      ]
+    },
+    {
+      "id": "pm-navi-6",
+      "title": "AI tooling stack validation",
+      "description": "SAM: avaluar OpenAI API, Whisper local, i eines AI existents vs necessitats per client delivery",
+      "assignee": "sam",
+      "status": "todo",
+      "priority": "media",
+      "createdDate": "2026-03-31T06:30:00.000Z",
+      "updatedDate": "2026-03-31T06:30:00.000Z",
+      "deliverableLink": "",
+      "notes": [
+        {
+          "at": "2026-03-31T06:30:00.000Z",
+          "by": "Navi",
+          "text": "From daily standup — SAM commitment"
+        }
+      ],
+      "history": [
+        {
+          "at": "2026-03-31T06:30:00.000Z",
+          "by": "Navi",
+          "action": "created",
+          "to": "todo"
+        }
+      ]
+    },
     {
       "id": "pm-gary-1",
       "title": "Ops audit hardening",
@@ -43,16 +310,16 @@
       "title": "Brain standup structure",
       "description": "Preparar plantilla de standup per chiefs",
       "assignee": "blair-brain",
-      "status": "review",
+      "status": "done",
       "priority": "media",
       "createdDate": "2026-03-31T00:52:00.000Z",
-      "updatedDate": "2026-03-31T00:55:00.000Z",
+      "updatedDate": "2026-03-31T07:25:00.000Z",
       "deliverableLink": "",
       "notes": [
         {
-          "at": "2026-03-31T00:55:00.000Z",
+          "at": "2026-03-31T07:25:00.000Z",
           "by": "Blair",
-          "text": "Blair moved draft to review"
+          "text": "Standup structure completada"
         }
       ],
       "history": [
@@ -68,38 +335,12 @@
           "action": "status-change",
           "from": "todo",
           "to": "review"
-        }
-      ]
-    },
-    {
-      "id": "pm-lena-1",
-      "title": "Lab experiment queue",
-      "description": "Organitzar proves del laboratori",
-      "assignee": "lena-lab",
-      "status": "done",
-      "priority": "baixa",
-      "createdDate": "2026-03-31T00:52:00.000Z",
-      "updatedDate": "2026-03-31T00:55:00.000Z",
-      "deliverableLink": "https://example.local/lab-queue",
-      "notes": [
-        {
-          "at": "2026-03-31T00:55:00.000Z",
-          "by": "Lena",
-          "text": "Lena completed the lab queue setup"
-        }
-      ],
-      "history": [
-        {
-          "at": "2026-03-31T00:52:00.000Z",
-          "by": "Navi",
-          "action": "created",
-          "to": "todo"
         },
         {
-          "at": "2026-03-31T00:55:00.000Z",
-          "by": "Lena",
+          "at": "2026-03-31T07:25:00.000Z",
+          "by": "Blair",
           "action": "status-change",
-          "from": "todo",
+          "from": "review",
           "to": "done"
         }
       ]

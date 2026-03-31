@@ -11,7 +11,9 @@
     "emoji": "🧚",
     "role": "Chief of Staff / Orchestrator",
     "source": "built-in",
-    "workspace": "/home/user/.openclaw/workspace"
+    "workspace": "/home/user/.openclaw/workspace",
+    "description": "Main orchestrator agent - coordinates all chiefs",
+    "model": "minimax-portal/MiniMax-M2.7"
   },
   "chiefs": [
     {
@@ -23,8 +25,10 @@
       "inspiredBy": "Elon Musk",
       "workspace": "/home/user/.openclaw/workspace/team/elom",
       "heartbeatInterval": 120,
-      "model": "minimax-portal/MiniMax-M2.7",
-      "source": "custom"
+      "model": "openai-codex/gpt-5.4",
+      "modelReason": "Strategic vision requires deep reasoning and long-term thinking",
+      "source": "custom",
+      "description": "Defines vision and strategic direction for 10x growth"
     },
     {
       "agentId": "warren",
@@ -35,8 +39,10 @@
       "inspiredBy": "Warren Buffett",
       "workspace": "/home/user/.openclaw/workspace/team/warren",
       "heartbeatInterval": 135,
-      "model": "minimax-portal/MiniMax-M2.7",
-      "source": "custom"
+      "model": "openai-codex/gpt-5.3-codex",
+      "modelReason": "Quality analysis requires methodical, detail-oriented thinking",
+      "source": "custom",
+      "description": "Guarantees quality standards, audits, and risk assessment"
     },
     {
       "agentId": "jeff",
@@ -47,8 +53,10 @@
       "inspiredBy": "Jeff Bezos",
       "workspace": "/home/user/.openclaw/workspace/team/jeff",
       "heartbeatInterval": 150,
-      "model": "minimax-portal/MiniMax-M2.7",
-      "source": "custom"
+      "model": "minimax-portal/MiniMax-M2.7-highspeed",
+      "modelReason": "Operations need fast execution and efficiency",
+      "source": "custom",
+      "description": "Builds scalable systems, eliminates bottlenecks, ensures delivery"
     },
     {
       "agentId": "sam",
@@ -59,8 +67,10 @@
       "inspiredBy": "Sam Altman",
       "workspace": "/home/user/.openclaw/workspace/team/sam",
       "heartbeatInterval": 180,
-      "model": "minimax-portal/MiniMax-M2.7",
-      "source": "custom"
+      "model": "openai-codex/gpt-5.3-codex",
+      "modelReason": "AI architecture requires technical depth and code expertise",
+      "source": "custom",
+      "description": "Leads AI strategy, automation, and technical architecture"
     }
   ],
   "specialists": {
