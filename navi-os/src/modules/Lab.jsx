@@ -5,6 +5,7 @@ import {
 } from 'lucide-react'
 import Modal from '../components/ui/Modal'
 import FeatureCard from '../components/ui/FeatureCard'
+import Inbox from './Lab/Inbox'
 import './Lab.css'
 
 const API_BASE = '/api'
@@ -320,6 +321,9 @@ export default function Lab() {
         <button className={`lab-nav-btn ${activeSection === 'research' ? 'active' : ''}`} onClick={() => setActiveSection('research')}>
           Research
         </button>
+        <button className={`lab-nav-btn ${activeSection === 'inbox' ? 'active' : ''}`} onClick={() => setActiveSection('inbox')}>
+          Inbox
+        </button>
       </div>
 
       {/* Content */}
@@ -336,6 +340,7 @@ export default function Lab() {
           </div>
         )}
         {activeSection === 'research' && <ResearchDashboard />}
+        {activeSection === 'inbox' && <Inbox />}
       </div>
 
       {/* Modals */}

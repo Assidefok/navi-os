@@ -1669,6 +1669,168 @@ app.post('/api/internal/automations/fire', async (req, res) => {
   }
 })
 
+// ─── Obsidian-Format Action Logger ───────────────────────────────────────────
+const LOGS_DIR = join(WORKSPACE, 'memory', 'Logs')
+
+function logAction({ type, title, body, tags, source, metadata }) {
+  try {
+    const DATE = new Date()
+    const dateStr = DATE.toISOString().split('T')[0]
+    const timeStr = DATE.toISOString().split('T')[1].slice(0, 8)
+    const id = `${dateStr}-${Date.now()}`
+    const slug = (title || type || 'log')
+      .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 50)
+    const filename = `${id}-${slug}.md`
+    const path = join(LOGS_DIR, filename)
+    mkdirSync(LOGS_DIR, { recursive: true })
+    const frontmatter = `---
+id: ${id}
+type: ${type || 'action'}
+date: ${dateStr}
+time: ${timeStr}
+source: ${source || 'system'}
+${tags && tags.length ? `tags: [${tags.join(', ')}]\n` : ''}---
+`
+    const content = `${frontmatter}# ${title || `${type} · ${source || 'System'}`}
+
+${body || ''}
+${metadata ? `\n**Metadata:**\n${Object.entries(metadata).map(([k, v]) => `- **${k}:** ${v}`).join('\n')}\n` : ''}
+
+---
+
+_Logged: ${DATE.toLocaleString('ca-ES', { dateStyle: 'full', timeStyle: 'medium' })}_
+`
+    writeFileSync(path, content)
+    return { ok: true, file: filename, id }
+  } catch (err) {
+    console.error('Log action error:', err)
+    return { ok: false, error: err.message }
+  }
+}
+
+app.post('/api/logs', (req, res) => {
+  try { res.json(logAction(req.body)) }
+  catch (err) { res.status(500).json({ error: err.message }) }
+})
+
+app.get('/api/logs', (req, res) => {
+  try {
+    if (!existsSync(LOGS_DIR)) return res.json({ logs: [] })
+    const files = readdirSync(LOGS_DIR).filter(f => f.endsWith('.md')).sort().reverse().slice(0, 50)
+    const logs = files.map(f => {
+      const content = readFileSync(join(LOGS_DIR, f), 'utf-8')
+      const m = {}
+      content.replace(/^(\w+): (.+)/m, (_, k, v) => { m[k] = v })
+      return { file: f, title: content.match(/^# (.+)/m)?.[1] || f, date: m.date || f.slice(0, 10), type: m.type || 'action' }
+    })
+    res.json({ logs })
+  } catch (err) { res.json({ logs: [], error: err.message }) }
+})
+
+// ─── Inbox (Ideas & Notes) ────────────────────────────────────────────────────
+const INBOX_DIR = join(WORKSPACE, 'memory', 'Inbox')
+const INBOX_INDEX = join(WORKSPACE, 'memory', 'Inbox', 'index.json')
+
+function inboxList() {
+  try {
+    if (!existsSync(INBOX_DIR)) return []
+    const files = readdirSync(INBOX_DIR).filter(f => f.endsWith('.md') && f !== 'index.md')
+    const items = files.map(file => {
+      const path = join(INBOX_DIR, file)
+      const content = readFileSync(path, 'utf-8')
+      const titleMatch = content.match(/^# (.+)/m)
+      const title = titleMatch ? titleMatch[1] : file.replace('.md', '')
+      const dateMatch = content.match(/\*\*Created:\*\* (.+)/)
+      const statusMatch = content.match(/\*\*Status:\*\* (.+)/)
+      const tagsMatch = content.match(/Tags?: (.+)/)
+      return {
+        file,
+        title,
+        created: dateMatch ? dateMatch[1] : file.slice(0, 10),
+        status: statusMatch ? statusMatch[1].toLowerCase() : 'new',
+        tags: tagsMatch ? tagsMatch[1].split(',').map(t => t.trim()) : []
+      }
+    })
+    return items.sort((a, b) => b.created.localeCompare(a.created))
+  } catch { return [] }
+}
+
+function inboxSave(item) {
+  const slug = (item.title || 'idea')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+    .slice(0, 60)
+  const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19)
+  const filename = `${timestamp}-${slug}.md`
+  const path = join(INBOX_DIR, filename)
+  mkdirSync(INBOX_DIR, { recursive: true })
+  const tags = Array.isArray(item.tags) ? item.tags.join(', ') : (item.tags || '')
+  const content = `---
+source: ${item.source || 'inbox'}
+createdAt: ${new Date().toISOString()}
+status: new
+type: ${item.type || 'idea'}
+---
+
+# ${item.title || 'Idea'}
+
+${item.body || ''}
+
+---
+
+**Status:** New  
+**Tags:** ${tags || 'none'}
+**Source:** ${item.source || 'inbox'}
+
+---
+
+*Captured from ${item.source || 'inbox'} on ${new Date().toLocaleString('ca-ES', { dateStyle: 'full', timeStyle: 'short' })}*
+`
+  writeFileSync(path, content)
+  return { ok: true, file: filename }
+}
+
+app.get('/api/inbox', (req, res) => {
+  const items = inboxList()
+  res.json({ items, count: items.length })
+})
+
+app.post('/api/inbox', (req, res) => {
+  try {
+    const { title, body, tags, source, type } = req.body
+    if (!title && !body) return res.status(400).json({ error: 'title or body required' })
+    const result = inboxSave({ title, body, tags, source: source || 'api', type: type || 'idea' })
+    res.json(result)
+  } catch (err) { res.status(500).json({ error: err.message }) }
+})
+
+app.patch('/api/inbox/:filename', (req, res) => {
+  try {
+    const { status, tags, title } = req.body
+    const safeName = req.params.filename.replace(/\.\./, '')
+    const path = join(INBOX_DIR, safeName)
+    if (!path.startsWith(INBOX_DIR)) return res.status(403).json({ error: 'Invalid filename' })
+    if (!existsSync(path)) return res.status(404).json({ error: 'Not found' })
+    let content = readFileSync(path, 'utf-8')
+    if (status) content = content.replace(/\*\*Status:\*\* .+/, `**Status:** ${status.charAt(0).toUpperCase() + status.slice(1)}`)
+    if (tags) content = content.replace(/\*\*Tags:\*\* .+/, `**Tags:** ${tags}`)
+    if (title) content = content.replace(/^# .+/m, `# ${title}`)
+    writeFileSync(path, content)
+    res.json({ ok: true })
+  } catch (err) { res.status(500).json({ error: err.message }) }
+})
+
+app.delete('/api/inbox/:filename', (req, res) => {
+  try {
+    const safeName = req.params.filename.replace(/\.\./, '')
+    const path = join(INBOX_DIR, safeName)
+    if (!path.startsWith(INBOX_DIR)) return res.status(403).json({ error: 'Invalid filename' })
+    if (existsSync(path)) unlinkSync(path)
+    res.json({ ok: true })
+  } catch (err) { res.status(500).json({ error: err.message }) }
+})
+
 // ─── Somiar de Dia / de Nit ─────────────────────────────────────────────────
 const SOMIAR_ENABLED_DAY = join(WORKSPACE, '.somiar-de-dia.enabled')
 const SOMIAR_ENABLED_NIT = join(WORKSPACE, '.somiar-de-nit.enabled')
