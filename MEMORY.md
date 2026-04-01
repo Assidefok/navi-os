@@ -1,6 +1,6 @@
 # MEMORY.md - Long-Term Memory
 
-_Last updated: 2026-03-30_
+_Last updated: 2026-04-01_
 
 ---
 
@@ -159,6 +159,7 @@ Course videos: /home/user/.openclaw/workspace/course/video-reports.md
 - Aleix corrects me directly (name = Aleix, not Alex)
 - Windows voice dictation doesn't support Catalan → he writes Spanish, I respond Catalan
 - Aleix wants practical, production-ready solutions not just proofs-of-concept
+- Audit script `02-overnight-audit.sh` had 2 bugs: (1) `${path#../}` only stripped ONE `../` prefix, failing for multi-level paths; (2) didn't try `.jsx`/`.js` extensions when checking file existence. Both fixed. Always validate broken-import detections manually — the script produced 16 false positives.
 
 ---
 

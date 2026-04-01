@@ -1,0 +1,10 @@
+[PM2] Starting /home/user/.openclaw/workspace/navi-os/server.js in fork_mode (1 instance)
+[PM2] Done.
+┌────┬──────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name                 │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼──────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 3  │ navi-os              │ default     │ 0.0.0   │ fork    │ 241366   │ 0s     │ 0    │ online    │ 0%       │ 17.6mb   │ user     │ disabled │
+│ 1  │ navi-os-api          │ default     │ 0.0.0   │ fork    │ 241306   │ 1s     │ 1    │ online    │ 0%       │ 71.8mb   │ user     │ disabled │
+│ 2  │ proposals-watcher    │ default     │ N/A     │ fork    │ 230457   │ 6h     │ 0    │ online    │ 0%       │ 68.8mb   │ user     │ disabled │
+│ 0  │ vite                 │ default     │ 8.0.3   │ fork    │ 230449   │ 6h     │ 0    │ online    │ 0%       │ 144.2mb  │ user     │ disabled │
+└────┴──────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘

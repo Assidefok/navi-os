@@ -1,6 +1,32 @@
 {
   "entries": [
     {
+      "filename": "2026-04-01-06.00.md",
+      "headlines": [
+        "Al-Sharaa says Syria to stay out of war on Iran unless attacked",
+        "Trump tells allies \u2018get your own oil\u2019, says Iran war could end in 2-3 weeks",
+        "Iran war live: Trump says conflict to end in 2-3 weeks; Kuwait airport hit",
+        "Trump says US will be leaving Iran in two to three weeks",
+        "Pope Leo urges Trump to end war on Iran"
+      ],
+      "date": "2026-04-01",
+      "hour": "06",
+      "timestamp": "2026-04-01 06:45:24",
+      "item_count": 5,
+      "keywords": [
+        "iran",
+        "iranian",
+        "tehran",
+        "isfahan",
+        "persian",
+        "middle east war",
+        "us-iran",
+        "iran war",
+        "iran attack",
+        "iran nuclear"
+      ]
+    },
+    {
       "filename": "2026-03-31-22.00.md",
       "headlines": [
         "What\u2019s behind Donald Trump\u2019s interest in Iran\u2019s Kharg Island?",
@@ -53,5 +79,5 @@
       ]
     }
   ],
-  "last_updated": "2026-03-31 22:01:51"
+  "last_updated": "2026-04-01 06:45:24"
 }

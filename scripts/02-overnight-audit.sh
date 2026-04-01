@@ -55,12 +55,20 @@ echo "" >> "$LOG_FILE"
 echo "### Reference Check" >> "$LOG_FILE"
 BROKEN=0
 for js in $(find "$WORKSPACE/navi-os/src" -name "*.jsx" 2>/dev/null); do
-  IMPORTS=$(grep -oE "from ['\"]\.\./[^'\"]+['\"]" "$js" 2>/dev/null || true)
+  # Match both ../ and ./ relative imports (but not package names)
+  IMPORTS=$(grep -oE "from ['\"]\.\.?/[^'\"]+['\"]" "$js" 2>/dev/null || true)
   if [ -n "$IMPORTS" ]; then
     while read imp; do
       path=$(echo "$imp" | sed "s/from ['\"]//g" | sed "s/['\"]//g")
-      full_path="$WORKSPACE/navi-os/src/${path#../}"
-      if [ ! -f "$full_path" ]; then
+      # Resolve relative import path from the JS file's directory
+      js_dir=$(dirname "$js")
+      full_path=$(cd "$js_dir" && realpath -m "$path" 2>/dev/null || echo "")
+      # Try common extensions since JSX imports often omit them
+      found=0
+      for ext in "" ".jsx" ".js" ".tsx" ".ts"; do
+        [ -f "${full_path}${ext}" ] && found=1 && break
+      done
+      if [ $found -eq 0 ] && [ -n "$full_path" ]; then
         echo "- Broken import in $(basename $js): $path" >> "$LOG_FILE"
         BROKEN=$((BROKEN + 1))
       fi

@@ -26,9 +26,9 @@ PASSED=0
 FAILED=0
 WARNINGS=0
 
-log_pass() { echo -e "${GREEN}[PASS]${NC} $1"; ((PASSED++)); }
-log_fail() { echo -e "${RED}[FAIL]${NC} $1"; ((FAILED++)); }
-log_warn() { echo -e "${YELLOW}[WARN]${NC} $1"; ((WARNINGS++)); }
+log_pass() { echo -e "${GREEN}[PASS]${NC} $1"; PASSED=$((PASSED+1)); }
+log_fail() { echo -e "${RED}[FAIL]${NC} $1"; FAILED=$((FAILED+1)); }
+log_warn() { echo -e "${YELLOW}[WARN]${NC} $1"; WARNINGS=$((WARNINGS+1)); }
 log_info() { echo -e "${BLUE}[INFO]${NC} $1"; }
 
 # ─── Backup Directory Check ────────────────────────────────────────────────

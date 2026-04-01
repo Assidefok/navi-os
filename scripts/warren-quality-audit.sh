@@ -32,26 +32,29 @@ SUCCESSES=0
 
 log_critical() { 
   echo -e "${RED}[CRITICAL]${NC} $1"
-  ((CRITICAL++))
+  CRITICAL=$((CRITICAL+1))
 }
 log_high() { 
   echo -e "${ORANGE}[HIGH]${NC} $1"
-  ((HIGH++))
+  HIGH=$((HIGH+1))
 }
 log_medium() { 
   echo -e "${YELLOW}[MEDIUM]${NC} $1"
-  ((MEDIUM++))
+  MEDIUM=$((MEDIUM+1))
 }
 log_low() { 
   echo -e "${BLUE}[LOW]${NC} $1"
-  ((LOW++))
+  LOW=$((LOW+1))
 }
 log_ok() { 
   echo -e "${GREEN}[OK]${NC} $1"
-  ((SUCCESSES++))
+  SUCCESSES=$((SUCCESSES+1))
 }
 log_info() { 
   echo -e "${CYAN}[INFO]${NC} $1"
+}
+log_warn() { 
+  echo -e "${YELLOW}[WARN]${NC} $1"
 }
 
 # ─── Code Quality Checks ───────────────────────────────────────────────────

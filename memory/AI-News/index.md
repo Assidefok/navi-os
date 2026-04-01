@@ -4,7 +4,7 @@ category: AI News
 icon: 🤖
 description: Artificial Intelligence and Machine Learning news
 tags: ['ai', 'ml', 'llm', 'openai', 'anthropic', 'startups']
-created: 2026-03-31 23:47
+created: 2026-04-01 06:45
 ---
 
 # 🤖 AI News
@@ -13,13 +13,19 @@ Artificial Intelligence and Machine Learning news
 
 ## Meta
 - **Carpeta:** `memory/AI-News/`
-- **Total entrades:** 2
-- **Darrer update:** 2026-03-31 23:47
+- **Total entrades:** 3
+- **Darrer update:** 2026-04-01 06:45
 
 ## Tags
 #ai #ml #llm #openai #anthropic #startups
 
 ## Entrades recents
+
+### [[2026-04-01-06.00.md|2026-04-01 06:00]] #anthropic #openai #startups
+
+- Mercor says it was hit by cyberattack tied to compromise of open-source LiteLLM ...
+- Anthropic is having a month...
+- Salesforce announces an AI-heavy makeover for Slack, with 30 new features...
 
 ### [[2026-03-31-22.00.md|2026-03-31 22:00]] #startups
 

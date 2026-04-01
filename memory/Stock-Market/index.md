@@ -4,7 +4,7 @@ category: Borsa
 icon: 📈
 description: Stock market and finance news
 tags: ['stocks', 'markets', 'finance', 'investing']
-created: 2026-03-31 23:47
+created: 2026-04-01 06:45
 ---
 
 # 📈 Borsa
@@ -13,13 +13,19 @@ Stock market and finance news
 
 ## Meta
 - **Carpeta:** `memory/Stock-Market/`
-- **Total entrades:** 1
-- **Darrer update:** 2026-03-31 23:47
+- **Total entrades:** 2
+- **Darrer update:** 2026-04-01 06:45
 
 ## Tags
 #stocks #markets #finance #investing
 
 ## Entrades recents
+
+### [[2026-04-01-06.00.md|2026-04-01 06:00]] #us-markets #global-markets #finance #stocks #markets
+
+- Down 11% Over the Past 5 Days, Should You Buy the Dip in META Stock?...
+- Grant Cardone Responds To Actor Terrence Howard's Claim That 'Bitcoin Is Going T...
+- Netflix’s Revenue Engine Is Heating Up — Time to Buy NFLX Stock?...
 
 ### [[2026-03-31-23.00.md|2026-03-31 23:00]] #us-markets #global-markets #finance #stocks #markets
 
