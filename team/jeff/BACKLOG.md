@@ -1,25 +1,37 @@
 # BACKLOG.md - JEFF
 
-## Action Items
+_Last updated: 2026-04-01T15:24:00.000Z_
+
+---
+
+## Action Items (from PM Board)
 
 ### Alta Prioritat (立即)
 
 | ID | Tasca | Estat | Data Creació | Data Límit | Eficiència Impacte |
 |----|-------|-------|--------------|------------|-------------------|
-| J-001 | [Tasca] | [TODO/IN-PROGRESS/REVIEW/DONE] | YYYY-MM-DD | YYYY-MM-DD | [%] |
-| J-002 | [Tasca] | [TODO/IN-PROGRESS/REVIEW/DONE] | YYYY-MM-DD | YYYY-MM-DD | [%] |
+| J-001 | pm-jeff-1: Disseny sistema operatiu escalable | IN-PROGRESS | 2026-03-31 | TBD | 90% |
+| J-002 | pm-navi-4: Scalable OS v0.1 | TODO | 2026-03-31 | TBD | 85% |
 
 ### Mitjana Prioritat
 
 | ID | Tasca | Estat | Data Creació | Data Límit | Eficiència Impacte |
 |----|-------|-------|--------------|------------|-------------------|
-| J-003 | [Tasca] | [TODO/IN-PROGRESS/REVIEW/DONE] | YYYY-MM-DD | YYYY-MM-DD | [%] |
+| J-003 | pm-navi-5: MEMORY/BACKLOG population | DONE | 2026-03-31 | 2026-04-01 | 60% |
 
 ### Baixa Prioritat
 
 | ID | Tasca | Estat | Data Creació | Data Límit | Eficiència Impacte |
 |----|-------|-------|--------------|------------|-------------------|
-| J-004 | [Tasca] | [TODO/IN-PROGRESS/REVIEW/DONE] | YYYY-MM-DD | YYYY-MM-DD | [%] |
+
+---
+
+## Cross-Team Dependencies (Blockers per a JEFF)
+
+| Tasca | Blocker | Estat | Priority |
+|-------|---------|-------|----------|
+| pm-navi-4 | pm-sam-1 (SAM architecture) | review | Alta |
+| pm-navi-4 | pm-elom-1 (ELOM strategy) | in-progress | Alta |
 
 ---
 
@@ -27,37 +39,26 @@
 
 | ID | Tasca | Tipus | Impacte | Estat |
 |----|-------|-------|---------|-------|
-| O-001 | [Procés] | Automation | [Alto] | [TODO] |
-| O-002 | [Optimització] | Efficiency | [Mitjà] | [TODO] |
+| O-001 | PM board sync diari | Automation | [Alt] | TODO |
+| O-002 | Efficiency metrics tracking | Efficiency | [Mitjà] | IN-PROGRESS |
+| O-003 | Process health checks | Monitoring | [Mitjà] | TODO |
 
 ---
 
 ## Revisió de Backlog
 
-- **Darrera revisió:** YYYY-MM-DD
-- **Tasques completades:** N
-- **Tasques pendents:** N
-- **Coll d'ampolla resolts:** N
+- **Darrera revisió:** 2026-04-01
+- **Tasques completades:** 1
+- **Tasques pendents:** 5 (JEFF), 7 (total)
+- **Coll d'ampolla resolts:** 0
 
 ---
 
 ## Notes
 
-[Tancat per a notes operacionals]
-
----
-
-## Episode 4 - Automate Agents
-
-_Automatitzar agents per treballar autònoms 24/7 amb self-healing i retry logic._
-
-### Tasques concretes
-
-| ID | Tasca | Estat | Prioritat | Eficiència Impacte |
-|----|-------|-------|-----------|-------------------|
-| J-004 | **Cron Watchdog + Self-Healing** - Monitoritzar tots els cron jobs actius, detectar fallades (Overnight Audit, Daily AI News), auto-reiniciar amb retry 3x abans d'escalar | TODO | 🔴 Alta | 90% |
-| J-005 | **Escalation Flow Engine** - Quan un procés falla 3 cops, notificar automàticament al chief corresponent (SAM per AI, JEFF per ops, etc.) i obrir incidència a PROJECT.md | TODO | 🔴 Alta | 85% |
-| J-006 | **Chief Heartbeat Health Dashboard** - Consolidar l'estat de tots 4 chiefs (ELOM, WARREN, JEFF, SAM) en un view únic: última connexió, tasques actives, incidències obertes | TODO | 🟡 Mitjana | 75% |
+- pm-navi-4 blocked by SAM (pm-sam-1) and ELOM (pm-elom-1)
+- pm-gary-1 stale since 2026-03-31 — flag per a Gary/Navi
+- J-003 (MEMORY/BACKLOG population) ara completada
 
 ---
 

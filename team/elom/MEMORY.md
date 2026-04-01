@@ -1,6 +1,6 @@
 # MEMORY.md - ELOM
 
-_Last updated: 2026-03-31T23:26:00.000Z_
+_Last updated: 2026-04-01T14:54:00.000Z_
 
 ---
 
@@ -34,7 +34,9 @@ _Last updated: 2026-03-31T23:26:00.000Z_
 
 | Apostes | Inversió | Retorn esperat | Estat |
 |---------|----------|-----------------|-------|
-| TBD (després de pm-elom-1) | - | - | Pendent |
+| Certification & Partnership Model | 6 mesos, 2 consultors | 500K EUR ARR | Proposat (pending Aleix) |
+| The Delivery OS | 3 mesos, JEFF + 1 eng | 3x velocitat delivery | Proposat (pending Aleix) |
+| Vertical SaaS Play | 12 mesos, SAM + equip | 1M EUR ARR potencial | Proposat (pending Aleix) |
 
 ---
 
@@ -67,9 +69,9 @@ _Primera setmana d'operacions — no hi ha lliçons enregistrades encara._
 ---
 
 ## Open Issues
-- Strategic vision document (pm-elom-1) — pending Aleix approval
+- Strategic vision document (pm-elom-1) — ✅ Draft complete, pending Aleix approval
 - JEFF blocked on pm-elom-1 + pm-sam-1 for Scalable OS
-- Need 3 big 10x bets defined for 2026
+- 3 big 10x bets ✅ Defined in visio-2026.md
 
 ---
 
