@@ -13,9 +13,14 @@
       "status": "in-progress",
       "priority": "critica",
       "createdDate": "2026-03-31T07:25:00.000Z",
-      "updatedDate": "2026-03-31T07:25:00.000Z",
-      "deliverableLink": "",
+      "updatedDate": "2026-04-01T06:40:00.000Z",
+      "deliverableLink": "/home/user/.openclaw/workspace/team/elom/visions/visio-2026.md",
       "notes": [
+        {
+          "at": "2026-04-01T06:40:00.000Z",
+          "by": "ELOM",
+          "text": "Draft v0.1 creat — 3 apostes 10x definits. Pendent Aleix approval."
+        },
         {
           "at": "2026-03-31T07:25:00.000Z",
           "by": "Navi",

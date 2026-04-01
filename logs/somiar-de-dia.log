@@ -1,2 +1,60 @@
 [2026-04-01 07:50:52] [SOMIAR-DIA] === SOMIAR DE DIA - Starting check ===
 [2026-04-01 07:50:52] [SOMIAR-DIA] Outside 9:00-20:00 window (hour=07). Skipping.
+[2026-04-01 08:20:34] [SOMIAR-DIA] === SOMIAR DE DIA - Starting check ===
+[2026-04-01 08:20:34] [SOMIAR-DIA] Outside 9:00-20:00 window (hour=08). Skipping.
+[2026-04-01 08:50:35] [SOMIAR-DIA] === SOMIAR DE DIA - Starting check ===
+[2026-04-01 08:50:35] [SOMIAR-DIA] Outside 9:00-20:00 window (hour=08). Skipping.
+[2026-04-01 09:20:45] [SOMIAR-DIA] === SOMIAR DE DIA - Starting check ===
+[2026-04-01 09:20:45] [SOMIAR-DIA] No recent user activity. Proceeding with self-improvement cycle.
+[2026-04-01 09:20:45] [SOMIAR-DIA] Starting Self-Improvement Cycle: SD-20260401-0920
+[2026-04-01 09:20:46] [SOMIAR-DIA] Cycle complete: /home/user/.openclaw/workspace/.somiar-cycles/somiar-de-dia-SD-20260401-0920.md
+[2026-04-01 09:20:46] [SOMIAR-DIA] === SOMIAR DE DIA - Check complete ===
+[2026-04-01 09:50:35] [SOMIAR-DIA] === SOMIAR DE DIA - Starting check ===
+[2026-04-01 09:50:35] [SOMIAR-DIA] No recent user activity. Proceeding with self-improvement cycle.
+[2026-04-01 09:50:35] [SOMIAR-DIA] Starting Self-Improvement Cycle: SD-20260401-0950
+[2026-04-01 09:50:36] [SOMIAR-DIA] Cycle complete: /home/user/.openclaw/workspace/.somiar-cycles/somiar-de-dia-SD-20260401-0950.md
+[2026-04-01 09:50:36] [SOMIAR-DIA] === SOMIAR DE DIA - Check complete ===
+[2026-04-01 10:20:32] [SOMIAR-DIA] === SOMIAR DE DIA - Starting check ===
+[2026-04-01 10:20:32] [SOMIAR-DIA] No recent user activity. Proceeding with self-improvement cycle.
+[2026-04-01 10:20:32] [SOMIAR-DIA] Starting Self-Improvement Cycle: SD-20260401-1020
+[2026-04-01 10:20:33] [SOMIAR-DIA] Cycle complete: /home/user/.openclaw/workspace/.somiar-cycles/somiar-de-dia-SD-20260401-1020.md
+[2026-04-01 10:20:33] [SOMIAR-DIA] === SOMIAR DE DIA - Check complete ===
+[2026-04-01 10:55:40] [SOMIAR-DIA] === SOMIAR DE DIA - Starting check ===
+[2026-04-01 10:55:40] [SOMIAR-DIA] Starting Self-Improvement Cycle: SD-20260401-1055
+[2026-04-01 10:55:43] [SOMIAR-DIA] Cycle complete: /home/user/.openclaw/workspace/.somiar-cycles/somiar-de-dia-SD-20260401-1055.md
+[2026-04-01 10:55:43] [SOMIAR-DIA] Proposal created: [Somiar Dia] 01/04 10:55 - 4 accions proposades
+[2026-04-01 10:55:43] [SOMIAR-DIA] === SOMIAR DE DIA - Done ===
+[2026-04-01 10:56:55] [SOMIAR-DIA] === SOMIAR DE DIA - Starting check ===
+[2026-04-01 10:56:55] [SOMIAR-DIA] Starting Self-Improvement Cycle: SD-20260401-1056
+[2026-04-01 10:56:59] [SOMIAR-DIA] Cycle complete: /home/user/.openclaw/workspace/.somiar-cycles/somiar-de-dia-SD-20260401-1056.md
+[2026-04-01 10:56:59] [SOMIAR-DIA] Proposal created: [Somiar Dia] 01/04 10:56 - 4 accions
+[2026-04-01 10:56:59] [SOMIAR-DIA] === SOMIAR DE DIA - Done ===
+[2026-04-01 10:59:41] [SOMIAR-DIA] === SOMIAR DE DIA - Starting check ===
+[2026-04-01 10:59:41] [SOMIAR-DIA] Starting: SD-20260401-1059
+[2026-04-01 10:59:42] [SOMIAR-DIA] Cycle complete: /home/user/.openclaw/workspace/.somiar-cycles/somiar-de-dia-SD-20260401-1059.md
+[2026-04-01 10:59:42] [SOMIAR-DIA] === DONE ===
+[2026-04-01 11:21:03] [SOMIAR-DIA] === SOMIAR DE DIA - Starting check ===
+[2026-04-01 11:21:03] [SOMIAR-DIA] Starting: SD-20260401-1121
+[2026-04-01 11:21:04] [SOMIAR-DIA] Cycle complete: /home/user/.openclaw/workspace/.somiar-cycles/somiar-de-dia-SD-20260401-1121.md
+[2026-04-01 11:21:04] [SOMIAR-DIA] === DONE ===
+[2026-04-01 11:52:20] [SOMIAR-DIA] === Starting ===
+[2026-04-01 11:52:21] [SOMIAR-DIA] Report: /home/user/.openclaw/workspace/.somiar-cycles/somiar-de-dia-SD-20260401-1152.md
+[2026-04-01 11:52:21] [SOMIAR-DIA] === Done ===
+[2026-04-01 11:54:45] [SOMIAR-DIA] === Starting ===
+[2026-04-01 11:54:46] [SOMIAR-DIA] Report: /home/user/.openclaw/workspace/.somiar-cycles/somiar-de-dia-SD-20260401-1154.md
+[2026-04-01 11:54:46] [SOMIAR-DIA] === Done ===
+[2026-04-01 11:56:28] [SOMIAR-DIA] === Starting ===
+[2026-04-01 11:56:29] [SOMIAR-DIA] Report: /home/user/.openclaw/workspace/.somiar-cycles/somiar-de-dia-SD-20260401-1156.md
+[2026-04-01 11:56:29] [SOMIAR-DIA] === Done ===
+[2026-04-01 11:57:42] [SOMIAR-DIA] === Starting ===
+[2026-04-01 11:57:43] [SOMIAR-DIA] Report: /home/user/.openclaw/workspace/.somiar-cycles/somiar-de-dia-SD-20260401-1157.md
+[2026-04-01 11:57:43] [SOMIAR-DIA] === Done ===
+[2026-04-01 11:58:38] [SOMIAR-DIA] === Starting ===
+[2026-04-01 11:58:38] [SOMIAR-DIA] Report: /home/user/.openclaw/workspace/.somiar-cycles/somiar-de-dia-SD-20260401-1158.md
+[2026-04-01 11:58:38] [SOMIAR-DIA] === Done ===
+[2026-04-01 12:00:12] [SOMIAR-DIA] === Starting ===
+[2026-04-01 12:00:13] [SOMIAR-DIA] Report: /home/user/.openclaw/workspace/.somiar-cycles/somiar-de-dia-SD-20260401-1200.md
+[2026-04-01 12:00:14] [SOMIAR-DIA] === Done ===
+[2026-04-01 12:03:42] [SOMIAR-DIA] === Starting ===
+[2026-04-01 12:03:43] [SOMIAR-DIA] Report: /home/user/.openclaw/workspace/.somiar-cycles/somiar-de-dia-SD-20260401-1203.md
+[2026-04-01 12:03:43] [SOMIAR-DIA] === Done ===

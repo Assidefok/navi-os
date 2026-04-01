@@ -47,14 +47,13 @@ _Primera setmana d'operacions — no hi ha lliçons enregistrades encara._
 ## Revisió de Visió
 
 ### Qüestions Obertes
-- Quins son els 3 apostes gegants per 2026?
-- Quin és el model de negoci exactament (impl + licensing + SaaS)?
-- Com genera valor OpenClaw vs competidors?
+- Aleix ha d'aprovar/rebutjar els 3 apostes proposats
+- Cal ajustar prioritats o timeline?
 
 ### Validacions Pendents
-- Aleix ha d'aprovar visió estratègica
-- JEFF necessita pm-elom-1 per desbloquejar Scalable OS
-- WARREN needshigh-level strategic direction per risk register
+- ✅ Aleix approval del document visio-2026.md (pm-elom-1)
+- ⚠️ JEFF necessita pm-elom-1 (unblocked un cop Aleix aprovi)
+- ⚠️ WARREN necessita high-level strategic direction (desbloquejat post-approval)
 
 ---
 
