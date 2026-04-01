@@ -109,20 +109,42 @@ function SessionDetail({ session, onBack }) {
   const messagesEndRef = useRef(null)
 
   useEffect(() => {
-    fetch(`/api/session/${session.id}/messages`)
-      .then(r => r.json())
-      .then(d => { 
-        setMessages(d.messages || []); 
-        setLoading(false);
-        // Scroll to bottom after messages load
-        setTimeout(() => {
-          if (messagesEndRef.current) {
-            messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
-          }
-        }, 100)
-      })
-      .catch(() => setLoading(false))
-  }, [session.id])
+    let cancelled = false
+
+    const loadMessages = (silent = false) => {
+      if (!silent) setLoading(true)
+      fetch(`/api/session/${encodeURIComponent(session.id)}/messages`)
+        .then(r => r.json())
+        .then(d => {
+          if (cancelled) return
+          setMessages(prev => {
+            const next = d.messages || []
+            const changed = JSON.stringify(prev.slice(-3)) !== JSON.stringify(next.slice(-3)) || prev.length !== next.length
+            if (changed) {
+              setTimeout(() => {
+                if (messagesEndRef.current) {
+                  messagesEndRef.current.scrollIntoView({ behavior: silent ? 'auto' : 'smooth' })
+                }
+              }, 80)
+            }
+            return next
+          })
+          setLoading(false)
+        })
+        .catch(() => {
+          if (!cancelled) setLoading(false)
+        })
+    }
+
+    loadMessages()
+    const intervalMs = (session.status === 'running' || session.live) ? 15000 : 60000
+    const interval = setInterval(() => loadMessages(true), intervalMs)
+
+    return () => {
+      cancelled = true
+      clearInterval(interval)
+    }
+  }, [session.id, session.status, session.live])
 
   return (
     <div className="session-detail">
@@ -167,27 +189,37 @@ function ActiveSessions() {
   const [loading, setLoading] = useState(true)
   const [expandedSession] = useState(null)
   const [detailSession, setDetailSession] = useState(null)
+  const [lastSync, setLastSync] = useState(null)
 
-  const loadSessions = () => {
-    setLoading(true)
+  const loadSessions = (silent = false) => {
+    if (!silent) setLoading(true)
     fetch('/api/sessions')
       .then(r => r.json())
       .then(d => {
         setSessions(d.sessions || [])
+        setLastSync(new Date())
         setLoading(false)
+        if (detailSession) {
+          const refreshed = (d.sessions || []).find(s => s.id === detailSession.id)
+          if (refreshed) setDetailSession(refreshed)
+        }
       })
       .catch(() => {
-        setSessions([])
-        setLoading(false)
+        if (!silent) {
+          setSessions([])
+          setLoading(false)
+        }
       })
   }
 
   useEffect(() => {
-    Promise.resolve().then(() => loadSessions())
-  }, [])
+    loadSessions()
+    const interval = setInterval(() => loadSessions(true), 15000)
+    return () => clearInterval(interval)
+  }, [detailSession?.id])
 
-  const activeSessions = sessions.filter(s => s.status === 'running' || s.status === 'active')
-  const inactiveSessions = sessions.filter(s => s.status !== 'running' && s.status !== 'active')
+  const activeSessions = sessions.filter(s => s.presenceActive || s.status === 'running' || s.status === 'active' || s.live)
+  const inactiveSessions = sessions.filter(s => !s.presenceActive && s.status !== 'running' && s.status !== 'active' && !s.live)
 
   if (detailSession) {
     return <SessionDetail session={detailSession} onBack={() => setDetailSession(null)} />
@@ -204,6 +236,10 @@ function ActiveSessions() {
         <div className="mc-stat">
           <span className="stat-num">{loading ? '...' : sessions.length}</span>
           <span className="stat-label">Total</span>
+        </div>
+        <div className="mc-stat">
+          <span className="stat-num">{lastSync ? 'LIVE' : '—'}</span>
+          <span className="stat-label">Sync {lastSync ? lastSync.toLocaleTimeString('ca-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : ''}</span>
         </div>
       </div>
 
@@ -224,7 +260,7 @@ function ActiveSessions() {
                 <Icon size={18} />
                 <div className="session-text">
                   <span className="session-label">{session.label || session.id}</span>
-                  <span className="session-type">{session.type || 'main'}</span>
+                  <span className="session-type">{session.type || 'main'} · {session.channel || '—'}</span>
                 </div>
               </div>
               <div className="session-meta">
@@ -232,7 +268,7 @@ function ActiveSessions() {
                   className="session-status-badge"
                   style={{ color: statusColor, background: `${statusColor}20` }}
                 >
-                  {session.status}
+                  {session.live ? 'live' : session.presenceActive ? 'active' : session.status}
                 </span>
                 <ChevronRight size={16} />
               </div>

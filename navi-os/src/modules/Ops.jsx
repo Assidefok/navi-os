@@ -652,9 +652,32 @@ function IntegrationView() {
 
 export default function Ops() {
   const [viewMode, setViewMode] = useState('mission')
+  const [activeSessionsCount, setActiveSessionsCount] = useState(0)
+
+  useEffect(() => {
+    let cancelled = false
+
+    const loadActiveCount = () => {
+      fetch('/api/sessions')
+        .then(r => r.json())
+        .then(d => {
+          if (!cancelled) setActiveSessionsCount(d.activeCount || 0)
+        })
+        .catch(() => {
+          if (!cancelled) setActiveSessionsCount(0)
+        })
+    }
+
+    loadActiveCount()
+    const interval = setInterval(loadActiveCount, 15000)
+    return () => {
+      cancelled = true
+      clearInterval(interval)
+    }
+  }, [])
 
   const primaryTabs = [
-    { id: 'mission', label: 'Mission Control' },
+    { id: 'mission', label: 'Mission Control', badge: activeSessionsCount > 0 ? activeSessionsCount : null },
     { id: 'sessions', label: 'Sessions' },
     { id: 'cron', label: 'Cron' },
     { id: 'activity', label: 'Activity' },
@@ -719,7 +742,8 @@ export default function Ops() {
             className={`ops-primary-tab ${viewMode === tab.id ? 'active' : ''}`}
             onClick={() => setViewMode(tab.id)}
           >
-            {tab.label}
+            <span>{tab.label}</span>
+            {tab.badge ? <span className="ops-tab-badge" aria-hidden="true" /> : null}
           </button>
         ))}
       </div>

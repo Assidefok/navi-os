@@ -121,17 +121,30 @@
   transform: translateX(-50%) translateY(0);
 }
 
-/* Active indicator dot */
+/* Live badge */
+.dock-live-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #ff5f57, #ff3b30);
+  border: 1px solid rgba(255,255,255,0.22);
+  box-shadow: 0 0 14px rgba(255, 59, 48, 0.45);
+  z-index: 2;
+}
+
+/* Active indicator line */
 .dock-active-dot {
   position: absolute;
-  bottom: 2px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: #30d158;
-  box-shadow: 0 0 6px rgba(48, 209, 88, 0.8);
+  bottom: 3px;
+  left: 6px;
+  width: calc(100% - 12px);
+  height: 3px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(48, 209, 88, 0.95), rgba(120, 255, 170, 0.95));
+  box-shadow: 0 0 10px rgba(48, 209, 88, 0.45);
 }
 
 /* Mobile: larger touch targets */

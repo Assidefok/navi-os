@@ -351,55 +351,101 @@ app.get('/api/sessions', (req, res) => {
     }
     const raw = JSON.parse(readFileSync(sessionsFile, 'utf-8'))
     const sessions = []
+    const now = Date.now()
+
+    const enrichSession = (base, data) => {
+      const sessionFile = data.sessionFile || null
+      const lockFile = sessionFile ? `${sessionFile}.lock` : null
+      const fileExists = sessionFile && existsSync(sessionFile)
+      const lockExists = lockFile && existsSync(lockFile)
+      const lastActivityMs = fileExists ? statSync(sessionFile).mtimeMs : null
+      const lastActivityAt = lastActivityMs ? new Date(lastActivityMs).toISOString() : null
+      const freshWindowMs = 60 * 1000
+      const activeWindowMs = 15 * 60 * 1000
+      const startedAtMs = data.startedAt ? Number(data.startedAt) : null
+      const endedAtMs = data.endedAt ? Number(data.endedAt) : null
+      const hasFreshActivity = !!((lastActivityMs && (now - lastActivityMs) <= freshWindowMs) || (startedAtMs && (now - startedAtMs) <= freshWindowMs))
+      const isRecentlyOpen = !!((lastActivityMs && (now - lastActivityMs) <= activeWindowMs) || (startedAtMs && (now - startedAtMs) <= activeWindowMs))
+      const isInteractiveSession = base.type === 'main' || base.type === 'subagent'
+      const presenceActive = !endedAtMs && (lockExists || hasFreshActivity || (isInteractiveSession && isRecentlyOpen) || data.status === 'running')
+
+      let status = data.status || 'unknown'
+      if (lockExists || hasFreshActivity) {
+        status = 'running'
+      } else if (presenceActive) {
+        status = 'active'
+      } else if (status === 'running') {
+        status = endedAtMs ? 'done' : 'stale'
+      }
+
+      const runtimeMs = (status === 'running' || status === 'active') && startedAtMs
+        ? now - startedAtMs
+        : (data.runtimeMs || 0)
+
+      return {
+        ...base,
+        status,
+        runtimeMs,
+        sessionFile,
+        live: !!(lockExists || hasFreshActivity),
+        presenceActive,
+        lastActivityAt,
+      }
+    }
     
     for (const [key, data] of Object.entries(raw)) {
       if (key.includes(':subagent:')) {
-        sessions.push({
+        sessions.push(enrichSession({
           id: key,
           label: data.label || key.split(':').pop(),
           type: 'subagent',
-          status: data.status || 'unknown',
           model: data.model || 'unknown',
-          runtimeMs: data.runtimeMs || 0,
           totalTokens: data.totalTokens || 0,
           startedAt: data.startedAt,
           endedAt: data.endedAt,
           channel: data.lastChannel || 'unknown',
-          sessionFile: data.sessionFile || null,
-        })
+        }, data))
       } else if (key.includes(':cron:')) {
         const nameMatch = key.match(/cron:([^:]+)/)
-        sessions.push({
+        sessions.push(enrichSession({
           id: key,
           label: data.label || (nameMatch ? `Cron: ${nameMatch[1]}` : key),
           type: 'cron',
-          status: data.status || 'unknown',
           model: data.model || 'MiniMax-M2.7',
-          runtimeMs: data.runtimeMs || 0,
           totalTokens: data.totalTokens || 0,
           startedAt: data.startedAt,
           endedAt: data.endedAt,
           channel: data.lastChannel || 'system',
-          sessionFile: data.sessionFile || null,
-        })
+        }, data))
       } else if (key.includes(':main:')) {
-        sessions.push({
+        const channel = data.lastChannel || 'webchat'
+        const threadMatch = key.match(/:thread:[^:]+:(\d+)/)
+        const topicLabel = threadMatch ? ` · thread ${threadMatch[1]}` : ''
+        const label = data.label || `Sessio ${channel}${topicLabel}`
+
+        sessions.push(enrichSession({
           id: key,
-          label: 'Sessio Principal',
+          label,
           type: 'main',
-          status: data.status || 'unknown',
           model: data.model || 'MiniMax-M2.7',
-          runtimeMs: data.runtimeMs || 0,
           totalTokens: data.totalTokens || 0,
           startedAt: data.startedAt,
           endedAt: data.endedAt,
-          channel: data.lastChannel || 'webchat',
-          sessionFile: data.sessionFile || null,
-        })
+          channel,
+        }, data))
       }
     }
+
+    sessions.sort((a, b) => {
+      const aActive = a.status === 'running' || a.live
+      const bActive = b.status === 'running' || b.live
+      if (aActive !== bActive) return aActive ? -1 : 1
+      const aTime = new Date(a.lastActivityAt || a.startedAt || a.endedAt || 0).getTime()
+      const bTime = new Date(b.lastActivityAt || b.startedAt || b.endedAt || 0).getTime()
+      return bTime - aTime
+    })
     
-    const activeCount = sessions.filter(s => s.status === 'running').length
+    const activeCount = sessions.filter(s => s.presenceActive || s.status === 'running' || s.live).length
     res.json({ sessions, activeCount })
   } catch (err) {
     res.status(500).json({ error: err.message, sessions: [] })
