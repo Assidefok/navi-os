@@ -1727,6 +1727,16 @@ app.get('/api/logs', (req, res) => {
   } catch (err) { res.json({ logs: [], error: err.message }) }
 })
 
+app.get('/api/logs/:filename', (req, res) => {
+  try {
+    const safeName = req.params.filename.replace(/\.\./, '')
+    const path = join(LOGS_DIR, safeName)
+    if (!path.startsWith(LOGS_DIR)) return res.status(403).json({ error: 'Invalid filename' })
+    if (!existsSync(path)) return res.status(404).json({ error: 'Not found' })
+    res.type('text/markdown').send(readFileSync(path, 'utf-8'))
+  } catch (err) { res.status(500).json({ error: err.message }) }
+})
+
 // ─── Inbox (Ideas & Notes) ────────────────────────────────────────────────────
 const INBOX_DIR = join(WORKSPACE, 'memory', 'Inbox')
 const INBOX_INDEX = join(WORKSPACE, 'memory', 'Inbox', 'index.json')

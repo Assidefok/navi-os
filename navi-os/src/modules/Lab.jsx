@@ -6,6 +6,7 @@ import {
 import Modal from '../components/ui/Modal'
 import FeatureCard from '../components/ui/FeatureCard'
 import Inbox from './Lab/Inbox'
+import Logs from './Lab/Logs'
 import './Lab.css'
 
 const API_BASE = '/api'
@@ -324,6 +325,9 @@ export default function Lab() {
         <button className={`lab-nav-btn ${activeSection === 'inbox' ? 'active' : ''}`} onClick={() => setActiveSection('inbox')}>
           Inbox
         </button>
+        <button className={`lab-nav-btn ${activeSection === 'logs' ? 'active' : ''}`} onClick={() => setActiveSection('logs')}>
+          Logs
+        </button>
       </div>
 
       {/* Content */}
@@ -341,6 +345,7 @@ export default function Lab() {
         )}
         {activeSection === 'research' && <ResearchDashboard />}
         {activeSection === 'inbox' && <Inbox />}
+        {activeSection === 'logs' && <Logs />}
       </div>
 
       {/* Modals */}
