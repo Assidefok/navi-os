@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import { Settings, Brain, FlaskConical, Lightbulb } from 'lucide-react'
 import './Dock.css'
 
@@ -10,31 +9,6 @@ const dockItems = [
 ]
 
 export default function Dock({ activeTab, setActiveTab }) {
-  const [activeSessions, setActiveSessions] = useState(0)
-
-  useEffect(() => {
-    let cancelled = false
-
-    const load = () => {
-      fetch('/api/sessions')
-        .then(r => r.json())
-        .then(d => {
-          if (cancelled) return
-          setActiveSessions(d.activeCount || 0)
-        })
-        .catch(() => {
-          if (!cancelled) setActiveSessions(0)
-        })
-    }
-
-    load()
-    const interval = setInterval(load, 15000)
-    return () => {
-      cancelled = true
-      clearInterval(interval)
-    }
-  }, [])
-
   return (
     <nav className="dock" role="navigation" aria-label="Navegacio principal">
       <div className="dock-icons">
@@ -53,9 +27,6 @@ export default function Dock({ activeTab, setActiveTab }) {
                 <Icon size={28} strokeWidth={1.5} />
               </div>
               <span className="dock-tooltip">{item.label}</span>
-              {item.id === 'ops' && activeSessions > 0 && (
-                <span className="dock-live-badge" aria-hidden="true" />
-              )}
               {activeTab === item.id && <span className="dock-active-dot" aria-hidden="true" />}
             </button>
           )

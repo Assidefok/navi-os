@@ -1,8 +1,8 @@
 {
   "meta": {
-    "version": 2,
+    "version": 1,
     "path": "/home/user/.openclaw/workspace/data/pm-board.json",
-    "updatedAt": "2026-04-01T15:24:00.000Z"
+    "updatedAt": "2026-04-01T21:55:26.219Z"
   },
   "tasks": [
     {
@@ -359,6 +359,28 @@
           "action": "status-change",
           "from": "review",
           "to": "done"
+        }
+      ]
+    },
+    {
+      "id": "pm-auto-1775080526219",
+      "title": "Idea → Debat amb el Chief assignat",
+      "description": "Quan s'accepta una idea al Lab, crea automàticament una proposta de debat i assigna al chief proposat per gestionar-la",
+      "assignee": "navi",
+      "status": "todo",
+      "priority": "alta",
+      "createdDate": "2026-04-01T21:55:26.219Z",
+      "updatedDate": "2026-04-01T21:55:26.219Z",
+      "deliverableLink": "",
+      "notes": [
+        "Creat automàticament per: Debat aprovat → Tasca PM per l'agent"
+      ],
+      "history": [
+        {
+          "at": "2026-04-01T21:55:26.219Z",
+          "by": "automation",
+          "action": "created",
+          "to": "todo"
         }
       ]
     }

@@ -252,6 +252,44 @@ function formatRuntime(runtimeMs) {
   return rem ? `${mins}m ${rem}s` : `${mins}m`
 }
 
+function getSessionBucket(session) {
+  if (session.type === 'cron') {
+    return { bucketKey: 'cron', bucketLabel: 'Cron', laneKey: `cron:${session.label}`, laneLabel: session.label || 'Cron job' }
+  }
+
+  if (session.type === 'subagent') {
+    return { bucketKey: 'subagent', bucketLabel: 'Subagents', laneKey: 'subagent', laneLabel: 'Subagents' }
+  }
+
+  if (session.channel === 'telegram') {
+    const threadFromId = session.id?.match(/:thread:[^:]+:(\d+)/)?.[1]
+    const threadFromLabel = session.label?.match(/thread\s+(\d+)/i)?.[1]
+    const thread = threadFromId || threadFromLabel || null
+    return {
+      bucketKey: 'telegram',
+      bucketLabel: 'Telegram',
+      laneKey: thread ? `telegram:${thread}` : 'telegram:main',
+      laneLabel: thread ? `Thread ${thread}` : 'Telegram principal',
+    }
+  }
+
+  if (session.channel === 'webchat') {
+    return { bucketKey: 'webchat', bucketLabel: 'Web', laneKey: 'webchat', laneLabel: 'Webchat' }
+  }
+
+  if (session.type === 'main') {
+    const channel = session.channel || 'main'
+    return {
+      bucketKey: channel,
+      bucketLabel: channel === 'system' ? 'Sistema' : channel.charAt(0).toUpperCase() + channel.slice(1),
+      laneKey: channel,
+      laneLabel: channel === 'system' ? 'Sistema' : channel,
+    }
+  }
+
+  return { bucketKey: 'other', bucketLabel: 'Altres', laneKey: 'other', laneLabel: 'Altres' }
+}
+
 function SessionDetailPanel({ session, onClose }) {
   const [messages, setMessages] = useState([])
   const [loading, setLoading] = useState(true)
@@ -319,8 +357,9 @@ function SessionsModule() {
   const [typeFilter, setTypeFilter] = useState('all')
   const [statusFilter, setStatusFilter] = useState('all')
   const [channelFilter, setChannelFilter] = useState('all')
-  const [groupBy, setGroupBy] = useState('none')
+  const [groupBy, setGroupBy] = useState('smart')
   const [selectedSession, setSelectedSession] = useState(null)
+  const [expandedLanes, setExpandedLanes] = useState({})
 
   const loadSessions = () => {
     setLoading(true)
@@ -335,7 +374,7 @@ function SessionsModule() {
     loadSessions()
   }, [])
 
-  const active = sessions.filter(s => s.status === 'running' || s.status === 'active').length
+  const active = sessions.filter(s => s.presenceActive || s.status === 'running' || s.status === 'active').length
   const mainCount = sessions.filter(s => s.type === 'main').length
   const subagents = sessions.filter(s => s.type === 'subagent').length
   const cronCount = sessions.filter(s => s.type === 'cron').length
@@ -349,7 +388,65 @@ function SessionsModule() {
     return true
   })
 
-  const groupedSessions = filtered.reduce((acc, session) => {
+  const toggleLane = (key) => {
+    setExpandedLanes(prev => ({ ...prev, [key]: !prev[key] }))
+  }
+
+  const smartBuckets = filtered.reduce((acc, session) => {
+    const bucket = getSessionBucket(session)
+    if (!acc[bucket.bucketKey]) {
+      acc[bucket.bucketKey] = {
+        key: bucket.bucketKey,
+        label: bucket.bucketLabel,
+        lanes: {},
+      }
+    }
+    if (!acc[bucket.bucketKey].lanes[bucket.laneKey]) {
+      acc[bucket.bucketKey].lanes[bucket.laneKey] = {
+        key: bucket.laneKey,
+        label: bucket.laneLabel,
+        sessions: [],
+      }
+    }
+    acc[bucket.bucketKey].lanes[bucket.laneKey].sessions.push(session)
+    return acc
+  }, {})
+
+  const bucketOrder = ['telegram', 'webchat', 'subagent', 'cron', 'system', 'other']
+  const orderedBuckets = Object.values(smartBuckets)
+    .map(bucket => ({
+      ...bucket,
+      lanes: Object.values(bucket.lanes)
+        .map(lane => {
+          const laneSessions = [...lane.sessions].sort((a, b) => {
+            const aTime = new Date(a.lastActivityAt || a.startedAt || 0).getTime()
+            const bTime = new Date(b.lastActivityAt || b.startedAt || 0).getTime()
+            return bTime - aTime
+          })
+          const latest = laneSessions[0]
+          const activeCount = laneSessions.filter(s => s.presenceActive || s.live || s.status === 'running' || s.status === 'active').length
+          return {
+            ...lane,
+            sessions: laneSessions,
+            latest,
+            activeCount,
+          }
+        })
+        .sort((a, b) => {
+          if (a.activeCount !== b.activeCount) return b.activeCount - a.activeCount
+          const aTime = new Date(a.latest?.lastActivityAt || a.latest?.startedAt || 0).getTime()
+          const bTime = new Date(b.latest?.lastActivityAt || b.latest?.startedAt || 0).getTime()
+          return bTime - aTime
+        }),
+    }))
+    .sort((a, b) => {
+      const ai = bucketOrder.indexOf(a.key)
+      const bi = bucketOrder.indexOf(b.key)
+      if (ai !== bi) return (ai === -1 ? 999 : ai) - (bi === -1 ? 999 : bi)
+      return a.label.localeCompare(b.label)
+    })
+
+  const simpleGroups = filtered.reduce((acc, session) => {
     const key = groupBy === 'type'
       ? (session.type || 'main')
       : groupBy === 'status'
@@ -406,10 +503,11 @@ function SessionsModule() {
         <label>
           <span>Agrupar per</span>
           <select value={groupBy} onChange={e => setGroupBy(e.target.value)}>
-            <option value="none">Sense agrupació</option>
+            <option value="smart">Intel·ligent</option>
             <option value="type">Tipus</option>
             <option value="status">Estat</option>
             <option value="channel">Canal</option>
+            <option value="none">Sense agrupació</option>
           </select>
         </label>
       </div>
@@ -418,9 +516,60 @@ function SessionsModule() {
         <div className="ops-empty-state">Carregant sessions...</div>
       ) : filtered.length === 0 ? (
         <div className="ops-empty-state">No hi ha sessions per mostrar</div>
+      ) : groupBy === 'smart' ? (
+        <div className="ops-grouped-sections">
+          {orderedBuckets.map(bucket => (
+            <section key={bucket.key} className="ops-session-group">
+              <div className="ops-group-title">{bucket.label} · {bucket.lanes.length}</div>
+              <div className="ops-session-clusters">
+                {bucket.lanes.map(lane => {
+                  const isExpanded = !!expandedLanes[lane.key]
+                  return (
+                    <div key={lane.key} className="ops-session-cluster-card">
+                      <button className="ops-session-cluster-header" onClick={() => toggleLane(lane.key)}>
+                        <div>
+                          <div className="ops-list-title">{lane.label}</div>
+                          <div className="ops-list-subtitle">
+                            {lane.activeCount} actives · {lane.sessions.length} sessions · última {formatDate(lane.latest?.lastActivityAt || lane.latest?.startedAt)}
+                          </div>
+                        </div>
+                        <div className="ops-session-cluster-right">
+                          <span className={`ops-status-pill ${lane.activeCount > 0 ? 'active' : 'done'}`}>{lane.activeCount > 0 ? 'active' : 'history'}</span>
+                          <span className="ops-cluster-toggle">{isExpanded ? '−' : '+'}</span>
+                        </div>
+                      </button>
+
+                      {isExpanded && (
+                        <div className="ops-session-cluster-body">
+                          {lane.sessions.map(session => (
+                            <button key={session.id} className="ops-list-card ops-session-card compact" onClick={() => setSelectedSession(session)}>
+                              <div className="ops-list-top">
+                                <div>
+                                  <div className="ops-list-title compact">{session.label || session.id}</div>
+                                  <div className="ops-list-subtitle">{session.channel || 'sense canal'} · {session.model || 'sense model'}</div>
+                                </div>
+                                <span className={`ops-status-pill ${session.live ? 'active' : session.status || 'unknown'}`}>{session.live ? 'live' : session.status || 'unknown'}</span>
+                              </div>
+                              <div className="ops-meta-grid compact">
+                                <div><span>Tipus</span><strong>{session.type || 'main'}</strong></div>
+                                <div><span>Activitat</span><strong>{formatDate(session.lastActivityAt || session.startedAt)}</strong></div>
+                                <div><span>Tokens</span><strong>{(session.totalTokens || 0).toLocaleString()}</strong></div>
+                                <div><span>Runtime</span><strong>{formatRuntime(session.runtimeMs)}</strong></div>
+                              </div>
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+            </section>
+          ))}
+        </div>
       ) : (
         <div className="ops-grouped-sections">
-          {Object.entries(groupedSessions).map(([group, groupSessions]) => (
+          {Object.entries(simpleGroups).map(([group, groupSessions]) => (
             <section key={group} className="ops-session-group">
               {groupBy !== 'none' && <div className="ops-group-title">{group} · {groupSessions.length}</div>}
               <div className="ops-list-stack">
@@ -431,7 +580,7 @@ function SessionsModule() {
                         <div className="ops-list-title">{session.label || session.id}</div>
                         <div className="ops-list-subtitle">{session.channel || 'sense canal'} · {session.model || 'sense model'}</div>
                       </div>
-                      <span className={`ops-status-pill ${session.status || 'unknown'}`}>{session.status || 'unknown'}</span>
+                      <span className={`ops-status-pill ${session.live ? 'active' : session.status || 'unknown'}`}>{session.live ? 'live' : session.status || 'unknown'}</span>
                     </div>
                     <div className="ops-meta-grid compact">
                       <div><span>Tipus</span><strong>{session.type || 'main'}</strong></div>
@@ -652,32 +801,9 @@ function IntegrationView() {
 
 export default function Ops() {
   const [viewMode, setViewMode] = useState('mission')
-  const [activeSessionsCount, setActiveSessionsCount] = useState(0)
-
-  useEffect(() => {
-    let cancelled = false
-
-    const loadActiveCount = () => {
-      fetch('/api/sessions')
-        .then(r => r.json())
-        .then(d => {
-          if (!cancelled) setActiveSessionsCount(d.activeCount || 0)
-        })
-        .catch(() => {
-          if (!cancelled) setActiveSessionsCount(0)
-        })
-    }
-
-    loadActiveCount()
-    const interval = setInterval(loadActiveCount, 15000)
-    return () => {
-      cancelled = true
-      clearInterval(interval)
-    }
-  }, [])
 
   const primaryTabs = [
-    { id: 'mission', label: 'Mission Control', badge: activeSessionsCount > 0 ? activeSessionsCount : null },
+    { id: 'mission', label: 'Mission Control' },
     { id: 'sessions', label: 'Sessions' },
     { id: 'cron', label: 'Cron' },
     { id: 'activity', label: 'Activity' },
@@ -743,7 +869,6 @@ export default function Ops() {
             onClick={() => setViewMode(tab.id)}
           >
             <span>{tab.label}</span>
-            {tab.badge ? <span className="ops-tab-badge" aria-hidden="true" /> : null}
           </button>
         ))}
       </div>

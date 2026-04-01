@@ -6,11 +6,11 @@
       "description": "Quan s'accepta una idea al Lab, crea automàticament una proposta de debat i assigna al chief proposat per gestionar-la",
       "author": "navi",
       "assignee": null,
-      "status": "debate",
+      "status": "accepted",
       "priority": "alta",
       "track": "B",
       "createdAt": "2026-03-31T22:53:15.007Z",
-      "updatedAt": "2026-03-31T22:53:15.007Z",
+      "updatedAt": "2026-04-01T21:55:26.171Z",
       "source": "automation",
       "sourceAutomation": "auto-idea-debat",
       "debateOutcome": null,
@@ -39,9 +39,9 @@
       "title": "TEST - Proposta AUTOMATICA",
       "category": "ai",
       "chiefId": "sam",
-      "status": "rejected",
+      "status": "pending",
       "createdAt": "2026-03-31T21:05:00Z",
-      "updatedAt": "2026-03-31T22:52:19.665Z"
+      "updatedAt": "2026-04-01T21:56:03.686Z"
     }
   ]
 }

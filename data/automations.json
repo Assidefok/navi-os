@@ -2,7 +2,7 @@
   "meta": {
     "version": 1,
     "createdAt": "2026-03-31T21:58:00.000Z",
-    "updatedAt": "2026-04-01T20:25:33.214Z",
+    "updatedAt": "2026-04-01T21:56:03.694Z",
     "path": "/home/user/.openclaw/workspace/data/automations.json"
   },
   "automations": [
@@ -26,8 +26,8 @@
           }
         }
       ],
-      "lastTriggered": null,
-      "triggerCount": 0
+      "lastTriggered": "2026-04-01T21:56:03.694Z",
+      "triggerCount": 2
     },
     {
       "id": "auto-pm-task-delivered",
@@ -122,8 +122,8 @@
           "params": {}
         }
       ],
-      "lastTriggered": null,
-      "triggerCount": 0
+      "lastTriggered": "2026-04-01T21:55:26.219Z",
+      "triggerCount": 1
     },
     {
       "id": "auto-debat-rejected",
@@ -312,6 +312,92 @@
         }
       ],
       "executedAt": "2026-03-31T22:53:15.007Z",
+      "success": true
+    },
+    {
+      "automationId": "auto-debat-approved-to-pm",
+      "automationName": "Debat aprovat → Tasca PM per l'agent",
+      "trigger": "debate.approved",
+      "triggerData": {
+        "proposalId": "proposal-1774997595008",
+        "proposalTitle": "Idea → Debat amb el Chief assignat",
+        "description": "Quan s'accepta una idea al Lab, crea automàticament una proposta de debat i assigna al chief proposat per gestionar-la",
+        "author": "navi",
+        "assignee": null,
+        "priority": "alta",
+        "debateNotes": []
+      },
+      "results": [
+        {
+          "action": "pm_board.create_task",
+          "success": true,
+          "result": {
+            "taskId": "pm-auto-1775080526219"
+          }
+        },
+        {
+          "action": "backlog.add",
+          "success": true,
+          "result": {
+            "agentId": "navi",
+            "added": false,
+            "error": "Backlog file not found"
+          }
+        }
+      ],
+      "executedAt": "2026-04-01T21:55:26.219Z",
+      "success": true
+    },
+    {
+      "automationId": "auto-proposal-status-changed",
+      "automationName": "Proposta: Canvi d'estat",
+      "trigger": "proposal.status_changed",
+      "triggerData": {
+        "proposalId": "proposal-1774997595008",
+        "proposalTitle": "Idea → Debat amb el Chief assignat",
+        "description": "Quan s'accepta una idea al Lab, crea automàticament una proposta de debat i assigna al chief proposat per gestionar-la",
+        "author": "navi",
+        "assignee": null,
+        "priority": "alta",
+        "oldStatus": "debate",
+        "newStatus": "accepted"
+      },
+      "results": [
+        {
+          "action": "message.send",
+          "success": true,
+          "result": {
+            "message": "[debate → accepted] ",
+            "sent": true,
+            "channel": "internal"
+          }
+        }
+      ],
+      "executedAt": "2026-04-01T21:55:26.222Z",
+      "success": true
+    },
+    {
+      "automationId": "auto-proposal-status-changed",
+      "automationName": "Proposta: Canvi d'estat",
+      "trigger": "proposal.status_changed",
+      "triggerData": {
+        "proposalId": "prop-003",
+        "proposalTitle": "TEST - Proposta AUTOMATICA",
+        "oldStatus": "rejected",
+        "newStatus": "pending"
+      },
+      "results": [
+        {
+          "action": "message.send",
+          "success": true,
+          "result": {
+            "message": "[rejected → pending] ",
+            "sent": true,
+            "channel": "internal"
+          }
+        }
+      ],
+      "executedAt": "2026-04-01T21:56:03.694Z",
       "success": true
     }
   ]
