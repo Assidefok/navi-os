@@ -103,7 +103,7 @@ PYEOF
   total_mem=$(echo "$SYS_DATA" | python3 -c "import sys,json; print(json.load(sys.stdin).get('total_mem',0))" 2>/dev/null)
   if [ "$total_mem" -gt 800 ] 2>/dev/null; then
     log "High mem (${total_mem}MB). Restarting services..."
-    cd "$WORKSPACE/navi-os" && npx pm2 restart vite navi-os-api 2>/dev/null
+    cd "$WORKSPACE/navi-os" && npx pm2 restart vite navi-os-api 2>/dev/null || true
     AUTO="${AUTO}- SAM: Mem alta (${total_mem}MB) → restart auto-executat"
   fi
   
@@ -111,7 +111,7 @@ PYEOF
   ai_status=$(echo "$SYS_DATA" | python3 -c "import sys,json; print(json.load(sys.stdin).get('ai_status','?'))" 2>/dev/null)
   if [ "$ai_status" = "DOWN" ] 2>/dev/null; then
     log "AI down. Restarting..."
-    cd "$WORKSPACE/navi-os" && npx pm2 restart navi-os-api 2>/dev/null
+    cd "$WORKSPACE/navi-os" && npx pm2 restart navi-os-api 2>/dev/null || npx pm2 start "npm run dev" --name "navi-os-api" 2>/dev/null || true
     AUTO="${AUTO}
 - SAM: AI DOWN → restart auto-executat"
   fi
