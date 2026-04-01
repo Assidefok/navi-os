@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Activity, Zap, Link, FolderSync, Shield, Database, Users, LayoutList, LayoutDashboard, Server, Moon, CheckCircle2, AlertCircle, MessageSquare } from 'lucide-react'
 import TaskPipeline from '../components/TaskPipeline'
+import Standups from './Ops/Standups'
 import ChiefsCouncil from './Ops/ChiefsCouncil/ChiefsCouncil'
 import DeliverableTracker from '../components/DeliverableTracker'
 import TaskManager from '../components/TaskManager'
@@ -275,6 +276,13 @@ export default function Ops() {
           <MessageSquare size={15} />
           Chiefs Council
         </button>
+        <button
+          className={`toggle-btn ${viewMode === 'standups' ? 'active' : ''}`}
+          onClick={() => setViewMode('standups')}
+        >
+          <Users size={15} />
+          Standups
+        </button>
       </div>
 
       {/* Hub View */}
@@ -328,6 +336,9 @@ export default function Ops() {
 
       {/* Chiefs Council View */}
       {viewMode === 'chiefs' && <ChiefsCouncil />}
+
+      {/* Standups View */}
+      {viewMode === 'standups' && <Standups />}
     </div>
   )
 }

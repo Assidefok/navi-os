@@ -1,0 +1,397 @@
+.standups-module {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-bottom: 40px;
+}
+
+.standups-header {
+  margin-bottom: 4px;
+}
+
+.standups-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.standups-title-row h2 {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--ops-amber);
+}
+
+.standups-date {
+  font-size: 13px;
+  color: rgba(255,255,255,0.45);
+  text-transform: capitalize;
+}
+
+.trigger-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 14px;
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.25);
+  color: #22c55e;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: 'Ubuntu', sans-serif;
+  transition: all 0.2s ease;
+}
+
+.trigger-btn:hover:not(:disabled) {
+  background: rgba(34, 197, 94, 0.2);
+  border-color: rgba(34, 197, 94, 0.4);
+}
+
+.trigger-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Countdown */
+.standup-countdown {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,184,0,0.2);
+  border-radius: 14px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.countdown-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,255,255,0.7);
+  font-size: 13px;
+}
+
+.weekday-badge {
+  font-size: 11px;
+  padding: 2px 8px;
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+  border-radius: 10px;
+  margin-left: 4px;
+}
+
+.weekend-badge {
+  font-size: 11px;
+  padding: 2px 8px;
+  background: rgba(255,184,0,0.12);
+  color: rgba(255,184,0,0.7);
+  border-radius: 10px;
+  margin-left: 4px;
+}
+
+.countdown-time {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.countdown-time > span:first-child {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 28px;
+  font-weight: 600;
+  color: #ffb800;
+}
+
+.countdown-actual {
+  font-size: 13px;
+  color: rgba(255,255,255,0.5);
+}
+
+.standup-soon {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 28px;
+  font-weight: 600;
+  color: #22c55e;
+  animation: pulse 1.5s ease infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.standup-alert {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  border-radius: 8px;
+  color: #22c55e;
+  font-size: 13px;
+}
+
+/* Chiefs Status */
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.chiefs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+.chief-status-mini {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 14px;
+  transition: border-color 0.2s;
+}
+
+.chief-mini-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.chief-mini-emoji {
+  font-size: 16px;
+}
+
+.chief-mini-name {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  color: rgba(255,255,255,0.8);
+  font-weight: 600;
+}
+
+.chief-mini-loading,
+.chief-mini-empty {
+  font-size: 12px;
+  color: rgba(255,255,255,0.3);
+  font-style: italic;
+}
+
+.chief-mini-content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.chief-mini-project {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 13px;
+  color: rgba(255,255,255,0.9);
+  font-weight: 500;
+}
+
+.chief-mini-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: rgba(255,255,255,0.5);
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #888;
+}
+
+.status-dot.in-progress { background: #22c55e; }
+.status-dot.review { background: #f59e0b; }
+.status-dot.done { background: #3b82f6; }
+.status-dot.blocked { background: #ef4444; }
+.status-dot.unknown { background: #555; }
+
+.chief-mini-commitment {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+  font-size: 11px;
+  color: rgba(255,255,255,0.5);
+  margin-top: 4px;
+}
+
+.chief-mini-commitment svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* History */
+.standups-history {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.standups-loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: rgba(255,255,255,0.4);
+  font-size: 13px;
+  padding: 20px 0;
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.standups-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 40px 0;
+  color: rgba(255,255,255,0.3);
+  font-size: 13px;
+}
+
+.standup-history {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.standup-entry {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.standup-entry-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 14px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: rgba(255,255,255,0.85);
+  text-align: left;
+  transition: background 0.15s;
+}
+
+.standup-entry-header:hover {
+  background: rgba(255,255,255,0.04);
+}
+
+.entry-date {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  color: rgba(255,255,255,0.7);
+  min-width: 120px;
+}
+
+.entry-chiefs {
+  display: flex;
+  gap: 4px;
+  flex: 1;
+}
+
+.chief-badge {
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.entry-chevron {
+  color: rgba(255,255,255,0.4);
+  transition: transform 0.2s;
+}
+
+.entry-chevron.rotated {
+  transform: rotate(90deg);
+}
+
+.standup-entry-body {
+  padding: 0 14px 14px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  margin-top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.standup-entry-body h4 {
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 12px 0 6px;
+}
+
+.entry-summary p {
+  font-size: 13px;
+  color: rgba(255,255,255,0.8);
+  line-height: 1.5;
+}
+
+.action-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.action-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.75);
+}
+
+.action-item svg.done { color: #22c55e; }
+.action-item svg.pending { color: rgba(255,255,255,0.3); }
+
+.action-owner {
+  margin-left: auto;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+  background: rgba(255,255,255,0.06);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.entry-full-link {
+  font-size: 12px;
+  color: rgba(255,184,0,0.7);
+  text-decoration: none;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  margin-top: 4px;
+}
+
+.entry-full-link:hover {
+  color: #ffb800;
+}

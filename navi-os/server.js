@@ -1169,6 +1169,85 @@ function getChiefsCouncil() {
   })
 }
 
+// Standup API
+const MEETINGS_DIR = join(WORKSPACE, 'team/meetings')
+
+function getMeetings() {
+  try {
+    if (!existsSync(MEETINGS_DIR)) return []
+    const files = readdirSync(MEETINGS_DIR).filter(f => f.endsWith('-daily-standup.md') || f.endsWith('-manual-standup.md'))
+    return files.sort().reverse().map(file => {
+      const content = readFileSync(join(MEETINGS_DIR, file), 'utf-8')
+      const date = file.replace('-daily-standup.md', '').replace('-manual-standup.md', '')
+      const chiefs = []
+      if (content.includes('ELOM')) chiefs.push('ELOM')
+      if (content.includes('WARREN')) chiefs.push('WARREN')
+      if (content.includes('JEFF')) chiefs.push('JEFF')
+      if (content.includes('SAM')) chiefs.push('SAM')
+      // Extract executive summary
+      const summaryMatch = content.match(/\*\*Executive Summary\*\*\s*\n\s*\n(.+?)(?=\n\n---|\n##)/s)
+      const summary = summaryMatch ? summaryMatch[1].replace(/\[TBD.*?\]/g, '').trim() : null
+      // Extract actions
+      const actionMatches = content.match(/\|\s*(.+?)\s*\|\s*([A-Z]+)\s*\|/g) || []
+      const actions = actionMatches.slice(1).map(a => {
+        const parts = a.split('|').map(p => p.trim())
+        return { text: parts[1] || '', owner: parts[2] || '', done: false }
+      }).filter(a => a.text && a.text !== '[Action]')
+      return { file, date, chiefs, summary, actions }
+    })
+  } catch { return [] }
+}
+
+app.get('/api/standups', (req, res) => {
+  const meetings = getMeetings()
+  res.json({ meetings })
+})
+
+app.get('/api/standup/:file', (req, res) => {
+  const file = req.params.file
+  const safePath = join(MEETINGS_DIR, file)
+  if (!safePath.startsWith(MEETINGS_DIR)) return res.status(403).json({ error: 'Invalid path' })
+  try {
+    const content = readFileSync(safePath, 'utf-8')
+    res.json({ content })
+  } catch { res.status(404).json({ error: 'Not found' }) }
+})
+
+app.post('/api/standup/trigger', async (req, res) => {
+  // Trigger the standup orchestrator script asynchronously
+  const { exec } = await import('child_process')
+  exec(`bash ${WORKSPACE}/scripts/09-standup-orchestrator.sh`, (err) => {
+    if (err) console.error('Standup error:', err)
+  })
+  res.json({ success: true, message: 'Standup triggered', date: new Date().toISOString() })
+})
+
+app.get('/api/chief/:id/status', (req, res) => {
+  const chiefId = req.params.id.toLowerCase()
+  const chiefDir = join(WORKSPACE, 'team', chiefId)
+  const memoryFile = join(chiefDir, 'MEMORY.md')
+  const backlogFile = join(chiefDir, 'BACKLOG.md')
+  try {
+    let currentProject = 'Sense projecte actiu'
+    let status = 'idle'
+    let commitment = null
+    if (existsSync(memoryFile)) {
+      const content = readFileSync(memoryFile, 'utf-8')
+      // Find active project
+      const projMatch = content.match(/\|\s*([^\|]+?)\s*\|\s*(IN PROGRESS|IN-PROGRESS|In Progress)\s*\|/i)
+      if (projMatch) currentProject = projMatch[1].trim()
+      // Find status
+      if (/IN PROGRESS|In-Progress/i.test(content)) status = 'in-progress'
+      else if (/REVIEW/i.test(content)) status = 'review'
+      else if (/DONE|COMPLETED/i.test(content)) status = 'done'
+      // Find commitment from last standup notes
+      const notesMatch = content.match(/\*\*Commitments?\*\*.*?\n\s*\n(.+?)(?=\n\n|\*\*|$)/is)
+      if (notesMatch) commitment = notesMatch[1].trim().substring(0, 120)
+    }
+    res.json({ chiefId, currentProject, status, commitment })
+  } catch { res.json({ chiefId, currentProject: 'Sense projecte actiu', status: 'unknown', commitment: null }) }
+})
+
 function saveChiefsCouncil(data) {
   data.meta = { ...(data.meta || {}), version: 1, path: CHIEFS_COUNCIL_FILE, updatedAt: new Date().toISOString() }
   writeJsonSafe(CHIEFS_COUNCIL_FILE, data)
