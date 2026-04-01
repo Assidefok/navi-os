@@ -554,7 +554,7 @@ function MemoryExplorer({ onClose }) {
             )}
             {selectedFile ? (
               <div className="preview-breadcrumb">
-                {file.pinned && <Pin size={12} className="pin-icon" />}
+                {selectedFile.pinned && <Pin size={12} className="pin-icon" />}
                 <span className="breadcrumb-filename">{selectedFile.name}</span>
                 <span className="breadcrumb-meta">{formatDate(selectedFile.modified)} · {formatSize(selectedFile.size)}</span>
               </div>

@@ -1999,13 +1999,9 @@ app.post('/api/somiar/:mode/run', async (req, res) => {
 const distPath = join(__dirname, 'dist')
 if (existsSync(distPath)) {
   app.use(express.static(distPath))
-  // Catch-all: serve index.html for non-API routes (Express 5 compatible)
-  app.use((req, res, next) => {
-    if (!req.path.startsWith('/api')) {
-      res.sendFile(join(distPath, 'index.html'))
-    } else {
-      next()
-    }
+  // Catch-all for SPA routes (excluding /api)
+  app.get(/^(?!\/api).*/, (req, res) => {
+    res.sendFile(join(distPath, 'index.html'))
   })
 }
 

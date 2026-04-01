@@ -15,11 +15,11 @@ module.exports = {
     },
     {
       name: 'navi-os-vite',
-      script: 'node_modules/vite/bin/vite.js',
-      args: '--port 8100',
+      script: 'server.js',
       cwd: '/home/user/.openclaw/workspace/navi-os',
       env: {
-        NODE_ENV: 'production'
+        NODE_ENV: 'production',
+        PORT: 8100
       },
       watch: false,
       autorestart: true,
