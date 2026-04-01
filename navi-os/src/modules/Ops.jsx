@@ -11,7 +11,7 @@ import Status from '../components/Status'
 import Files from '../components/Files'
 import Security from '../components/Security'
 import Sync from '../components/Sync'
-import Proposals from '../components/Proposals'
+import ProposalsBoard from './Proposals/ProposalsBoard'
 import AutomationsBoard from './Ops/Automations/AutomationsBoard'
 import './Ops.css'
 
@@ -307,7 +307,7 @@ export default function Ops() {
         <>
           <OvernightSummary />
           <TaskPipeline />
-          <Proposals />
+          <ProposalsBoard />
           <DeliverableTracker />
         </>
       )}

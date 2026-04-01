@@ -4,7 +4,7 @@ category: Borsa
 icon: 📈
 description: Stock market and finance news
 tags: ['stocks', 'markets', 'finance', 'investing']
-created: 2026-04-01 07:10
+created: 2026-04-01 13:25
 ---
 
 # 📈 Borsa
@@ -13,13 +13,19 @@ Stock market and finance news
 
 ## Meta
 - **Carpeta:** `memory/Stock-Market/`
-- **Total entrades:** 3
-- **Darrer update:** 2026-04-01 07:10
+- **Total entrades:** 4
+- **Darrer update:** 2026-04-01 13:25
 
 ## Tags
 #stocks #markets #finance #investing
 
 ## Entrades recents
+
+### [[2026-04-01-13.00.md|2026-04-01 13:00]] #us-markets #global-markets #finance #stocks #markets
+
+- UPM Adhesive Materials plans new facility near New Delhi, India...
+- Stock market today: Dow S&P 500, Nasdaq futures climb as de-escalation talk in I...
+- EU Launches Probe Against Snap Inc. (SNAP), Here’s What You Should Know...
 
 ### [[2026-04-01-07.00.md|2026-04-01 07:00]] #us-markets #global-markets #finance #stocks #markets
 

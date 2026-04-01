@@ -94,7 +94,7 @@ export default function TaskPipeline() {
       if (task) {
         try {
           const apiStatus = STAGE_TO_STATUS[newStage] || 'todo'
-          await fetch(`/api/pm-board/${changedTaskId}`, {
+          const res = await fetch(`/api/pm-board/${changedTaskId}`, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -105,6 +105,41 @@ export default function TaskPipeline() {
               notes: task.blockers || []
             })
           })
+          const data = await res.json()
+
+          // Fire automations when task moves to done
+          if (newStage === 'delivered' && data?.task) {
+            fetch('/api/internal/automations/fire', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                triggerType: 'pm.task.delivered',
+                triggerData: {
+                  taskId: data.task.id,
+                  taskTitle: data.task.title,
+                  assignee: data.task.assignee,
+                  priority: data.task.priority,
+                  deliveredAt: new Date().toISOString()
+                }
+              })
+            }).catch(() => {})
+          }
+
+          // Fire automations when task moves to review
+          if (newStage === 'review' && data?.task) {
+            fetch('/api/internal/automations/fire', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                triggerType: 'pm.task.review',
+                triggerData: {
+                  taskId: data.task.id,
+                  taskTitle: data.task.title,
+                  assignee: data.task.assignee
+                }
+              })
+            }).catch(() => {})
+          }
         } catch (err) {
           console.error('Error syncing task to API:', err)
         }

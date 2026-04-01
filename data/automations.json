@@ -7,6 +7,75 @@
   },
   "automations": [
     {
+      "id": "auto-proposal-status-changed",
+      "name": "Proposta: Canvi d'estat",
+      "description": "Quan qualsevol proposta canvia d'estat, registra el canvi i notifica si passa a debat o accepted",
+      "enabled": true,
+      "trigger": {
+        "type": "proposal.status_changed",
+        "label": "Canvi d'estat de proposta"
+      },
+      "conditions": [],
+      "actions": [
+        {
+          "type": "message.send",
+          "label": "Registrar canvi al flux",
+          "params": {
+            "template": "[{oldStatus} → {newStatus}] {title}",
+            "channel": "internal"
+          }
+        }
+      ],
+      "lastTriggered": null,
+      "triggerCount": 0
+    },
+    {
+      "id": "auto-pm-task-delivered",
+      "name": "PM: Tasca delivered",
+      "description": "Quan una tasca es mou a Delivered, registra l'entrega",
+      "enabled": true,
+      "trigger": {
+        "type": "pm.task.delivered",
+        "label": "Tasca marcada com delivered"
+      },
+      "conditions": [],
+      "actions": [
+        {
+          "type": "message.send",
+          "label": "Registrar entrega",
+          "params": {
+            "template": "✓ TASCA ENTREGADA: {taskTitle} (assignee: {assignee})",
+            "channel": "internal"
+          }
+        }
+      ],
+      "lastTriggered": null,
+      "triggerCount": 0
+    },
+    {
+      "id": "auto-pm-task-review",
+      "name": "PM: Tasca en Review",
+      "description": "Quan una tasca es mou a Review, registra que cal revisió",
+      "enabled": true,
+      "trigger": {
+        "type": "pm.task.review",
+        "label": "Tasca en revisió"
+      },
+      "conditions": [],
+      "actions": [
+        {
+          "type": "message.send",
+          "label": "Notificar en review",
+          "params": {
+            "template": "👁 TASCA EN REVIEW: {taskTitle} - awaiting warren sign-off",
+            "channel": "internal"
+          }
+        }
+      ],
+      "lastTriggered": null,
+      "triggerCount": 0
+    },
+    {
       "id": "auto-idea-debat",
       "name": "Idea → Debat amb el Chief assignat",
       "description": "Quan s'accepta una idea al Lab, crea automàticament una proposta de debat i assigna al chief proposat per gestionar-la",

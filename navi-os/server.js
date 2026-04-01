@@ -258,6 +258,48 @@ app.patch('/api/pm-board/:id', (req, res) => {
   }
 })
 
+// ─── Skill Content (for skill detail modal) ─────────────────────────────────
+
+app.get('/api/skill-content', (req, res) => {
+  try {
+    const name = req.query.name || ''
+    if (!name) return res.status(400).json({ error: 'name required' })
+
+    // Try workspace skills dir
+    const skillPath = join(SKILLS_DIR, name, 'SKILL.md')
+    if (existsSync(skillPath)) {
+      const content = readFileSync(skillPath, 'utf-8')
+      return res.json({ content, source: 'workspace' })
+    }
+
+    // Try clawhub skills
+    const clawhubSkill = join(WORKSPACE, 'navi-os', 'src', 'data', 'skills', name, 'SKILL.md')
+    if (existsSync(clawhubSkill)) {
+      const content = readFileSync(clawhubSkill, 'utf-8')
+      return res.json({ content, source: 'clawhub' })
+    }
+
+    res.json({ content: '', source: 'not_found' })
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
+
+app.post('/api/skill-toggle', (req, res) => {
+  // Skill enable/disable - log it but don't actually toggle (requires skill system restart)
+  const { name, enabled } = req.body || {}
+  if (!name) return res.status(400).json({ error: 'name required' })
+  console.log(`[Skill Toggle] ${name} -> ${enabled ? 'enabled' : 'disabled'}`)
+  res.json({ ok: true, name, enabled })
+})
+
+// ─── Current Model ─────────────────────────────────────────────────────────────
+
+app.get('/api/current-model', (req, res) => {
+  const model = process.env.OPENCLAW_MODEL || 'minimax-portal/MiniMax-M2.7'
+  res.json({ model })
+})
+
 // ─── Skills Directory ──────────────────────────────────────────────────────────
 
 app.get('/api/skills', (req, res) => {
@@ -1110,9 +1152,10 @@ app.patch('/api/proposals/:id', (req, res) => {
     data.proposals[idx] = { ...data.proposals[idx], ...req.body, updatedAt: new Date().toISOString() }
     writeFileSync(dataFile, JSON.stringify(data, null, 2))
     
-    // Fire automations based on status transitions
+    // Fire automations based on status transitions — ANY status change fires proposal.status_changed
     if (newStatus && newStatus !== oldStatus) {
       const triggerType = `debate.${newStatus === 'accepted' ? 'approved' : newStatus === 'rejected' ? 'rejected' : 'status_changed'}`
+      // Fire the debate.* trigger for debate column transitions
       if (['debate.approved', 'debate.rejected', 'debate.status_changed'].includes(triggerType)) {
         try {
           fetch('http://localhost:3001/api/internal/automations/fire', {
@@ -1133,6 +1176,26 @@ app.patch('/api/proposals/:id', (req, res) => {
           }).catch(() => {})
         } catch (_) {}
       }
+      // Always fire proposal.status_changed for any transition (including pending→debate, debate→processing, etc.)
+      try {
+        fetch('http://localhost:3001/api/internal/automations/fire', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            triggerType: 'proposal.status_changed',
+            triggerData: {
+              proposalId: id,
+              proposalTitle: oldProposal.title,
+              description: oldProposal.description,
+              author: oldProposal.author,
+              assignee: oldProposal.assignee,
+              priority: oldProposal.priority,
+              oldStatus,
+              newStatus
+            }
+          })
+        }).catch(() => {})
+      } catch (_) {}
     }
     
     res.json(data.proposals[idx])
@@ -1564,6 +1627,12 @@ async function executeAutomation(automation, triggerData = {}, globalData) {
             .replace('{title}', triggerData.title || '')
             .replace('{description}', triggerData.description || '')
             .replace('{priority}', triggerData.priority || '')
+            .replace('{oldStatus}', triggerData.oldStatus || '')
+            .replace('{newStatus}', triggerData.newStatus || '')
+            .replace('{taskTitle}', triggerData.taskTitle || '')
+            .replace('{taskId}', triggerData.taskId || '')
+            .replace('{assignee}', triggerData.assignee || '')
+            .replace('{proposalTitle}', triggerData.proposalTitle || '')
           result = { message, sent: true, channel: action.params?.channel || 'internal' }
           break
         }

@@ -102,3 +102,9 @@ _Notificant chiefs en cadena (ELOM → WARREN → JEFF → SAM)..._" 2>/dev/null
 [2026-03-31 22:53:15] Canvi detectat: change
 [2026-03-31 22:53:15] Processant 1 proposta(es) canviada(es)
 [2026-03-31 22:53:15] Missatge Telegram enviat
+[2026-04-01 12:22:35] ==================================================
+[2026-04-01 12:22:35] Proposals Watcher - INICIANT
+[2026-04-01 12:22:35] Vigilant: /home/user/.openclaw/workspace/data/proposals.json
+[2026-04-01 12:22:35] ==================================================
+[2026-04-01 12:22:35] ✅ Watcher actiu
+[2026-04-01 12:22:35] Esperant canvis...
