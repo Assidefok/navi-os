@@ -128,6 +128,83 @@ PYEOF
 - JEFF: $git_changes canvis auto-commited i pujats"
   fi
   
+  # ─── Deploy Approved Self-Improvements ────────────────────────
+  DEPLOY_LOG="$WORKSPACE/logs/deploy-$(date +%Y%m%d).log"
+  
+  # Check for pending approved proposals
+  PENDING=$(curl -s http://localhost:3001/api/self-improvement/pending-deployments 2>/dev/null | python3 -c "import sys,json; data=json.load(sys.stdin); print(len(data.get('pending',[])))" 2>/dev/null || echo "0")
+  
+  if [ "$PENDING" -gt 0 ] 2>/dev/null; then
+    log "Found $PENDING approved proposals to deploy. Processing..."
+    
+    # Get pending deployments
+    PENDING_JSON=$(curl -s http://localhost:3001/api/self-improvement/pending-deployments 2>/dev/null)
+    
+    echo "$PENDING_JSON" | python3 -c "
+import sys, json, subprocess, os
+
+data = json.load(sys.stdin)
+workspace = '/home/user/.openclaw/workspace'
+
+for item in data.get('pending', []):
+    proposal_id = item['proposalId']
+    generated_date = item['generatedDate']
+    
+    print(f'Deploying: {proposal_id}')
+    
+    # Step 1: Copy staging → production (src files only)
+    staging_src = os.path.join(workspace, 'navi-os-staging', 'src')
+    prod_src = os.path.join(workspace, 'navi-os', 'src')
+    
+    try:
+        result = subprocess.run(
+            ['cp', '-r'] + 
+            [f for f in os.listdir(staging_src) if os.path.isdir(os.path.join(staging_src, f))] +
+            [staging_src + '/'],
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        )
+        print(f'  Copy result: {result.returncode}')
+    except Exception as e:
+        print(f'  Copy error: {e}')
+    
+    # Step 2: Verify build
+    try:
+        build_result = subprocess.run(
+            ['npm', 'run', 'build'],
+            cwd=os.path.join(workspace, 'navi-os'),
+            capture_output=True, text=True, timeout=120
+        )
+        if build_result.returncode == 0:
+            print(f'  Build: SUCCESS')
+            
+            # Step 3: Mark as executed
+            mark_data = json.dumps({'proposalId': proposal_id, 'generatedDate': generated_date})
+            mark_result = subprocess.run(
+                ['curl', '-s', '-X', 'POST',
+                 'http://localhost:3001/api/self-improvement/mark-executed',
+                 '-H', 'Content-Type: application/json',
+                 '-d', mark_data],
+                capture_output=True, text=True
+            )
+            print(f'  Marked: {proposal_id} as executed')
+            
+            # Step 4: Log to build log
+            log_entry = f'# Self-Improvement Deployed\n\n- **Proposal:** {proposal_id}\n- **Deployed:** {generated_date}\n- **Status:** SUCCESS\n- **Deployed by:** Somiar de Nit\n'
+            log_path = os.path.join(workspace, 'memory', f'deployed-{generated_date}-{proposal_id}.md')
+            with open(log_path, 'w') as f:
+                f.write(log_entry)
+            print(f'  Logged to: {log_path}')
+        else:
+            print(f'  Build: FAILED')
+            print(f'  Error: {build_result.stderr[:200]}')
+    except Exception as e:
+        print(f'  Error: {e}')
+" >> "$DEPLOY_LOG" 2>&1
+    
+    AUTO="${AUTO}
+- ELOM: $PENDING millores auto-desplegades a producció"
+  fi
+  
   # Generate deep analysis report
   cat > "$OUTPUT_FILE" << EOF
 # Somiar de Nit - Deep Improvement Cycle

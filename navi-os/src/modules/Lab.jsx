@@ -12,6 +12,10 @@ import {
   PanelLeft,
   FileText,
   CheckCircle2,
+  Check,
+  X,
+  Lightbulb,
+  AlertCircle,
 } from 'lucide-react'
 import Modal from '../components/ui/Modal'
 import './Lab.css'
@@ -63,6 +67,7 @@ function LabTopTabs({ activeTab, onChange }) {
     ['overview', 'Overview'],
     ['prototypes', 'Prototypes'],
     ['logs', 'Build Logs'],
+    ['improvements', 'Self Improvement'],
   ]
 
   return (
@@ -322,6 +327,294 @@ function BuildLogsView({ logs, loading, onRefresh }) {
   )
 }
 
+function priorityColor(priority) {
+  if (!priority) return 'neutral'
+  if (priority.toLowerCase().includes('critic') || priority.includes('🔴')) return 'failed'
+  if (priority.toLowerCase().includes('alt') || priority.includes('🟡')) return 'running'
+  if (priority.toLowerCase().includes('baix') || priority.includes('🟢')) return 'ok'
+  return 'neutral'
+}
+
+function statusBadge(status) {
+  switch (status) {
+    case 'pending': return { label: 'Pendent', class: 'neutral' }
+    case 'approved': return { label: 'Aprobat', class: 'running' }
+    case 'denied': return { label: 'Denegat', class: 'failed' }
+    case 'executed': return { label: 'Executat', class: 'ok' }
+    default: return { label: status, class: 'neutral' }
+  }
+}
+
+function SelfImprovementView() {
+  const [proposals, setProposals] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [processing, setProcessing] = useState(null)
+  const [feedback, setFeedback] = useState(null)
+
+  const loadProposals = () => {
+    setLoading(true)
+    fetch(`${API_BASE}/self-improvement/proposals`)
+      .then(r => r.json())
+      .then(data => {
+        setProposals(data.proposals || [])
+      })
+      .catch(err => {
+        console.error('Failed to load proposals:', err)
+        setFeedback({ type: 'error', message: 'Error carregant propostes' })
+      })
+      .finally(() => setLoading(false))
+  }
+
+  useEffect(() => {
+    loadProposals()
+  }, [])
+
+  const handleApprove = async (proposal) => {
+    setProcessing(proposal.id)
+    setFeedback(null)
+    try {
+      const res = await fetch(`${API_BASE}/self-improvement/approve`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          proposalId: proposal.id,
+          generatedDate: proposal.generatedDate,
+        }),
+      })
+      const data = await res.json()
+      if (data.ok) {
+        setFeedback({ type: 'success', message: `${proposal.id} aprovat — es desplegarà aquesta nit` })
+        loadProposals()
+      } else {
+        setFeedback({ type: 'error', message: data.error || 'Error desconegut' })
+      }
+    } catch (err) {
+      setFeedback({ type: 'error', message: `Error: ${err.message}` })
+    } finally {
+      setProcessing(null)
+    }
+  }
+
+  const handleDeny = async (proposal) => {
+    setProcessing(proposal.id)
+    setFeedback(null)
+    try {
+      const res = await fetch(`${API_BASE}/self-improvement/deny`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          proposalId: proposal.id,
+          generatedDate: proposal.generatedDate,
+        }),
+      })
+      const data = await res.json()
+      if (data.ok) {
+        setFeedback({ type: 'success', message: `${proposal.id} denegat` })
+        loadProposals()
+      } else {
+        setFeedback({ type: 'error', message: data.error || 'Error desconegut' })
+      }
+    } catch (err) {
+      setFeedback({ type: 'error', message: `Error: ${err.message}` })
+    } finally {
+      setProcessing(null)
+    }
+  }
+
+  const pendingProposals = proposals.filter(p => p.status === 'pending')
+  const approvedProposals = proposals.filter(p => p.status === 'approved')
+  const executedProposals = proposals.filter(p => p.status === 'executed')
+  const deniedProposals = proposals.filter(p => p.status === 'denied')
+
+  return (
+    <section className="lab-shell lab-improvements-shell">
+      <div className="lab-section-header">
+        <div className="lab-section-title">
+          <Lightbulb size={20} />
+          <div>
+            <h2>Self Improvement</h2>
+          </div>
+        </div>
+        <button className="lab-refresh-btn" onClick={loadProposals}>
+          <RefreshCw size={14} /> Actualitzar
+        </button>
+      </div>
+
+      {feedback && (
+        <div className={`lab-feedback ${feedback.type}`}>
+          {feedback.type === 'success' ? <CheckCircle2 size={16} /> : <AlertCircle size={16} />}
+          {feedback.message}
+        </div>
+      )}
+
+      {loading ? (
+        <div className="lab-empty-state">Carregant propostes...</div>
+      ) : proposals.length === 0 ? (
+        <div className="lab-empty-state">
+          <Lightbulb size={42} />
+          <h4>No hi ha propostes</h4>
+          <p>Les propostes de self-improvement apareixeran aqui cada matí.</p>
+        </div>
+      ) : (
+        <div className="lab-improvements-content">
+          {pendingProposals.length > 0 && (
+            <div className="lab-improvements-section">
+              <h3 className="lab-improvements-section-title">
+                <AlertCircle size={16} /> Pendents de Revisar ({pendingProposals.length})
+              </h3>
+              <div className="lab-proposal-cards">
+                {pendingProposals.map(proposal => (
+                  <div key={proposal.id} className="lab-proposal-card">
+                    <div className="lab-proposal-header">
+                      <div className="lab-proposal-id">{proposal.id}</div>
+                      <span className={`lab-pill ${priorityColor(proposal.priority)}`}>
+                        {proposal.priority?.replace(/[🔴🟡🟢]/g, '').trim() || '—'}
+                      </span>
+                    </div>
+                    
+                    <h4 className="lab-proposal-title">{proposal.title}</h4>
+                    
+                    <p className="lab-proposal-description">{proposal.description}</p>
+                    
+                    <div className="lab-proposal-meta">
+                      <div className="lab-proposal-meta-item">
+                        <Clock size={12} />
+                        {proposal.generatedDate}
+                      </div>
+                      <div className="lab-proposal-meta-item">
+                        <FileText size={12} />
+                        {proposal.buildLog}
+                      </div>
+                    </div>
+
+                    {proposal.steps && proposal.steps.length > 0 && (
+                      <div className="lab-proposal-steps">
+                        <strong>Passos:</strong>
+                        <ol>
+                          {proposal.steps.slice(0, 3).map((step, i) => (
+                            <li key={i}>{step}</li>
+                          ))}
+                          {proposal.steps.length > 3 && (
+                            <li className="lab-proposal-more">+ {proposal.steps.length - 3} mes...</li>
+                          )}
+                        </ol>
+                      </div>
+                    )}
+                    
+                    <div className="lab-proposal-actions">
+                      <button
+                        className="lab-btn-approve"
+                        onClick={() => handleApprove(proposal)}
+                        disabled={processing === proposal.id}
+                      >
+                        {processing === proposal.id ? (
+                          <RefreshCw size={14} className="spin" />
+                        ) : (
+                          <Check size={14} />
+                        )}
+                        Acceptar
+                      </button>
+                      <button
+                        className="lab-btn-deny"
+                        onClick={() => handleDeny(proposal)}
+                        disabled={processing === proposal.id}
+                      >
+                        <X size={14} />
+                        Denegar
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {approvedProposals.length > 0 && (
+            <div className="lab-improvements-section">
+              <h3 className="lab-improvements-section-title">
+                <CheckCircle2 size={16} /> Aprovades ({approvedProposals.length}) — Es despleguen aquesta nit
+              </h3>
+              <div className="lab-proposal-cards">
+                {approvedProposals.map(proposal => (
+                  <div key={proposal.id} className="lab-proposal-card lab-proposal-card-approved">
+                    <div className="lab-proposal-header">
+                      <div className="lab-proposal-id">{proposal.id}</div>
+                      <span className="lab-pill running">Aprobat</span>
+                    </div>
+                    <h4 className="lab-proposal-title">{proposal.title}</h4>
+                    <div className="lab-proposal-meta">
+                      <div className="lab-proposal-meta-item">
+                        <Clock size={12} />
+                        {proposal.generatedDate}
+                      </div>
+                      {proposal.approvedAt && (
+                        <div className="lab-proposal-meta-item">
+                          <CheckCircle2 size={12} />
+                          Aprovat {formatDate(proposal.approvedAt)}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {executedProposals.length > 0 && (
+            <div className="lab-improvements-section">
+              <h3 className="lab-improvements-section-title">
+                <CheckCircle2 size={16} /> Executades ({executedProposals.length})
+              </h3>
+              <div className="lab-proposal-cards">
+                {executedProposals.map(proposal => (
+                  <div key={proposal.id} className="lab-proposal-card lab-proposal-card-executed">
+                    <div className="lab-proposal-header">
+                      <div className="lab-proposal-id">{proposal.id}</div>
+                      <span className="lab-pill ok">Executat</span>
+                    </div>
+                    <h4 className="lab-proposal-title">{proposal.title}</h4>
+                    <div className="lab-proposal-meta">
+                      <div className="lab-proposal-meta-item">
+                        <Clock size={12} />
+                        {proposal.generatedDate}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {deniedProposals.length > 0 && (
+            <div className="lab-improvements-section">
+              <h3 className="lab-improvements-section-title">
+                <AlertCircle size={16} /> Denegades ({deniedProposals.length})
+              </h3>
+              <div className="lab-proposal-cards">
+                {deniedProposals.map(proposal => (
+                  <div key={proposal.id} className="lab-proposal-card lab-proposal-card-denied">
+                    <div className="lab-proposal-header">
+                      <div className="lab-proposal-id">{proposal.id}</div>
+                      <span className="lab-pill failed">Denegat</span>
+                    </div>
+                    <h4 className="lab-proposal-title">{proposal.title}</h4>
+                    <div className="lab-proposal-meta">
+                      <div className="lab-proposal-meta-item">
+                        <Clock size={12} />
+                        {proposal.generatedDate}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </section>
+  )
+}
+
 export default function Lab() {
   const [activeTab, setActiveTab] = useState('overview')
   const [prototypes, setPrototypes] = useState([])
@@ -359,6 +652,7 @@ export default function Lab() {
         {activeTab === 'logs' && (
           <BuildLogsView logs={logs} loading={loading} onRefresh={loadAll} />
         )}
+        {activeTab === 'improvements' && <SelfImprovementView />}
       </div>
     </div>
   )

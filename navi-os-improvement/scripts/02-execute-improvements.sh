@@ -6,7 +6,7 @@
 
 set -e
 
-PROJECT_DIR="/home/user/.openclaw/workspace/navi-os"
+PROJECT_DIR="/home/user/.openclaw/workspace/navi-os-staging"
 IMPROVEMENT_DIR="/home/user/.openclaw/workspace/navi-os-improvement"
 DATE=$(date +%Y-%m-%d-%H.%M)
 REPORT_FILE="$IMPROVEMENT_DIR/reports/${DATE}-execution.md"
