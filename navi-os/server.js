@@ -20,7 +20,17 @@ const CHIEFS_COUNCIL_FILE = join(WORKSPACE, 'navi-os', 'src', 'data', 'chiefs-co
 
 const app = express()
 app.use(cors())
-app.use(express.json())
+
+// Custom JSON parser with error handling to prevent crashes on malformed JSON
+app.use((req, res, next) => {
+  express.json()(req, res, (err) => {
+    if (err) {
+      console.error(`[JSON Parse Error] ${req.method} ${req.path}: ${err.message}`)
+      return res.status(400).json({ error: 'Invalid JSON', details: err.message })
+    }
+    next()
+  })
+})
 
 function ensureDataFile(filePath, fallback) {
   mkdirSync(dirname(filePath), { recursive: true })
