@@ -1,360 +1,365 @@
-import { useState, useEffect } from 'react'
+import { marked } from 'marked'
+import DOMPurify from 'dompurify'
+import { useEffect, useMemo, useState } from 'react'
 import {
-  FlaskConical, Lightbulb, Rocket, Search, Plus, Play, Pause, Archive,
-  ChevronRight, X, RefreshCw, TrendingUp, Clock, Star, Check, Ban
+  FlaskConical,
+  ScrollText,
+  RefreshCw,
+  ChevronRight,
+  Clock,
+  ExternalLink,
+  Monitor,
+  PanelLeft,
+  FileText,
+  CheckCircle2,
 } from 'lucide-react'
 import Modal from '../components/ui/Modal'
-import FeatureCard from '../components/ui/FeatureCard'
-import Inbox from './Lab/Inbox'
-import Logs from './Lab/Logs'
 import './Lab.css'
 
 const API_BASE = '/api'
 
-// ─── Prototype Portfolio ──────────────────────────────────────────────────────
+marked.setOptions({ breaks: true, gfm: true })
 
-function PrototypePortfolio() {
-  const [prototypes, setPrototypes] = useState([])
-  const [loading, setLoading] = useState(true)
+function renderMarkdown(text) {
+  if (!text) return <p className="lab-empty-copy">No hi ha contingut</p>
+  try {
+    const html = marked.parse(text)
+    const sanitized = DOMPurify.sanitize(html)
+    return <div className="lab-markdown-body" dangerouslySetInnerHTML={{ __html: sanitized }} />
+  } catch {
+    return <pre className="lab-pre-fallback">{text}</pre>
+  }
+}
+
+function formatDate(iso) {
+  if (!iso) return '—'
+  try {
+    return new Date(iso).toLocaleString('ca-ES', {
+      day: '2-digit',
+      month: 'short',
+      hour: '2-digit',
+      minute: '2-digit',
+    })
+  } catch {
+    return iso
+  }
+}
+
+function statusTone(status) {
+  if (['running', 'healthy', 'ok', 'done', 'delivered'].includes(status)) return 'running'
+  if (['failed', 'error'].includes(status)) return 'failed'
+  if (['archived', 'disabled', 'stopped'].includes(status)) return 'muted'
+  return 'neutral'
+}
+
+function normalizePreviewUrl(proto) {
+  if (proto.previewUrl) return proto.previewUrl
+  if (proto.port) return `http://127.0.0.1:${proto.port}`
+  return null
+}
+
+function LabTopTabs({ activeTab, onChange }) {
+  const tabs = [
+    ['overview', 'Overview'],
+    ['prototypes', 'Prototypes'],
+    ['logs', 'Build Logs'],
+  ]
+
+  return (
+    <div className="lab-top-tabs minimal">
+      {tabs.map(([id, label]) => (
+        <button
+          key={id}
+          className={`lab-top-tab minimal ${activeTab === id ? 'active' : ''}`}
+          onClick={() => onChange(id)}
+        >
+          {label}
+        </button>
+      ))}
+    </div>
+  )
+}
+
+function LabOverview({ prototypes, logs, loading, openTab }) {
+  const running = prototypes.filter(p => p.status === 'running').length
+  const recentLog = logs[0]
+
+  return (
+    <section className="lab-shell lab-overview-shell">
+      <div className="lab-overview-header">
+        <div className="lab-overview-title">
+          <FlaskConical size={22} />
+          <div>
+            <h1>Laboratory</h1>
+            <p>Experiments, prototypes, and overnight builds</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="lab-overview-grid">
+        <button className="lab-summary-card" onClick={() => openTab('prototypes')}>
+          <div className="lab-summary-header">
+            <div className="lab-summary-title">
+              <div className="lab-summary-icon"><FlaskConical size={16} /></div>
+              <div>
+                <h3>Prototypes</h3>
+                <p>Staged experiments and client previews</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="lab-summary-body">
+            <div className="lab-summary-count">{loading ? '…' : prototypes.length}</div>
+            <div className="lab-summary-list">
+              {prototypes.slice(0, 1).map(proto => (
+                <div key={proto.id} className="lab-summary-row">
+                  <strong>{proto.name}</strong>
+                  <span className={`lab-pill ${statusTone(proto.status)}`}>{proto.status}</span>
+                </div>
+              ))}
+              {!loading && prototypes.length === 0 && <span className="lab-empty-copy">No hi ha prototips</span>}
+            </div>
+            <div className="lab-summary-footnote">{running} running</div>
+          </div>
+        </button>
+
+        <button className="lab-summary-card" onClick={() => openTab('logs')}>
+          <div className="lab-summary-header">
+            <div className="lab-summary-title">
+              <div className="lab-summary-icon"><ScrollText size={16} /></div>
+              <div>
+                <h3>Build Logs</h3>
+                <p>Overnight builds and self-improvement runs</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="lab-summary-body">
+            <div className="lab-summary-count">{loading ? '…' : logs.length}</div>
+            <div className="lab-summary-list mono">
+              {recentLog ? (
+                <div className="lab-summary-logline">{recentLog.title}</div>
+              ) : (
+                !loading && <span className="lab-empty-copy">No hi ha logs</span>
+              )}
+            </div>
+          </div>
+        </button>
+      </div>
+    </section>
+  )
+}
+
+function PrototypePreviewContent({ prototype }) {
+  const previewUrl = normalizePreviewUrl(prototype)
+
+  return (
+    <div className="lab-window-preview">
+      <div className="lab-window-topbar">
+        <div className="lab-window-left">
+          <span className="lab-window-appname">{prototype.name}</span>
+          <span className={`lab-pill ${statusTone(prototype.status)}`}>{prototype.status}</span>
+        </div>
+        <div className="lab-window-right">
+          {previewUrl && (
+            <a href={previewUrl} target="_blank" rel="noreferrer" className="lab-open-external">
+              <ExternalLink size={14} /> Open in new tab
+            </a>
+          )}
+        </div>
+      </div>
+
+      <div className="lab-window-subbar">
+        <span>Mission Control</span>
+      </div>
+
+      {previewUrl ? (
+        <div className="lab-live-preview-frame-wrap windowed">
+          <iframe
+            className="lab-live-preview-frame"
+            src={previewUrl}
+            title={`Preview ${prototype.name}`}
+          />
+        </div>
+      ) : (
+        <div className="lab-prototype-fallback">
+          <Monitor size={42} />
+          <h4>No hi ha preview en viu</h4>
+          <p>Aquest prototip no té port o URL local assignada.</p>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function PrototypesView({ prototypes, loading, onRefresh }) {
+  const [selectedPrototype, setSelectedPrototype] = useState(null)
+
+  return (
+    <section className="lab-shell lab-prototypes-shell">
+      <div className="lab-section-header">
+        <div className="lab-section-title">
+          <FlaskConical size={20} />
+          <div>
+            <h2>Prototypes</h2>
+          </div>
+        </div>
+        <button className="lab-refresh-btn" onClick={onRefresh}>
+          <RefreshCw size={14} /> Actualitzar
+        </button>
+      </div>
+
+      {loading ? (
+        <div className="lab-empty-state">Carregant prototips...</div>
+      ) : prototypes.length === 0 ? (
+        <div className="lab-empty-state">No hi ha prototips definits</div>
+      ) : (
+        <div className="lab-prototype-list-view">
+          {prototypes.map(proto => (
+            <button key={proto.id} className="lab-prototype-line-card" onClick={() => setSelectedPrototype(proto)}>
+              <div className="lab-prototype-line-top">
+                <strong>{proto.name}</strong>
+                <span className={`lab-pill ${statusTone(proto.status)}`}>{proto.status}</span>
+              </div>
+              <p>{proto.description || proto['one-liner']}</p>
+              <div className="lab-prototype-line-meta">
+                <span>{proto.port ? `:${proto.port}` : 'internal'}</span>
+                <span>{formatDate(proto.lastBuild)}</span>
+              </div>
+            </button>
+          ))}
+        </div>
+      )}
+
+      <Modal
+        isOpen={!!selectedPrototype}
+        onClose={() => setSelectedPrototype(null)}
+        title={selectedPrototype?.name || 'Prototype'}
+        width="75%"
+        height="75%"
+      >
+        {selectedPrototype && <PrototypePreviewContent prototype={selectedPrototype} />}
+      </Modal>
+    </section>
+  )
+}
+
+function BuildLogsView({ logs, loading, onRefresh }) {
+  const [selectedLogId, setSelectedLogId] = useState(null)
+  const recentLogs = useMemo(() => logs.slice(0, 60), [logs])
 
   useEffect(() => {
-    fetch(`${API_BASE}/prototypes`)
-      .then(r => r.json())
-      .then(d => { setPrototypes(d.prototypes || []); setLoading(false) })
-      .catch(() => setLoading(false))
-  }, [])
-
-  const stats = {
-    running: prototypes.filter(p => p.status === 'running').length,
-    stopped: prototypes.filter(p => p.status === 'stopped').length,
-    total: prototypes.length,
-  }
-
-  const statusColor = (status) => {
-    switch (status) {
-      case 'running': return '#00ff41'
-      case 'stopped': return '#ffb800'
-      case 'archived': return '#606070'
-      default: return '#606070'
+    if (!recentLogs.length) {
+      setSelectedLogId(null)
+      return
     }
-  }
+    setSelectedLogId(prev => recentLogs.find(log => log.id === prev)?.id || recentLogs[0].id)
+  }, [recentLogs])
 
-  const formatDate = (iso) => {
-    if (!iso) return '—'
-    try { return new Date(iso).toLocaleDateString('es-ES', { month: 'short', day: 'numeric', year: 'numeric' }) } catch { return iso }
-  }
+  const selectedLog = recentLogs.find(log => log.id === selectedLogId) || null
 
   return (
-    <div className="prototype-portfolio">
-      <div className="section-stats">
-        <span className="stat"><span className="dot running" /> {stats.running} running</span>
-        <span className="stat"><span className="dot stopped" /> {stats.stopped} stopped</span>
-        <span className="stat"><span className="dot archived" /> {stats.total} total</span>
-      </div>
-      <div className="prototypes-grid">
-        {prototypes.map(proto => (
-          <div key={proto.id} className="prototype-card">
-            <div className="proto-header">
-              <span className="proto-status-dot" style={{ background: statusColor(proto.status) }} />
-              <span className="proto-status-text">{proto.status}</span>
-              {proto.port && <span className="proto-port">:{proto.port}</span>}
-            </div>
-            <h3 className="proto-name">{proto.name}</h3>
-            <p className="proto-one-liner">{proto['one-liner']}</p>
-            <div className="proto-score">
-              <Star size={12} className="amber" />
-              <span>{proto.score}/100</span>
-            </div>
-            <div className="proto-footer">
-              <span>Build: {formatDate(proto.lastBuild)}</span>
-              <ChevronRight size={14} />
-            </div>
-          </div>
-        ))}
-        {prototypes.length === 0 && !loading && (
-          <div className="empty-state">No prototypes found</div>
-        )}
-      </div>
-    </div>
-  )
-}
-
-// ─── Ideas Gallery ────────────────────────────────────────────────────────────
-
-function IdeasGallery() {
-  const [ideas, setIdeas] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [filter, setFilter] = useState('all')
-  const [actionLoading, setActionLoading] = useState(null)
-
-  const loadIdeas = () => {
-    setLoading(true)
-    fetch(`${API_BASE}/ideas`)
-      .then(r => r.json())
-      .then(d => { setIdeas(d.ideas || []); setLoading(false) })
-      .catch(() => setLoading(false))
-  }
-
-  useEffect(() => {
-    Promise.resolve().then(() => loadIdeas())
-  }, [])
-
-  const acceptIdea = (id) => {
-    setActionLoading(id)
-    fetch(`${API_BASE}/ideas/${id}/accept`, { method: 'POST' })
-      .then(r => r.json())
-      .then(() => { loadIdeas(); setActionLoading(null) })
-      .catch(() => setActionLoading(null))
-  }
-
-  const rejectIdea = (id) => {
-    setActionLoading(id)
-    fetch(`${API_BASE}/ideas/${id}/reject`, { method: 'POST' })
-      .then(r => r.json())
-      .then(() => { loadIdeas(); setActionLoading(null) })
-      .catch(() => setActionLoading(null))
-  }
-
-  const filtered = filter === 'all' ? ideas : ideas.filter(i => i.track === filter)
-
-  const impactColor = (impact) => {
-    switch (impact) {
-      case 'high': return '#00ff41'
-      case 'medium': return '#ffb800'
-      case 'low': return '#a0a0b0'
-      default: return '#a0a0b0'
-    }
-  }
-
-  const formatDate = (d) => {
-    try { return new Date(d).toLocaleDateString('es-ES', { month: 'short', day: 'numeric' }) } catch { return d }
-  }
-
-  return (
-    <div className="ideas-gallery">
-      <div className="tab-bar">
-        {['all', 'A', 'B'].map(t => (
-          <button key={t} className={`tab ${filter === t ? 'active' : ''}`} onClick={() => setFilter(t)}>
-            Track {t === 'all' ? 'All' : t}
-            <span className="tab-count">{t === 'all' ? ideas.length : ideas.filter(i => i.track === t).length}</span>
-          </button>
-        ))}
-      </div>
-      <div className="ideas-grid">
-        {filtered.map(idea => (
-          <div key={idea.id} className="idea-card">
-            <div className="idea-header">
-              <span className={`track-badge track-${idea.track.toLowerCase()}`}>Track {idea.track}</span>
-              <span className="idea-impact" style={{ color: impactColor(idea.impact) }}>
-                <TrendingUp size={12} /> {idea.impact}
-              </span>
-            </div>
-            <h4 className="idea-title">{idea.title}</h4>
-            <p className="idea-description">{idea.description}</p>
-            <div className="idea-footer">
-              <span className="idea-date"><Clock size={11} /> {formatDate(idea.date)}</span>
-              <span className="idea-category">{idea.category}</span>
-              <span className={`idea-status ${idea.status}`}>{idea.status}</span>
-            </div>
-            <div className="idea-actions">
-              <button 
-                className="idea-btn accept" 
-                onClick={() => acceptIdea(idea.id)}
-                disabled={actionLoading === idea.id}
-              >
-                <Check size={14} /> Acceptar
-              </button>
-              <button 
-                className="idea-btn reject" 
-                onClick={() => rejectIdea(idea.id)}
-                disabled={actionLoading === idea.id}
-              >
-                <Ban size={14} /> Rebutjar
-              </button>
-            </div>
-          </div>
-        ))}
-        {filtered.length === 0 && !loading && (
-          <div className="empty-state">No ideas for this track</div>
-        )}
-      </div>
-    </div>
-  )
-}
-
-// ─── Research Dashboard ───────────────────────────────────────────────────────
-
-function ResearchDashboard() {
-  return (
-    <div className="research-dashboard">
-      <div className="section-stats">
-        <span className="stat"><Search size={14} /> AI Pulse & Research</span>
-      </div>
-      <div className="research-placeholder">
-        <Search size={32} className="green" />
-        <h4>Research Files</h4>
-        <p>Place markdown research files in /home/user/.openclaw/workspace/research/</p>
-        <p className="sub">They will appear here automatically.</p>
-      </div>
-      <div className="timeline-placeholder">
-        <h4>Timeline</h4>
-        <div className="timeline-item">
-          <div className="timeline-dot" />
-          <div className="timeline-content">
-            <span className="timeline-date">2026-03-30</span>
-            <span>Research dashboard initialized</span>
+    <section className="lab-shell lab-logs-shell">
+      <div className="lab-section-header">
+        <div className="lab-section-title">
+          <ScrollText size={20} />
+          <div>
+            <h2>Build Logs</h2>
           </div>
         </div>
+        <button className="lab-refresh-btn" onClick={onRefresh}>
+          <RefreshCw size={14} /> Actualitzar
+        </button>
       </div>
-    </div>
-  )
-}
 
-// ─── Lab Command Center (Landing) ────────────────────────────────────────────
+      {loading ? (
+        <div className="lab-empty-state">Carregant logs...</div>
+      ) : recentLogs.length === 0 ? (
+        <div className="lab-empty-state">No hi ha logs disponibles</div>
+      ) : (
+        <div className="lab-build-logs-layout">
+          <aside className="lab-build-logs-sidebar">
+            <div className="lab-sidebar-title"><PanelLeft size={13} /> BUILDS</div>
+            <div className="lab-builds-nav-list">
+              {recentLogs.map(log => (
+                <button
+                  key={log.id}
+                  className={`lab-build-nav-item ${selectedLogId === log.id ? 'active' : ''}`}
+                  onClick={() => setSelectedLogId(log.id)}
+                >
+                  <div className="lab-build-nav-title">{log.title}</div>
+                  <div className="lab-build-nav-subtitle">{formatDate(log.timestamp)} · {log.meta || log.source}</div>
+                </button>
+              ))}
+            </div>
+          </aside>
 
-function LabCommandCenter({ onNavigate }) {
-  const [prototypes, setPrototypes] = useState([])
-  const [ideas, setIdeas] = useState([])
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    Promise.all([
-      fetch(`${API_BASE}/prototypes`).then(r => r.json()).catch(() => ({ prototypes: [] })),
-      fetch(`${API_BASE}/ideas`).then(r => r.json()).catch(() => ({ ideas: [] })),
-    ]).then(([pData, iData]) => {
-      setPrototypes(pData.prototypes || [])
-      setIdeas(iData.ideas || [])
-      setLoading(false)
-    }).catch(() => setLoading(false))
-  }, [])
-
-  const latestPrototype = prototypes[0]
-  const latestIdea = ideas[0]
-
-  return (
-    <div className="lab-command-center">
-      <div className="tiles-grid">
-        {/* Ideas Tile */}
-        <div className="lab-tile" onClick={() => onNavigate('ideas')}>
-          <div className="tile-icon"><Lightbulb size={28} className="amber" /></div>
-          <div className="tile-info">
-            <h3>Ideas</h3>
-            <span className="tile-count">{loading ? '...' : ideas.length} ideas</span>
-            {latestIdea && (
-              <p className="tile-latest">Latest: {latestIdea.title.substring(0, 40)}...</p>
+          <section className="lab-build-log-reader">
+            {selectedLog ? (
+              <>
+                <div className="lab-build-log-header">
+                  <div>
+                    <h3>{selectedLog.title}</h3>
+                    <div className="lab-build-log-meta-line">
+                      <span>{formatDate(selectedLog.timestamp)}</span>
+                      <span>{selectedLog.type}</span>
+                      <span>{selectedLog.source}</span>
+                    </div>
+                  </div>
+                  <span className={`lab-pill ${statusTone(selectedLog.status)}`}>{selectedLog.status}</span>
+                </div>
+                <div className="lab-build-log-content">
+                  {renderMarkdown(selectedLog.content || selectedLog.summary)}
+                </div>
+              </>
+            ) : (
+              <div className="lab-empty-state">Selecciona un build log</div>
             )}
-          </div>
-          <ChevronRight size={18} className="tile-arrow" />
+          </section>
         </div>
-
-        {/* Prototypes Tile */}
-        <div className="lab-tile" onClick={() => onNavigate('prototypes')}>
-          <div className="tile-icon"><FlaskConical size={28} className="green" /></div>
-          <div className="tile-info">
-            <h3>Prototypes</h3>
-            <span className="tile-count">
-              {loading ? '...' : `${prototypes.filter(p => p.status === 'running').length} running / ${prototypes.length} total`}
-            </span>
-            {latestPrototype && (
-              <p className="tile-latest">Latest: {latestPrototype.name}</p>
-            )}
-          </div>
-          <ChevronRight size={18} className="tile-arrow" />
-        </div>
-
-        {/* Overnight Builds Tile */}
-        <div className="lab-tile" onClick={() => onNavigate('overnight')}>
-          <div className="tile-icon"><Rocket size={28} className="sky" /></div>
-          <div className="tile-info">
-            <h3>Overnight Builds</h3>
-            <span className="tile-count">Automated</span>
-            <p className="tile-latest">Cron-driven construction pipeline</p>
-          </div>
-          <ChevronRight size={18} className="tile-arrow" />
-        </div>
-
-        {/* Research Tile */}
-        <div className="lab-tile" onClick={() => onNavigate('research')}>
-          <div className="tile-icon"><Search size={28} className="purple" /></div>
-          <div className="tile-info">
-            <h3>Research</h3>
-            <span className="tile-count">AI Pulse</span>
-            <p className="tile-latest">Technology landscape tracking</p>
-          </div>
-          <ChevronRight size={18} className="tile-arrow" />
-        </div>
-      </div>
-    </div>
+      )}
+    </section>
   )
 }
-
-// ─── Main Lab Module ──────────────────────────────────────────────────────────
 
 export default function Lab() {
-  const [activeSection, setActiveSection] = useState('landing')
-  const [showPrototypes, setShowPrototypes] = useState(false)
-  const [showIdeas, setShowIdeas] = useState(false)
+  const [activeTab, setActiveTab] = useState('overview')
+  const [prototypes, setPrototypes] = useState([])
+  const [logs, setLogs] = useState([])
+  const [loading, setLoading] = useState(true)
 
-  const handleNavigate = (section) => {
-    setActiveSection(section)
-    if (section === 'prototypes') setShowPrototypes(true)
-    if (section === 'ideas') setShowIdeas(true)
+  const loadAll = () => {
+    setLoading(true)
+    Promise.all([
+      fetch(`${API_BASE}/prototypes`).then(r => r.json()).catch(() => ({ prototypes: [] })),
+      fetch(`${API_BASE}/lab/build-logs`).then(r => r.json()).catch(() => ({ logs: [] })),
+    ])
+      .then(([protoData, logData]) => {
+        setPrototypes(protoData.prototypes || [])
+        setLogs(logData.logs || [])
+      })
+      .finally(() => setLoading(false))
   }
 
+  useEffect(() => {
+    loadAll()
+  }, [])
+
   return (
-    <div className="module-view lab">
-      <h1 className="dashboard-title green neon-green">Laboratori</h1>
+    <div className="module-view lab lab-dashboard-module">
+      <LabTopTabs activeTab={activeTab} onChange={setActiveTab} />
 
-      {/* Section Nav */}
-      <div className="lab-nav">
-        <button className={`lab-nav-btn ${activeSection === 'landing' ? 'active' : ''}`} onClick={() => setActiveSection('landing')}>
-          Command Center
-        </button>
-        <button className={`lab-nav-btn ${activeSection === 'prototypes' ? 'active' : ''}`} onClick={() => { setActiveSection('prototypes'); setShowPrototypes(true) }}>
-          Prototypes
-        </button>
-        <button className={`lab-nav-btn ${activeSection === 'ideas' ? 'active' : ''}`} onClick={() => { setActiveSection('ideas'); setShowIdeas(true) }}>
-          Ideas
-        </button>
-        <button className={`lab-nav-btn ${activeSection === 'overnight' ? 'active' : ''}`} onClick={() => setActiveSection('overnight')}>
-          Overnight
-        </button>
-        <button className={`lab-nav-btn ${activeSection === 'research' ? 'active' : ''}`} onClick={() => setActiveSection('research')}>
-          Research
-        </button>
-        <button className={`lab-nav-btn ${activeSection === 'inbox' ? 'active' : ''}`} onClick={() => setActiveSection('inbox')}>
-          Inbox
-        </button>
-        <button className={`lab-nav-btn ${activeSection === 'logs' ? 'active' : ''}`} onClick={() => setActiveSection('logs')}>
-          Logs
-        </button>
-      </div>
-
-      {/* Content */}
-      <div className="lab-content">
-        {activeSection === 'landing' && <LabCommandCenter onNavigate={handleNavigate} />}
-        {activeSection === 'prototypes' && <PrototypePortfolio />}
-        {activeSection === 'ideas' && <IdeasGallery />}
-        {activeSection === 'overnight' && (
-          <div className="overnight-section">
-            <Rocket size={40} className="sky" />
-            <h3>Overnight Builds</h3>
-            <p>Automated build pipeline runs during off-hours.</p>
-            <p className="sub">Configure via /workspace/scripts/cron-*.sh</p>
-          </div>
+      <div className="lab-content-shell">
+        {activeTab === 'overview' && (
+          <LabOverview prototypes={prototypes} logs={logs} loading={loading} openTab={setActiveTab} />
         )}
-        {activeSection === 'research' && <ResearchDashboard />}
-        {activeSection === 'inbox' && <Inbox />}
-        {activeSection === 'logs' && <Logs />}
+        {activeTab === 'prototypes' && (
+          <PrototypesView prototypes={prototypes} loading={loading} onRefresh={loadAll} />
+        )}
+        {activeTab === 'logs' && (
+          <BuildLogsView logs={logs} loading={loading} onRefresh={loadAll} />
+        )}
       </div>
-
-      {/* Modals */}
-      <Modal isOpen={showPrototypes} onClose={() => setShowPrototypes(false)} title="Prototype Portfolio" width="85%" height="80%">
-        <PrototypePortfolio onClose={() => setShowPrototypes(false)} />
-      </Modal>
-      <Modal isOpen={showIdeas} onClose={() => setShowIdeas(false)} title="Ideas Gallery" width="85%" height="80%">
-        <IdeasGallery />
-      </Modal>
     </div>
   )
 }

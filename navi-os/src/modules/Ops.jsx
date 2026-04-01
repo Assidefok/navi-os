@@ -243,10 +243,84 @@ function KpiCard({ label, value, tone = 'neutral' }) {
   )
 }
 
+function formatRuntime(runtimeMs) {
+  if (!runtimeMs) return '—'
+  const secs = Math.round(runtimeMs / 1000)
+  if (secs < 60) return `${secs}s`
+  const mins = Math.floor(secs / 60)
+  const rem = secs % 60
+  return rem ? `${mins}m ${rem}s` : `${mins}m`
+}
+
+function SessionDetailPanel({ session, onClose }) {
+  const [messages, setMessages] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    if (!session?.id) return
+    setLoading(true)
+    fetch(`/api/session/${encodeURIComponent(session.id)}/messages`)
+      .then(r => r.json())
+      .then(d => setMessages(d.messages || []))
+      .catch(() => setMessages([]))
+      .finally(() => setLoading(false))
+  }, [session?.id])
+
+  return (
+    <div className="ops-session-detail-overlay" onClick={onClose}>
+      <div className="ops-session-detail-panel" onClick={e => e.stopPropagation()}>
+        <div className="ops-session-detail-header">
+          <div>
+            <div className="ops-list-title">{session.label || session.id}</div>
+            <div className="ops-list-subtitle">{session.id}</div>
+          </div>
+          <button className="ops-detail-close" onClick={onClose}>×</button>
+        </div>
+
+        <div className="ops-meta-grid compact ops-session-detail-meta">
+          <div><span>Tipus</span><strong>{session.type || 'main'}</strong></div>
+          <div><span>Estat</span><strong>{session.status || 'unknown'}</strong></div>
+          <div><span>Canal</span><strong>{session.channel || '—'}</strong></div>
+          <div><span>Model</span><strong>{session.model || '—'}</strong></div>
+          <div><span>Inici</span><strong>{formatDate(session.startedAt)}</strong></div>
+          <div><span>Fi</span><strong>{formatDate(session.endedAt)}</strong></div>
+          <div><span>Tokens</span><strong>{(session.totalTokens || 0).toLocaleString()}</strong></div>
+          <div><span>Runtime</span><strong>{formatRuntime(session.runtimeMs)}</strong></div>
+        </div>
+
+        <div className="ops-session-messages-block">
+          <div className="ops-session-messages-title">Missatges recents</div>
+          {loading ? (
+            <div className="ops-empty-state small">Carregant missatges...</div>
+          ) : messages.length === 0 ? (
+            <div className="ops-empty-state small">No hi ha missatges registrats</div>
+          ) : (
+            <div className="ops-session-messages-list">
+              {messages.slice(-20).map((message, idx) => (
+                <div key={idx} className={`ops-session-message ${message.role || 'unknown'}`}>
+                  <div className="ops-session-message-meta">
+                    <span className="ops-session-message-role">{message.role || 'unknown'}</span>
+                    <span className="ops-session-message-time">{formatDate(message.timestamp)}</span>
+                  </div>
+                  <div className="ops-session-message-content">{String(message.content || '').slice(0, 1400) || '—'}</div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function SessionsModule() {
   const [sessions, setSessions] = useState([])
   const [loading, setLoading] = useState(true)
-  const [filter, setFilter] = useState('all')
+  const [typeFilter, setTypeFilter] = useState('all')
+  const [statusFilter, setStatusFilter] = useState('all')
+  const [channelFilter, setChannelFilter] = useState('all')
+  const [groupBy, setGroupBy] = useState('none')
+  const [selectedSession, setSelectedSession] = useState(null)
 
   const loadSessions = () => {
     setLoading(true)
@@ -261,11 +335,32 @@ function SessionsModule() {
     loadSessions()
   }, [])
 
-  const filtered = filter === 'all' ? sessions : sessions.filter(s => s.type === filter)
   const active = sessions.filter(s => s.status === 'running' || s.status === 'active').length
   const mainCount = sessions.filter(s => s.type === 'main').length
   const subagents = sessions.filter(s => s.type === 'subagent').length
   const cronCount = sessions.filter(s => s.type === 'cron').length
+  const statuses = Array.from(new Set(sessions.map(s => s.status || 'unknown')))
+  const channels = Array.from(new Set(sessions.map(s => s.channel || '—')))
+
+  const filtered = sessions.filter(session => {
+    if (typeFilter !== 'all' && (session.type || 'main') !== typeFilter) return false
+    if (statusFilter !== 'all' && (session.status || 'unknown') !== statusFilter) return false
+    if (channelFilter !== 'all' && (session.channel || '—') !== channelFilter) return false
+    return true
+  })
+
+  const groupedSessions = filtered.reduce((acc, session) => {
+    const key = groupBy === 'type'
+      ? (session.type || 'main')
+      : groupBy === 'status'
+        ? (session.status || 'unknown')
+        : groupBy === 'channel'
+          ? (session.channel || '—')
+          : 'Totes les sessions'
+    if (!acc[key]) acc[key] = []
+    acc[key].push(session)
+    return acc
+  }, {})
 
   return (
     <OpsShell title="Sessions" icon={MessageSquare} onRefresh={loadSessions}>
@@ -285,12 +380,38 @@ function SessionsModule() {
         ].map(([id, label]) => (
           <button
             key={id}
-            className={`ops-filter-tab ${filter === id ? 'active' : ''}`}
-            onClick={() => setFilter(id)}
+            className={`ops-filter-tab ${typeFilter === id ? 'active' : ''}`}
+            onClick={() => setTypeFilter(id)}
           >
             {label}
           </button>
         ))}
+      </div>
+
+      <div className="ops-session-controls">
+        <label>
+          <span>Estat</span>
+          <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)}>
+            <option value="all">Tots</option>
+            {statuses.map(status => <option key={status} value={status}>{status}</option>)}
+          </select>
+        </label>
+        <label>
+          <span>Canal</span>
+          <select value={channelFilter} onChange={e => setChannelFilter(e.target.value)}>
+            <option value="all">Tots</option>
+            {channels.map(channel => <option key={channel} value={channel}>{channel}</option>)}
+          </select>
+        </label>
+        <label>
+          <span>Agrupar per</span>
+          <select value={groupBy} onChange={e => setGroupBy(e.target.value)}>
+            <option value="none">Sense agrupació</option>
+            <option value="type">Tipus</option>
+            <option value="status">Estat</option>
+            <option value="channel">Canal</option>
+          </select>
+        </label>
       </div>
 
       {loading ? (
@@ -298,28 +419,37 @@ function SessionsModule() {
       ) : filtered.length === 0 ? (
         <div className="ops-empty-state">No hi ha sessions per mostrar</div>
       ) : (
-        <div className="ops-list-stack">
-          {filtered.map(session => (
-            <div key={session.id} className="ops-list-card">
-              <div className="ops-list-top">
-                <div>
-                  <div className="ops-list-title">{session.label || session.id}</div>
-                  <div className="ops-list-subtitle">{session.channel || 'sense canal'} · {session.model || 'sense model'}</div>
-                </div>
-                <span className={`ops-status-pill ${session.status || 'unknown'}`}>{session.status || 'unknown'}</span>
+        <div className="ops-grouped-sections">
+          {Object.entries(groupedSessions).map(([group, groupSessions]) => (
+            <section key={group} className="ops-session-group">
+              {groupBy !== 'none' && <div className="ops-group-title">{group} · {groupSessions.length}</div>}
+              <div className="ops-list-stack">
+                {groupSessions.map(session => (
+                  <button key={session.id} className="ops-list-card ops-session-card" onClick={() => setSelectedSession(session)}>
+                    <div className="ops-list-top">
+                      <div>
+                        <div className="ops-list-title">{session.label || session.id}</div>
+                        <div className="ops-list-subtitle">{session.channel || 'sense canal'} · {session.model || 'sense model'}</div>
+                      </div>
+                      <span className={`ops-status-pill ${session.status || 'unknown'}`}>{session.status || 'unknown'}</span>
+                    </div>
+                    <div className="ops-meta-grid compact">
+                      <div><span>Tipus</span><strong>{session.type || 'main'}</strong></div>
+                      <div><span>Inici</span><strong>{formatDate(session.startedAt)}</strong></div>
+                      <div><span>Tokens</span><strong>{(session.totalTokens || 0).toLocaleString()}</strong></div>
+                      <div><span>Runtime</span><strong>{formatRuntime(session.runtimeMs)}</strong></div>
+                    </div>
+                  </button>
+                ))}
               </div>
-              <div className="ops-meta-grid compact">
-                <div><span>Tipus</span><strong>{session.type || 'main'}</strong></div>
-                <div><span>Inici</span><strong>{formatDate(session.startedAt)}</strong></div>
-                <div><span>Tokens</span><strong>{(session.totalTokens || 0).toLocaleString()}</strong></div>
-                <div><span>Runtime</span><strong>{session.runtimeMs ? `${Math.round(session.runtimeMs / 1000)}s` : '—'}</strong></div>
-              </div>
-            </div>
+            </section>
           ))}
         </div>
       )}
 
       <div className="ops-module-footer-note">Main: {mainCount} · Sessions vives: {active}</div>
+
+      {selectedSession && <SessionDetailPanel session={selectedSession} onClose={() => setSelectedSession(null)} />}
     </OpsShell>
   )
 }

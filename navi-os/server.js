@@ -500,6 +500,161 @@ app.get('/api/prototypes', (req, res) => {
   }
 })
 
+app.get('/api/lab/overnight-builds', (req, res) => {
+  try {
+    const jobsData = readJsonSafe('/home/user/.openclaw/cron/jobs.json', { jobs: [] })
+    const reportsIndex = readJsonSafe(join(WORKSPACE, 'navi-os-improvement', 'reports', 'index.json'), { reports: [] })
+
+    const buildItems = []
+
+    for (const job of jobsData.jobs || []) {
+      const title = job.name || 'Unnamed job'
+      const isRelevant = /navi os|overnight|audit|backup|rolling|somiar/i.test(title)
+      if (!isRelevant) continue
+
+      const lastRunAtMs = job.state?.lastRunAtMs || null
+      const nextRunAtMs = job.state?.nextRunAtMs || null
+      const status = !job.enabled ? 'disabled' : (job.state?.lastStatus === 'error' || job.state?.lastRunStatus === 'error' ? 'failed' : 'healthy')
+
+      buildItems.push({
+        id: `cron-${job.id}`,
+        kind: 'cron',
+        title,
+        status,
+        summary: job.description || job.payload?.message?.slice(0, 180) || 'Cron build pipeline',
+        timestamp: lastRunAtMs ? new Date(lastRunAtMs).toISOString() : null,
+        nextRun: nextRunAtMs ? new Date(nextRunAtMs).toISOString() : null,
+        timezone: job.schedule?.tz || 'UTC',
+        schedule: job.schedule?.expr || (job.schedule?.everyMs ? `every ${Math.round(job.schedule.everyMs / 60000)} min` : job.schedule?.kind || '—'),
+        source: 'cron',
+      })
+    }
+
+    for (const report of reportsIndex.reports || []) {
+      const timestamp = report.date
+        ? new Date(`${report.date}T${(report.time || '00:00').replace('.', ':')}:00`).toISOString()
+        : null
+
+      buildItems.push({
+        id: `report-${report.id || report.filename}`,
+        kind: report.type || 'report',
+        title: report.title || report.filename,
+        status: report.type === 'execution' ? 'healthy' : 'info',
+        summary: report.summary || 'Self-improvement report',
+        timestamp,
+        nextRun: null,
+        timezone: 'Europe/Madrid',
+        schedule: report.type || 'report',
+        source: 'self-improvement',
+        filename: report.filename || null,
+      })
+    }
+
+    buildItems.sort((a, b) => new Date(b.timestamp || 0).getTime() - new Date(a.timestamp || 0).getTime())
+    res.json({ builds: buildItems.slice(0, 60) })
+  } catch (err) {
+    res.status(500).json({ error: err.message, builds: [] })
+  }
+})
+
+app.get('/api/lab/build-logs', (req, res) => {
+  try {
+    const jobsData = readJsonSafe('/home/user/.openclaw/cron/jobs.json', { jobs: [] })
+    const reportsIndex = readJsonSafe(join(WORKSPACE, 'navi-os-improvement', 'reports', 'index.json'), { reports: [] })
+    const cronRunDir = '/home/user/.openclaw/cron/runs'
+    const improvementLogsDir = join(WORKSPACE, 'navi-os-improvement', 'logs')
+    const reportsDir = join(WORKSPACE, 'navi-os-improvement', 'reports')
+    const logs = []
+    const jobNameMap = new Map((jobsData.jobs || []).map(job => [job.id, job.name || job.id]))
+
+    if (existsSync(cronRunDir)) {
+      const runFiles = readdirSync(cronRunDir).filter(f => f.endsWith('.jsonl'))
+      for (const file of runFiles) {
+        const lines = readFileSync(join(cronRunDir, file), 'utf-8').split('\n').filter(Boolean).slice(-5)
+        for (const line of lines) {
+          try {
+            const entry = JSON.parse(line)
+            const timestamp = new Date(entry.ts || entry.runAtMs || Date.now()).toISOString()
+            const title = jobNameMap.get(entry.jobId) || entry.jobId || file
+            const content = [
+              `# ${title}`,
+              '',
+              `**Date:** ${timestamp}`,
+              `**Type:** Cron Run`,
+              `**Status:** ${entry.status || 'unknown'}`,
+              `**Model:** ${entry.model || '—'}`,
+              `**Duration:** ${entry.durationMs ? `${Math.round(entry.durationMs / 1000)}s` : '—'}`,
+              '',
+              '## Summary',
+              '',
+              entry.summary || entry.error || `${entry.action || 'run'} completed`,
+            ].join('\n')
+
+            logs.push({
+              id: `cron-run-${entry.ts || entry.runAtMs || Math.random()}`,
+              type: 'cron',
+              source: 'cron',
+              title,
+              status: entry.status || 'unknown',
+              timestamp,
+              summary: entry.summary || entry.error || `${entry.action || 'run'} completed`,
+              meta: `${entry.model || '—'} · ${entry.durationMs ? `${Math.round(entry.durationMs / 1000)}s` : '—'}`,
+              content,
+            })
+          } catch {}
+        }
+      }
+    }
+
+    if (existsSync(improvementLogsDir)) {
+      const files = readdirSync(improvementLogsDir).filter(f => f.endsWith('.log'))
+      for (const file of files) {
+        const fullPath = join(improvementLogsDir, file)
+        const stat = statSync(fullPath)
+        const content = readFileSync(fullPath, 'utf-8')
+        const summary = content.split('\n').filter(Boolean).slice(0, 8).join(' ').slice(0, 320)
+        logs.push({
+          id: `improvement-log-${file}`,
+          type: 'self-improvement',
+          source: 'self-improvement',
+          title: file,
+          status: 'info',
+          timestamp: stat.mtime.toISOString(),
+          summary: summary || 'Self-improvement log',
+          meta: 'local filesystem log',
+          content: `# ${file}\n\n${content}`,
+        })
+      }
+    }
+
+    for (const report of reportsIndex.reports || []) {
+      const timestamp = report.date
+        ? new Date(`${report.date}T${(report.time || '00:00').replace('.', ':')}:00`).toISOString()
+        : new Date().toISOString()
+      const reportPath = report.filename ? join(reportsDir, report.filename) : null
+      const fileContent = reportPath && existsSync(reportPath)
+        ? readFileSync(reportPath, 'utf-8')
+        : `# ${report.title || 'Report'}\n\n${report.summary || 'Self-improvement report'}`
+      logs.push({
+        id: `report-${report.id || report.filename}`,
+        type: 'report',
+        source: 'self-improvement',
+        title: report.title || report.filename || 'Report',
+        status: report.type === 'execution' ? 'healthy' : 'info',
+        timestamp,
+        summary: report.summary || 'Self-improvement report',
+        meta: report.type || 'report',
+        content: fileContent,
+      })
+    }
+
+    logs.sort((a, b) => new Date(b.timestamp || 0).getTime() - new Date(a.timestamp || 0).getTime())
+    res.json({ logs: logs.slice(0, 120) })
+  } catch (err) {
+    res.status(500).json({ error: err.message, logs: [] })
+  }
+})
+
 app.get('/api/ideas', (req, res) => {
   try {
     const dataFile = join(WORKSPACE, 'data', 'ideas.json')

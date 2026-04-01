@@ -3,13 +3,14 @@
     {
       "id": "proto-001",
       "name": "Navi OS v2",
-      "one-liner": "Personal operating system dashboard with React",
-      "port": 8100,
+      "one-liner": "Executive assistant operating system dashboard",
+      "port": 8101,
+      "previewUrl": "http://n100.casa:8101",
       "status": "running",
       "score": 92,
-      "lastBuild": "2026-03-30T08:00:00Z",
-      "description": "Full React rewrite of the personal OS dashboard. Features module system, persistent memory viewer, and Lab experimentation workspace.",
-      "stack": ["React 19", "Vite", "Lucide Icons"]
+      "lastBuild": "2026-04-01T21:00:00Z",
+      "description": "Executive assistant operating system — prototype preview endpoint for proposed improvements.",
+      "stack": ["React 19", "Vite", "Lucide Icons", "Express"]
     },
     {
       "id": "proto-002",

@@ -1,744 +1,549 @@
-.module-view {
-  max-width: 1000px;
+.module-view.lab {
+  max-width: 1380px;
   margin: 0 auto;
 }
 
-.dashboard-title {
-  font-family: 'Ubuntu', sans-serif;
-  font-size: 28px;
-  font-weight: 300;
-  margin-bottom: 32px;
-  text-align: center;
+.lab-dashboard-module {
+  padding-bottom: 28px;
 }
 
-.features-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
-}
-
-/* Quick Actions */
-.quick-actions {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 32px;
-}
-
-.action-btn {
-  flex: 1;
-  background: rgba(0, 255, 65, 0.08);
-  border: 1px solid rgba(0, 255, 65, 0.2);
-  border-radius: 12px;
-  padding: 16px 20px;
-  color: var(--lab-green);
-  font-family: 'Ubuntu', sans-serif;
-  font-size: 14px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  transition: all 0.3s;
-}
-
-.action-btn:hover {
-  background: rgba(0, 255, 65, 0.15);
-  border-color: rgba(0, 255, 65, 0.4);
-}
-
-/* Prototypes Grid */
-.prototypes-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 20px;
-}
-
-.prototype-card {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
-  padding: 20px;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.prototype-card:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(0, 255, 65, 0.3);
-  transform: translateY(-2px);
-}
-
-.proto-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-
-.proto-status {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-}
-
-.proto-status-text {
-  font-family: 'Ubuntu Mono', monospace;
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.5);
-  text-transform: uppercase;
-}
-
-.prototype-card h3 {
-  font-family: 'Ubuntu', sans-serif;
-  font-size: 16px;
-  font-weight: 500;
-  color: #fff;
-  margin-bottom: 8px;
-}
-
-.prototype-card p {
-  font-family: 'Ubuntu Mono', monospace;
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.6);
-  margin-bottom: 16px;
-}
-
-.proto-progress {
-  height: 4px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 2px;
-  overflow: hidden;
-  margin-bottom: 12px;
-}
-
-.proto-progress-bar {
-  height: 100%;
-  background: var(--lab-green);
-  border-radius: 2px;
-  transition: width 0.3s;
-}
-
-.proto-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-family: 'Ubuntu Mono', monospace;
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.4);
-}
-
-/* Prototype Detail */
-.prototype-detail {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-.detail-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.detail-status {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-family: 'Ubuntu Mono', monospace;
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.7);
-  text-transform: uppercase;
-}
-
-.status-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-}
-
-.detail-actions {
-  display: flex;
-  gap: 10px;
-}
-
-.detail-btn {
-  background: rgba(0, 255, 65, 0.15);
-  border: 1px solid rgba(0, 255, 65, 0.3);
-  border-radius: 8px;
-  padding: 8px 16px;
-  color: var(--lab-green);
-  font-family: 'Ubuntu', sans-serif;
-  font-size: 13px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  transition: all 0.2s;
-}
-
-.detail-btn:hover {
-  background: rgba(0, 255, 65, 0.25);
-}
-
-.detail-btn.secondary {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.15);
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.detail-btn.secondary:hover {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.detail-description {
-  font-family: 'Ubuntu Mono', monospace;
-  font-size: 14px;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.detail-progress {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  font-family: 'Ubuntu Mono', monospace;
-  font-size: 13px;
-}
-
-.progress-bar {
-  flex: 1;
-  height: 8px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.progress-fill {
-  height: 100%;
-  background: var(--lab-green);
-  border-radius: 4px;
-}
-
-.detail-section h4 {
-  font-family: 'Ubuntu', sans-serif;
-  font-size: 13px;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.5);
-  text-transform: uppercase;
-  margin-bottom: 12px;
-}
-
-.build-history {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.build-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 14px;
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 8px;
-  font-family: 'Ubuntu Mono', monospace;
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.6);
-}
-
-/* Build Logs List */
-.build-logs-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.log-item {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 14px 16px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 12px;
-}
-
-.log-icon {
-  color: rgba(255, 255, 255, 0.4);
-}
-
-.log-content {
-  flex: 1;
-}
-
-.log-message {
-  font-family: 'Ubuntu Mono', monospace;
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.85);
-  margin-bottom: 4px;
-}
-
-.log-timestamp {
-  font-family: 'Ubuntu Mono', monospace;
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.4);
-}
-
-.log-status {
-  font-family: 'Ubuntu Mono', monospace;
-  font-size: 11px;
-  padding: 4px 10px;
-  border-radius: 6px;
-}
-
-.log-status.success {
-  background: rgba(0, 255, 65, 0.15);
-  color: var(--lab-green);
-}
-
-.log-status.error {
-  background: rgba(255, 100, 100, 0.15);
-  color: #ff6b6b;
-}
-
-/* ─── Lab Nav ───────────────────────────────────────────────────────────────── */
-
-.lab-nav {
+.lab-top-tabs.minimal {
   display: flex;
   gap: 8px;
-  margin-bottom: 24px;
+  margin-bottom: 10px;
   flex-wrap: wrap;
 }
 
-.lab-nav-btn {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+.lab-top-tab.minimal {
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.04);
+  color: rgba(255,255,255,0.72);
   border-radius: 10px;
-  padding: 10px 18px;
-  color: rgba(255, 255, 255, 0.7);
-  font-family: 'Ubuntu', sans-serif;
-  font-size: 13px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.lab-nav-btn:hover {
-  background: rgba(0, 255, 65, 0.1);
-  border-color: rgba(0, 255, 65, 0.3);
-  color: #fff;
-}
-
-.lab-nav-btn.active {
-  background: rgba(0, 255, 65, 0.15);
-  border-color: rgba(0, 255, 65, 0.4);
-  color: var(--lab-green);
-}
-
-/* ─── Lab Command Center ─────────────────────────────────────────────────────── */
-
-.lab-command-center {
-  padding: 8px 0;
-}
-
-.tiles-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-}
-
-@media (max-width: 600px) {
-  .tiles-grid { grid-template-columns: 1fr; }
-}
-
-.lab-tile {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 18px;
-  padding: 24px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  transition: all 0.3s;
-}
-
-.lab-tile:hover {
-  background: rgba(0, 255, 65, 0.06);
-  border-color: rgba(0, 255, 65, 0.25);
-  transform: translateY(-2px);
-}
-
-.tile-icon {
-  flex-shrink: 0;
-}
-
-.tile-info {
-  flex: 1;
-}
-
-.tile-info h3 {
-  font-family: 'Ubuntu', sans-serif;
-  font-size: 16px;
-  font-weight: 500;
-  color: #fff;
-  margin-bottom: 6px;
-}
-
-.tile-count {
-  font-family: 'Ubuntu Mono', monospace;
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.5);
-  display: block;
-  margin-bottom: 4px;
-}
-
-.tile-latest {
-  font-family: 'Ubuntu Mono', monospace;
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.35);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 220px;
-}
-
-.tile-arrow {
-  color: rgba(255, 255, 255, 0.3);
-  flex-shrink: 0;
-}
-
-/* ─── Prototype Portfolio ───────────────────────────────────────────────────── */
-
-.prototype-portfolio {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.proto-port {
-  font-family: 'Ubuntu Mono', monospace;
-  font-size: 10px;
-  color: var(--lab-green);
-  background: rgba(0, 255, 65, 0.1);
-  padding: 2px 6px;
-  border-radius: 4px;
-  margin-left: auto;
-}
-
-.proto-name {
-  font-family: 'Ubuntu', sans-serif;
-  font-size: 15px;
-  font-weight: 500;
-  color: #fff;
-  margin-bottom: 6px;
-}
-
-.proto-one-liner {
-  font-family: 'Ubuntu Mono', monospace;
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.55);
-  margin-bottom: 10px;
-  line-height: 1.5;
-}
-
-.proto-score {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-family: 'Ubuntu Mono', monospace;
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.7);
-  margin-bottom: 12px;
-}
-
-/* ─── Ideas Gallery ─────────────────────────────────────────────────────────── */
-
-.ideas-gallery {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.ideas-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
-}
-
-.idea-card {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 14px;
-  padding: 18px;
-  transition: all 0.2s;
-}
-
-.idea-card:hover {
-  background: rgba(255, 184, 0, 0.05);
-  border-color: rgba(255, 184, 0, 0.2);
-}
-
-.idea-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.track-badge {
-  font-family: 'Ubuntu Mono', monospace;
-  font-size: 10px;
-  padding: 3px 8px;
-  border-radius: 5px;
-  text-transform: uppercase;
-}
-
-.track-badge.track-a {
-  background: rgba(0, 180, 216, 0.15);
-  color: var(--brain-sky);
-}
-
-.track-badge.track-b {
-  background: rgba(255, 184, 0, 0.15);
-  color: #ffb800;
-}
-
-.idea-impact {
-  font-family: 'Ubuntu Mono', monospace;
-  font-size: 11px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  text-transform: uppercase;
-}
-
-.idea-title {
+  padding: 9px 16px;
   font-family: 'Ubuntu', sans-serif;
   font-size: 14px;
-  font-weight: 500;
-  color: #fff;
-  margin-bottom: 8px;
-}
-
-.idea-description {
-  font-family: 'Ubuntu Mono', monospace;
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.55);
-  line-height: 1.6;
-  margin-bottom: 12px;
-}
-
-.idea-footer {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-family: 'Ubuntu Mono', monospace;
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.35);
-  flex-wrap: wrap;
-}
-
-.idea-date {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.idea-category {
-  text-transform: capitalize;
-}
-
-.idea-status {
-  margin-left: auto;
-  text-transform: capitalize;
-  color: rgba(255, 255, 255, 0.4);
-}
-
-.idea-actions {
-  display: flex;
-  gap: 8px;
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.idea-btn {
-  flex: 1;
-  padding: 8px 12px;
-  border-radius: 8px;
-  font-family: 'Ubuntu', sans-serif;
-  font-size: 12px;
-  font-weight: 500;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
-  border: none;
+}
+
+.lab-top-tab.minimal:hover {
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+}
+
+.lab-top-tab.minimal.active {
+  background: linear-gradient(180deg, rgba(102, 255, 185, 0.16), rgba(62, 164, 118, 0.14));
+  border-color: rgba(102,255,185,0.22);
+  color: #d8ffee;
+}
+
+.lab-content-shell {
+  min-height: 660px;
+}
+
+.lab-shell {
+  background: radial-gradient(circle at center, rgba(18, 86, 92, 0.18), transparent 30%), linear-gradient(180deg, rgba(11, 24, 49, 0.97), rgba(6, 15, 36, 0.98));
+  border: 1px solid rgba(108, 138, 186, 0.12);
+  border-radius: 22px;
+  padding: 18px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.03), 0 14px 36px rgba(0,0,0,0.26);
+}
+
+.lab-overview-shell {
+  min-height: 620px;
+}
+
+.lab-overview-header {
+  margin-bottom: 18px;
+}
+
+.lab-overview-title {
   display: flex;
   align-items: center;
+  gap: 12px;
+  color: #7bf7b0;
+}
+
+.lab-overview-title h1,
+.lab-section-title h2,
+.lab-summary-title h3,
+.lab-prototype-line-card strong,
+.lab-log-stream-item strong,
+.lab-prototype-meta-bar h3,
+.lab-build-log-header h3,
+.lab-window-appname {
+  margin: 0;
+  color: #fff;
+  font-family: 'Ubuntu', sans-serif;
+}
+
+.lab-overview-title h1 {
+  font-size: 34px;
+  font-weight: 700;
+}
+
+.lab-overview-title p,
+.lab-summary-title p,
+.lab-prototype-line-card p,
+.lab-log-stream-item p,
+.lab-prototype-meta-bar p,
+.lab-window-subbar,
+.lab-build-nav-subtitle,
+.lab-build-log-meta-line,
+.lab-empty-copy {
+  margin: 4px 0 0;
+  color: rgba(255,255,255,0.56);
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 12px;
+}
+
+.lab-overview-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.lab-summary-card {
+  text-align: left;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.05);
+  border-radius: 18px;
+  padding: 18px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.lab-summary-card:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(123,247,176,0.18);
+  transform: translateY(-1px);
+}
+
+.lab-summary-header {
+  margin-bottom: 14px;
+}
+
+.lab-summary-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.lab-summary-icon,
+.lab-section-title svg {
+  color: #6ff5a8;
+}
+
+.lab-summary-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: rgba(111,245,168,0.09);
+  border: 1px solid rgba(111,245,168,0.14);
+}
+
+.lab-summary-body {
+  background: rgba(255,255,255,0.035);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.lab-summary-count {
+  color: #fff;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 14px;
+}
+
+.lab-summary-list {
+  min-height: 42px;
+}
+
+.lab-summary-logline,
+.lab-summary-footnote,
+.lab-prototype-line-meta,
+.lab-log-stream-meta,
+.lab-open-external,
+.lab-build-log-meta-line {
+  font-family: 'Ubuntu Mono', monospace;
+}
+
+.lab-summary-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.lab-summary-row strong,
+.lab-summary-logline,
+.lab-build-nav-title {
+  color: #fff;
+  font-size: 13px;
+}
+
+.lab-summary-logline {
+  color: rgba(255,255,255,0.76);
+}
+
+.lab-summary-footnote {
+  margin-top: 16px;
+  font-size: 11px;
+  color: rgba(255,255,255,0.44);
+}
+
+.lab-pill {
+  display: inline-flex;
+  align-items: center;
   justify-content: center;
-  gap: 6px;
+  border-radius: 999px;
+  padding: 4px 10px;
+  border: 1px solid rgba(255,255,255,0.08);
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 11px;
+  text-transform: lowercase;
 }
 
-.idea-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+.lab-pill.running {
+  color: #72f7b6;
+  background: rgba(114,247,182,0.12);
 }
 
-.idea-btn.accept {
-  background: rgba(48, 209, 88, 0.15);
-  color: #30d158;
-  border: 1px solid rgba(48, 209, 88, 0.25);
+.lab-pill.failed {
+  color: #ff8e8e;
+  background: rgba(255,142,142,0.12);
 }
 
-.idea-btn.accept:hover:not(:disabled) {
-  background: rgba(48, 209, 88, 0.25);
+.lab-pill.muted {
+  color: #aeb8c8;
+  background: rgba(174,184,200,0.12);
 }
 
-.idea-btn.reject {
-  background: rgba(255, 69, 58, 0.1);
-  color: #ff453a;
-  border: 1px solid rgba(255, 69, 58, 0.2);
+.lab-pill.neutral {
+  color: rgba(255,255,255,0.74);
+  background: rgba(255,255,255,0.08);
 }
 
-.idea-btn.reject:hover:not(:disabled) {
-  background: rgba(255, 69, 58, 0.2);
-}
-
-/* ─── Research Dashboard ─────────────────────────────────────────────────────── */
-
-.research-dashboard {
+.lab-section-header {
   display: flex;
-  flex-direction: column;
-  gap: 20px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
 }
 
-.research-placeholder {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px dashed rgba(0, 255, 65, 0.2);
-  border-radius: 16px;
-  padding: 32px;
-  text-align: center;
+.lab-section-title {
   display: flex;
-  flex-direction: column;
   align-items: center;
   gap: 10px;
 }
 
-.research-placeholder h4 {
-  font-family: 'Ubuntu', sans-serif;
-  font-size: 16px;
+.lab-refresh-btn,
+.lab-open-external {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.8);
+  border-radius: 10px;
+  padding: 9px 14px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.lab-refresh-btn:hover,
+.lab-open-external:hover {
+  background: rgba(255,255,255,0.08);
   color: #fff;
 }
 
-.research-placeholder p {
-  font-family: 'Ubuntu Mono', monospace;
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.5);
-}
-
-.research-placeholder .sub {
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.3);
-}
-
-.timeline-placeholder {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 14px;
-  padding: 20px;
-}
-
-.timeline-placeholder h4 {
-  font-family: 'Ubuntu', sans-serif;
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.6);
-  text-transform: uppercase;
-  margin-bottom: 16px;
-}
-
-.timeline-item {
-  display: flex;
-  gap: 14px;
-  align-items: flex-start;
-}
-
-.timeline-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--lab-green);
-  margin-top: 4px;
-  flex-shrink: 0;
-}
-
-.timeline-content {
+.lab-prototype-list-view,
+.lab-log-stream {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 12px;
+}
+
+.lab-prototype-line-card,
+.lab-log-stream-item,
+.lab-build-nav-item {
+  text-align: left;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.05);
+  border-radius: 16px;
+  padding: 16px;
+  transition: all 0.18s ease;
+}
+
+.lab-prototype-line-card,
+.lab-build-nav-item {
+  cursor: pointer;
+}
+
+.lab-prototype-line-card:hover,
+.lab-build-nav-item:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(123,247,176,0.18);
+  transform: translateY(-1px);
+}
+
+.lab-build-nav-item.active {
+  background: linear-gradient(180deg, rgba(111,245,168,0.12), rgba(66,134,100,0.14));
+  border-color: rgba(111,245,168,0.22);
+  box-shadow: inset 3px 0 0 #6ff5a8;
+}
+
+.lab-prototype-line-top,
+.lab-log-stream-top,
+.lab-prototype-meta-bar,
+.lab-window-topbar,
+.lab-build-log-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.lab-prototype-line-card strong {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.lab-prototype-line-meta,
+.lab-log-stream-meta,
+.lab-build-log-meta-line {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+  font-size: 11px;
+  color: rgba(255,255,255,0.44);
+}
+
+.lab-log-stream-item strong {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.lab-log-stream-item p {
   font-family: 'Ubuntu Mono', monospace;
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.6;
 }
 
-.timeline-date {
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.35);
+.lab-build-logs-layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 16px;
+  min-height: 620px;
 }
 
-/* ─── Overnight Section ────────────────────────────────────────────────────── */
+.lab-build-logs-sidebar,
+.lab-build-log-reader {
+  background: rgba(255,255,255,0.035);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 16px;
+}
 
-.overnight-section {
+.lab-build-logs-sidebar {
+  padding: 14px;
+}
+
+.lab-sidebar-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+  color: rgba(255,255,255,0.58);
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.lab-builds-nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 560px;
+  overflow-y: auto;
+}
+
+.lab-build-log-reader {
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.lab-build-log-content {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-top: 16px;
+}
+
+.lab-window-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  height: 100%;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 18px;
+  overflow: hidden;
+  background: rgba(7, 14, 28, 0.98);
+}
+
+.lab-window-topbar {
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.03);
+}
+
+.lab-window-left,
+.lab-window-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.lab-window-appname {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.lab-window-subbar {
+  padding: 10px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.02);
+}
+
+.lab-live-preview-frame-wrap {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  background: rgba(0,0,0,0.2);
+}
+
+.lab-live-preview-frame-wrap.windowed {
+  border-top: 0;
+  border-radius: 0;
+}
+
+.lab-live-preview-frame {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #081224;
+}
+
+.lab-prototype-fallback,
+.lab-empty-state {
+  min-height: 120px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 300px;
-  gap: 14px;
+  gap: 10px;
   text-align: center;
-  padding: 40px;
-  border-radius: 20px;
-  border: 2px dashed rgba(0, 180, 216, 0.25);
+  color: rgba(255,255,255,0.5);
+  background: rgba(255,255,255,0.04);
+  border: 1px dashed rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 20px;
 }
 
-.overnight-section h3 {
-  font-family: 'Ubuntu', sans-serif;
-  font-size: 18px;
-  color: #fff;
-}
-
-.overnight-section p {
+.lab-markdown-body {
   font-family: 'Ubuntu Mono', monospace;
   font-size: 13px;
-  color: rgba(255, 255, 255, 0.5);
+  line-height: 1.9;
+  color: rgba(255,255,255,0.88);
 }
 
-.overnight-section .sub {
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.3);
-}
-
-/* ─── Shared ─────────────────────────────────────────────────────────────────── */
-
-.dot {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-}
-
-.dot.running { background: #00ff41; }
-.dot.stopped { background: #ffb800; }
-.dot.archived { background: #606070; }
-
-.empty-state {
-  grid-column: 1 / -1;
-  text-align: center;
-  padding: 40px;
-  color: rgba(255, 255, 255, 0.3);
+.lab-markdown-body h1,
+.lab-markdown-body h2,
+.lab-markdown-body h3,
+.lab-markdown-body h4 {
+  color: #fff;
   font-family: 'Ubuntu', sans-serif;
-  font-size: 14px;
+  line-height: 1.3;
+  margin: 22px 0 10px;
 }
 
-.green { color: #00ff41; }
-.amber { color: #ffb800; }
-.sky { color: #00b4d8; }
-.purple { color: #b388ff; }
+.lab-markdown-body h1 { font-size: 28px; font-weight: 700; }
+.lab-markdown-body h2 {
+  font-size: 20px;
+  font-weight: 700;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.lab-markdown-body h3 { font-size: 16px; font-weight: 700; }
+.lab-markdown-body p { margin-bottom: 12px; }
+.lab-markdown-body ul, .lab-markdown-body ol { margin: 10px 0 14px 22px; }
+.lab-markdown-body li { margin-bottom: 6px; }
+.lab-markdown-body li::marker { color: #7bf7b0; }
+.lab-markdown-body code {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 2px 6px;
+  border-radius: 6px;
+  color: #9fe3ff;
+  font-size: 12px;
+}
+.lab-markdown-body pre,
+.lab-pre-fallback {
+  background: rgba(0,0,0,0.28);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 16px;
+  overflow-x: auto;
+  margin: 14px 0;
+  color: rgba(255,255,255,0.88);
+}
+.lab-markdown-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 14px 0;
+}
+.lab-markdown-body th,
+.lab-markdown-body td {
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  padding: 10px 12px;
+  text-align: left;
+}
+.lab-markdown-body th {
+  color: #fff;
+  font-family: 'Ubuntu', sans-serif;
+  background: rgba(255,255,255,0.04);
+}
+
+@media (max-width: 920px) {
+  .lab-overview-grid,
+  .lab-build-logs-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .lab-section-header,
+  .lab-prototype-line-top,
+  .lab-log-stream-top,
+  .lab-prototype-meta-bar,
+  .lab-window-topbar,
+  .lab-build-log-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .lab-overview-title h1 {
+    font-size: 28px;
+  }
+}

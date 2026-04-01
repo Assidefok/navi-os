@@ -185,6 +185,56 @@
   background: rgba(255, 184, 0, 0.1);
 }
 
+.ops-session-controls {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.ops-session-controls label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ops-session-controls span {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.45);
+  text-transform: uppercase;
+}
+
+.ops-session-controls select {
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.04);
+  color: #fff;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-family: 'Ubuntu', sans-serif;
+}
+
+.ops-grouped-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.ops-session-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ops-group-title {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.46);
+}
+
 .ops-list-stack {
   display: flex;
   flex-direction: column;
@@ -201,6 +251,19 @@
 
 .ops-list-card {
   padding: 16px;
+}
+
+.ops-session-card {
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.ops-session-card:hover {
+  background: rgba(255,255,255,0.07);
+  border-color: rgba(255, 184, 0, 0.18);
+  transform: translateY(-1px);
 }
 
 .ops-list-top {
@@ -418,6 +481,124 @@
   color: #ffe4e1;
   font-family: 'Ubuntu Mono', monospace;
   font-size: 12px;
+}
+
+.ops-session-detail-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 8, 16, 0.72);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 200;
+}
+
+.ops-session-detail-panel {
+  width: min(1100px, 96vw);
+  max-height: 88vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, rgba(25, 26, 34, 0.98), rgba(13, 14, 19, 0.98));
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 18px 44px rgba(0,0,0,0.45);
+}
+
+.ops-session-detail-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.ops-detail-close {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.04);
+  color: #fff;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.ops-detail-close:hover {
+  background: rgba(255,255,255,0.08);
+}
+
+.ops-session-detail-meta {
+  margin-bottom: 16px;
+}
+
+.ops-session-messages-block {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1;
+}
+
+.ops-session-messages-title {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 12px;
+}
+
+.ops-session-messages-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.ops-session-message {
+  background: rgba(255,255,255,0.035);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 14px;
+  padding: 14px;
+}
+
+.ops-session-message.user {
+  border-left: 3px solid #60a5fa;
+}
+
+.ops-session-message.assistant {
+  border-left: 3px solid #f59e0b;
+}
+
+.ops-session-message.toolResult {
+  border-left: 3px solid #94a3b8;
+}
+
+.ops-session-message-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.ops-session-message-role,
+.ops-session-message-time {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+  color: rgba(255,255,255,0.46);
+}
+
+.ops-session-message-content {
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: rgba(255,255,255,0.86);
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  line-height: 1.6;
 }
 
 .ops-activity-grid {
@@ -870,7 +1051,8 @@
   .ops-meta-grid.compact,
   .ops-activity-grid,
   .ops-cron-meta-cards,
-  .ops-cron-footer-row {
+  .ops-cron-footer-row,
+  .ops-session-controls {
     grid-template-columns: 1fr 1fr;
   }
 }
@@ -888,14 +1070,23 @@
   .ops-activity-grid,
   .ops-cron-meta-cards,
   .ops-cron-footer-row,
-  .ops-cron-grid {
+  .ops-cron-grid,
+  .ops-session-controls {
     grid-template-columns: 1fr;
   }
 
   .ops-module-header,
   .ops-list-top,
-  .ops-cron-header {
+  .ops-cron-header,
+  .ops-session-detail-header,
+  .ops-session-message-meta {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .ops-session-detail-panel {
+    width: 100%;
+    max-height: 92vh;
+    padding: 16px;
   }
 }

@@ -1,0 +1,148 @@
+{
+  "queue": "navi-os-improvement",
+  "generated": "2026-04-01T21:00:00Z",
+  "date": "2026-04-01",
+  "time": "23:00",
+  "timezone": "Europe/Madrid",
+  "improvements": [
+    {
+      "id": "IMP-2026-04-01-01",
+      "title": "PM2 Ecosystem Fix: Separar API i Vite en processos independents",
+      "area": "DevOps / Deployment",
+      "type": "bug",
+      "priority": "CRITICAL",
+      "priority_order": 1,
+      "impact": "Mitjà–Alt | L'API i Vite share procés — quan un peta l'altre es perd",
+      "implementation_steps": [
+        "Editar ecosystem.config.cjs",
+        "Crear vite-preview.js script separat",
+        "PM2 app 1: navi-os-api → server.js (port 3001)",
+        "PM2 app 2: navi-os-vite → vite-preview.js (port 8100)",
+        "Actualitzar package.json restart scripts"
+      ],
+      "files_affected": [
+        "ecosystem.config.cjs",
+        "vite-preview.js (nou)",
+        "package.json"
+      ],
+      "estimated_minutes": 30,
+      "risk": "Baix | Canvi de configuració, fàcil rollback",
+      "status": "pending"
+    },
+    {
+      "id": "IMP-2026-04-01-02",
+      "title": "CSS Architecture: Split fitxers >800 línies en components",
+      "area": "Frontend / CSS",
+      "type": "optimization",
+      "priority": "ALT",
+      "priority_order": 2,
+      "impact": "Baix–Mitjà | Facilita manteniment, no canvia funcionalitat",
+      "implementation_steps": [
+        "Analitzar Ops.css (1092l), AutomationsBoard.css (954l), MissionControl.css (830l)",
+        "Extraure seccions CSS a fitxers parcials per component",
+        "Importar nous CSS als components respectius",
+        "Eliminar CSS originals un cop verificat"
+      ],
+      "files_affected": [
+        "src/modules/Ops.css",
+        "src/modules/Ops/Automations/AutomationsBoard.css",
+        "src/modules/MissionControl.css",
+        "src/components/* (on es moguin els CSS)"
+      ],
+      "estimated_minutes": 60,
+      "risk": "Mol baix | Reorganització pura, verificable visualment",
+      "status": "pending"
+    },
+    {
+      "id": "IMP-2026-04-01-03",
+      "title": "Replace execSync amb exec (async) a server.js",
+      "area": "Backend / Performance",
+      "type": "optimization",
+      "priority": "ALT",
+      "priority_order": 3,
+      "impact": "Mitjà | execSync bloqeja event loop — càrrega alta causa timeouts",
+      "implementation_steps": [
+        "Cercar totes les crides execSync a server.js",
+        "Crear wrapper execAsync amb Promise i timeout 15s",
+        "Convertir rutes a async",
+        "Afegir try/catch amb res.status(500) per errors",
+        "Verificar rutes manualment (curl)"
+      ],
+      "files_affected": [
+        "server.js"
+      ],
+      "estimated_minutes": 45,
+      "risk": "Mitjà | Canvi sync→async en rutes, verificar bé",
+      "status": "pending"
+    },
+    {
+      "id": "IMP-2026-04-01-04",
+      "title": "Consolidar Markdown utils i extreure shared format helpers",
+      "area": "Frontend / Code Quality",
+      "type": "optimization",
+      "priority": "ALT",
+      "priority_order": 4,
+      "impact": "Baix | Elimina duplicació, facilita canvis futurs",
+      "implementation_steps": [
+        "Crear src/utils/markdown.js amb renderMarkdown centralitzada",
+        "Reemplaçar dangerouslySetInnerHTML a Brain.jsx i MissionControl.jsx",
+        "Crear src/utils/format.js amb formatDate/formatDateTime",
+        "Eliminar duplicats de cada component",
+        "Verificar visualment abans/després"
+      ],
+      "files_affected": [
+        "src/utils/markdown.js (nou)",
+        "src/utils/format.js (nou)",
+        "src/modules/Brain.jsx",
+        "src/modules/MissionControl.jsx"
+      ],
+      "estimated_minutes": 30,
+      "risk": "Baix | Refactor local, fàcil verificar",
+      "status": "pending"
+    },
+    {
+      "id": "IMP-2026-04-01-05",
+      "title": "Afegir AbortController + Timeout a tots els fetch calls",
+      "area": "Frontend / Reliability",
+      "type": "bug",
+      "priority": "MITJÀ",
+      "priority_order": 5,
+      "impact": "Mitjà | Sense timeouts, API lenta penja UI indefinidament",
+      "implementation_steps": [
+        "Crear src/utils/api.js amb fetchWithTimeout helper (default 8s)",
+        "Substituir fetch() a tots els components: Status, Sync, SomiarSection, Standups, Logs, Brain, MissionControl, Inbox, AutomationsBoard",
+        "Afegir error state handler a cada component",
+        "Verificar que errors es mostren correctament"
+      ],
+      "files_affected": [
+        "src/utils/api.js (nou)",
+        "src/components/Status.jsx",
+        "src/components/Sync.jsx",
+        "src/modules/Ops/Automations/SomiarSection.jsx",
+        "src/modules/Ops/Standups.jsx",
+        "src/modules/Lab/Logs.jsx",
+        "src/modules/Brain.jsx",
+        "src/modules/MissionControl.jsx",
+        "src/modules/Lab/Inbox.jsx",
+        "src/modules/Ops/Automations/AutomationsBoard.jsx"
+      ],
+      "estimated_minutes": 45,
+      "risk": "Baix | Infraestructura fetch, fàcil rollback",
+      "status": "pending"
+    }
+  ],
+  "summary": {
+    "total": 5,
+    "by_priority": {
+      "CRITICAL": 1,
+      "ALT": 3,
+      "MITJÀ": 1
+    },
+    "by_type": {
+      "bug": 2,
+      "optimization": 3
+    },
+    "estimated_total_minutes": 210,
+    "recommended_order": ["IMP-2026-04-01-01", "IMP-2026-04-01-03", "IMP-2026-04-01-04", "IMP-2026-04-01-02", "IMP-2026-04-01-05"]
+  }
+}
