@@ -1,0 +1,73 @@
+.feature-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 24px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  padding: 2px;
+  background: transparent;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.feature-card:hover::before {
+  opacity: 1;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+}
+
+.feature-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-2px);
+}
+
+.feature-card .feature-icon {
+  margin-bottom: 14px;
+  display: flex;
+  justify-content: center;
+}
+
+.feature-card h3 {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #fff;
+}
+
+.feature-card p {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Color variants */
+.feature-card.amber .feature-icon {
+  color: var(--ops-amber);
+  filter: drop-shadow(0 0 8px var(--ops-glow));
+}
+
+.feature-card.sky .feature-icon {
+  color: var(--brain-sky);
+  filter: drop-shadow(0 0 8px var(--brain-glow));
+}
+
+.feature-card.green .feature-icon {
+  color: var(--lab-green);
+  filter: drop-shadow(0 0 8px var(--lab-glow));
+}

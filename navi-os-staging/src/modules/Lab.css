@@ -1,0 +1,549 @@
+.module-view.lab {
+  max-width: 1380px;
+  margin: 0 auto;
+}
+
+.lab-dashboard-module {
+  padding-bottom: 28px;
+}
+
+.lab-top-tabs.minimal {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.lab-top-tab.minimal {
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.04);
+  color: rgba(255,255,255,0.72);
+  border-radius: 10px;
+  padding: 9px 16px;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.lab-top-tab.minimal:hover {
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+}
+
+.lab-top-tab.minimal.active {
+  background: linear-gradient(180deg, rgba(102, 255, 185, 0.16), rgba(62, 164, 118, 0.14));
+  border-color: rgba(102,255,185,0.22);
+  color: #d8ffee;
+}
+
+.lab-content-shell {
+  min-height: 660px;
+}
+
+.lab-shell {
+  background: radial-gradient(circle at center, rgba(18, 86, 92, 0.18), transparent 30%), linear-gradient(180deg, rgba(11, 24, 49, 0.97), rgba(6, 15, 36, 0.98));
+  border: 1px solid rgba(108, 138, 186, 0.12);
+  border-radius: 22px;
+  padding: 18px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.03), 0 14px 36px rgba(0,0,0,0.26);
+}
+
+.lab-overview-shell {
+  min-height: 620px;
+}
+
+.lab-overview-header {
+  margin-bottom: 18px;
+}
+
+.lab-overview-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #7bf7b0;
+}
+
+.lab-overview-title h1,
+.lab-section-title h2,
+.lab-summary-title h3,
+.lab-prototype-line-card strong,
+.lab-log-stream-item strong,
+.lab-prototype-meta-bar h3,
+.lab-build-log-header h3,
+.lab-window-appname {
+  margin: 0;
+  color: #fff;
+  font-family: 'Ubuntu', sans-serif;
+}
+
+.lab-overview-title h1 {
+  font-size: 34px;
+  font-weight: 700;
+}
+
+.lab-overview-title p,
+.lab-summary-title p,
+.lab-prototype-line-card p,
+.lab-log-stream-item p,
+.lab-prototype-meta-bar p,
+.lab-window-subbar,
+.lab-build-nav-subtitle,
+.lab-build-log-meta-line,
+.lab-empty-copy {
+  margin: 4px 0 0;
+  color: rgba(255,255,255,0.56);
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 12px;
+}
+
+.lab-overview-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.lab-summary-card {
+  text-align: left;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.05);
+  border-radius: 18px;
+  padding: 18px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.lab-summary-card:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(123,247,176,0.18);
+  transform: translateY(-1px);
+}
+
+.lab-summary-header {
+  margin-bottom: 14px;
+}
+
+.lab-summary-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.lab-summary-icon,
+.lab-section-title svg {
+  color: #6ff5a8;
+}
+
+.lab-summary-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: rgba(111,245,168,0.09);
+  border: 1px solid rgba(111,245,168,0.14);
+}
+
+.lab-summary-body {
+  background: rgba(255,255,255,0.035);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.lab-summary-count {
+  color: #fff;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 14px;
+}
+
+.lab-summary-list {
+  min-height: 42px;
+}
+
+.lab-summary-logline,
+.lab-summary-footnote,
+.lab-prototype-line-meta,
+.lab-log-stream-meta,
+.lab-open-external,
+.lab-build-log-meta-line {
+  font-family: 'Ubuntu Mono', monospace;
+}
+
+.lab-summary-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.lab-summary-row strong,
+.lab-summary-logline,
+.lab-build-nav-title {
+  color: #fff;
+  font-size: 13px;
+}
+
+.lab-summary-logline {
+  color: rgba(255,255,255,0.76);
+}
+
+.lab-summary-footnote {
+  margin-top: 16px;
+  font-size: 11px;
+  color: rgba(255,255,255,0.44);
+}
+
+.lab-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 4px 10px;
+  border: 1px solid rgba(255,255,255,0.08);
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 11px;
+  text-transform: lowercase;
+}
+
+.lab-pill.running {
+  color: #72f7b6;
+  background: rgba(114,247,182,0.12);
+}
+
+.lab-pill.failed {
+  color: #ff8e8e;
+  background: rgba(255,142,142,0.12);
+}
+
+.lab-pill.muted {
+  color: #aeb8c8;
+  background: rgba(174,184,200,0.12);
+}
+
+.lab-pill.neutral {
+  color: rgba(255,255,255,0.74);
+  background: rgba(255,255,255,0.08);
+}
+
+.lab-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.lab-section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.lab-refresh-btn,
+.lab-open-external {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.8);
+  border-radius: 10px;
+  padding: 9px 14px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.lab-refresh-btn:hover,
+.lab-open-external:hover {
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+}
+
+.lab-prototype-list-view,
+.lab-log-stream {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lab-prototype-line-card,
+.lab-log-stream-item,
+.lab-build-nav-item {
+  text-align: left;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.05);
+  border-radius: 16px;
+  padding: 16px;
+  transition: all 0.18s ease;
+}
+
+.lab-prototype-line-card,
+.lab-build-nav-item {
+  cursor: pointer;
+}
+
+.lab-prototype-line-card:hover,
+.lab-build-nav-item:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(123,247,176,0.18);
+  transform: translateY(-1px);
+}
+
+.lab-build-nav-item.active {
+  background: linear-gradient(180deg, rgba(111,245,168,0.12), rgba(66,134,100,0.14));
+  border-color: rgba(111,245,168,0.22);
+  box-shadow: inset 3px 0 0 #6ff5a8;
+}
+
+.lab-prototype-line-top,
+.lab-log-stream-top,
+.lab-prototype-meta-bar,
+.lab-window-topbar,
+.lab-build-log-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.lab-prototype-line-card strong {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.lab-prototype-line-meta,
+.lab-log-stream-meta,
+.lab-build-log-meta-line {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+  font-size: 11px;
+  color: rgba(255,255,255,0.44);
+}
+
+.lab-log-stream-item strong {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.lab-log-stream-item p {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.lab-build-logs-layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 16px;
+  min-height: 620px;
+}
+
+.lab-build-logs-sidebar,
+.lab-build-log-reader {
+  background: rgba(255,255,255,0.035);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 16px;
+}
+
+.lab-build-logs-sidebar {
+  padding: 14px;
+}
+
+.lab-sidebar-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+  color: rgba(255,255,255,0.58);
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.lab-builds-nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 560px;
+  overflow-y: auto;
+}
+
+.lab-build-log-reader {
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.lab-build-log-content {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-top: 16px;
+}
+
+.lab-window-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  height: 100%;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 18px;
+  overflow: hidden;
+  background: rgba(7, 14, 28, 0.98);
+}
+
+.lab-window-topbar {
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.03);
+}
+
+.lab-window-left,
+.lab-window-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.lab-window-appname {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.lab-window-subbar {
+  padding: 10px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.02);
+}
+
+.lab-live-preview-frame-wrap {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  background: rgba(0,0,0,0.2);
+}
+
+.lab-live-preview-frame-wrap.windowed {
+  border-top: 0;
+  border-radius: 0;
+}
+
+.lab-live-preview-frame {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #081224;
+}
+
+.lab-prototype-fallback,
+.lab-empty-state {
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-align: center;
+  color: rgba(255,255,255,0.5);
+  background: rgba(255,255,255,0.04);
+  border: 1px dashed rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.lab-markdown-body {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 13px;
+  line-height: 1.9;
+  color: rgba(255,255,255,0.88);
+}
+
+.lab-markdown-body h1,
+.lab-markdown-body h2,
+.lab-markdown-body h3,
+.lab-markdown-body h4 {
+  color: #fff;
+  font-family: 'Ubuntu', sans-serif;
+  line-height: 1.3;
+  margin: 22px 0 10px;
+}
+
+.lab-markdown-body h1 { font-size: 28px; font-weight: 700; }
+.lab-markdown-body h2 {
+  font-size: 20px;
+  font-weight: 700;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.lab-markdown-body h3 { font-size: 16px; font-weight: 700; }
+.lab-markdown-body p { margin-bottom: 12px; }
+.lab-markdown-body ul, .lab-markdown-body ol { margin: 10px 0 14px 22px; }
+.lab-markdown-body li { margin-bottom: 6px; }
+.lab-markdown-body li::marker { color: #7bf7b0; }
+.lab-markdown-body code {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 2px 6px;
+  border-radius: 6px;
+  color: #9fe3ff;
+  font-size: 12px;
+}
+.lab-markdown-body pre,
+.lab-pre-fallback {
+  background: rgba(0,0,0,0.28);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 16px;
+  overflow-x: auto;
+  margin: 14px 0;
+  color: rgba(255,255,255,0.88);
+}
+.lab-markdown-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 14px 0;
+}
+.lab-markdown-body th,
+.lab-markdown-body td {
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  padding: 10px 12px;
+  text-align: left;
+}
+.lab-markdown-body th {
+  color: #fff;
+  font-family: 'Ubuntu', sans-serif;
+  background: rgba(255,255,255,0.04);
+}
+
+@media (max-width: 920px) {
+  .lab-overview-grid,
+  .lab-build-logs-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .lab-section-header,
+  .lab-prototype-line-top,
+  .lab-log-stream-top,
+  .lab-prototype-meta-bar,
+  .lab-window-topbar,
+  .lab-build-log-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .lab-overview-title h1 {
+    font-size: 28px;
+  }
+}

@@ -1,0 +1,444 @@
+.module-view.brain {
+  max-width: 1380px;
+  margin: 0 auto;
+}
+
+.brain-structured {
+  padding-bottom: 28px;
+}
+
+.brain-top-tabs.minimal {
+  display: flex;
+  gap: 8px;
+  padding: 10px 0 14px;
+}
+
+.brain-top-tab.minimal {
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.04);
+  color: rgba(255,255,255,0.74);
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.brain-top-tab.minimal:hover {
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+}
+
+.brain-top-tab.minimal.active {
+  background: linear-gradient(180deg, rgba(75, 126, 193, 0.28), rgba(54, 87, 141, 0.22));
+  color: #fff;
+  border-color: rgba(124, 180, 255, 0.24);
+}
+
+.brain-content.structured {
+  min-height: 660px;
+}
+
+.brain-dashboard-shell,
+.brain-daily-shell {
+  background: radial-gradient(circle at center, rgba(35, 74, 128, 0.18), transparent 30%), linear-gradient(180deg, rgba(14, 31, 63, 0.98), rgba(10, 24, 52, 0.96));
+  border: 1px solid rgba(132, 166, 219, 0.14);
+  border-radius: 22px;
+  padding: 18px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.03), 0 10px 26px rgba(0,0,0,0.24);
+}
+
+.brain-dashboard-hero {
+  padding: 10px 8px 18px;
+}
+
+.brain-dashboard-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brain-dashboard-hero-icon,
+.brain-dashboard-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: rgba(91, 212, 255, 0.12);
+  border: 1px solid rgba(91, 212, 255, 0.18);
+  color: #74e0ff;
+}
+
+.brain-dashboard-title-wrap h1 {
+  margin: 0;
+  color: #fff;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 34px;
+  font-weight: 700;
+}
+
+.brain-dashboard-title-wrap p,
+.brain-daily-header p,
+.brain-dashboard-card-title p {
+  margin: 4px 0 0;
+  color: rgba(255,255,255,0.56);
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 14px;
+}
+
+.brain-dashboard-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.brain-dashboard-card-header {
+  padding: 18px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.02);
+}
+
+.brain-dashboard-card-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brain-dashboard-card-title h3,
+.brain-daily-header h2,
+.brain-reader-header h3 {
+  margin: 0;
+  color: #fff;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.brain-dashboard-card-body {
+  padding: 18px;
+}
+
+.brain-block-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 14px;
+  color: rgba(255,255,255,0.58);
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.brain-dashboard-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.brain-dashboard-list-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.03);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.18s ease;
+}
+
+.brain-dashboard-list-item:hover {
+  background: rgba(91, 212, 255, 0.08);
+  border-color: rgba(91, 212, 255, 0.16);
+}
+
+.brain-dashboard-list-left,
+.brain-dashboard-list-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brain-dashboard-list-left strong {
+  display: block;
+  color: #fff;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 14px;
+  margin-bottom: 3px;
+}
+
+.brain-dashboard-list-left span {
+  color: rgba(255,255,255,0.48);
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+}
+
+.brain-dashboard-list-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 62px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.03);
+  color: rgba(255,255,255,0.46);
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  text-align: center;
+  padding: 16px;
+}
+
+.brain-dashboard-list-empty.large {
+  min-height: 340px;
+}
+
+.brain-daily-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.brain-refresh-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.78);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-family: 'Ubuntu', sans-serif;
+  cursor: pointer;
+}
+
+.brain-refresh-btn:hover {
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+}
+
+.brain-daily-layout {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  gap: 16px;
+  min-height: 620px;
+}
+
+.brain-daily-sidebar,
+.brain-daily-reader {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 16px;
+}
+
+.brain-daily-sidebar {
+  padding: 14px;
+}
+
+.brain-daily-history {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.brain-history-item {
+  text-align: left;
+  width: 100%;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  padding: 12px 13px;
+  background: rgba(255,255,255,0.03);
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.brain-history-item:hover {
+  background: rgba(91, 212, 255, 0.08);
+  border-color: rgba(91, 212, 255, 0.16);
+}
+
+.brain-history-item.active {
+  background: linear-gradient(180deg, rgba(72, 138, 213, 0.22), rgba(49, 92, 152, 0.2));
+  border-color: rgba(124, 180, 255, 0.24);
+}
+
+.brain-history-date {
+  color: #fff;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.brain-history-date.small {
+  font-size: 14px;
+}
+
+.brain-history-subdate {
+  margin-top: 4px;
+  color: rgba(255,255,255,0.48);
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.brain-daily-reader {
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.brain-reader-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 12px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.brain-reader-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  margin-bottom: 18px;
+  color: rgba(255,255,255,0.42);
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+}
+
+.brain-reader-content {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.brain-status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 5px 10px;
+  border: 1px solid rgba(255,255,255,0.08);
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 11px;
+  text-transform: lowercase;
+}
+
+.brain-status-badge.delivered {
+  color: #58e18f;
+  background: rgba(88, 225, 143, 0.12);
+}
+
+.brain-status-badge.pending {
+  color: #ffd166;
+  background: rgba(255, 209, 102, 0.12);
+}
+
+.brain-status-badge.unknown {
+  color: rgba(255,255,255,0.74);
+  background: rgba(255,255,255,0.08);
+}
+
+.markdown-body {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 13px;
+  line-height: 1.85;
+  color: rgba(255,255,255,0.88);
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4 {
+  color: #fff;
+  font-family: 'Ubuntu', sans-serif;
+  line-height: 1.3;
+  margin: 22px 0 10px;
+}
+
+.markdown-body h1 { font-size: 24px; font-weight: 700; }
+.markdown-body h2 {
+  font-size: 19px;
+  font-weight: 700;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.markdown-body h3 { font-size: 16px; font-weight: 700; }
+.markdown-body h4 { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.8); }
+.markdown-body p { margin-bottom: 12px; }
+.markdown-body ul, .markdown-body ol { margin: 10px 0 14px 22px; }
+.markdown-body li { margin-bottom: 6px; }
+.markdown-body li::marker { color: #7fd8ff; }
+.markdown-body a { color: #7fd8ff; text-decoration: none; }
+.markdown-body a:hover { text-decoration: underline; }
+.markdown-body code {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 2px 6px;
+  border-radius: 6px;
+  color: #9fe3ff;
+  font-size: 12px;
+}
+.markdown-body pre {
+  background: rgba(0,0,0,0.28);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 16px;
+  overflow-x: auto;
+  margin: 14px 0;
+}
+.markdown-body pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  color: rgba(255,255,255,0.9);
+}
+.markdown-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 14px 0;
+}
+.markdown-body th,
+.markdown-body td {
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  padding: 10px 12px;
+  text-align: left;
+}
+.markdown-body th {
+  color: #fff;
+  font-family: 'Ubuntu', sans-serif;
+  background: rgba(255,255,255,0.04);
+}
+
+.brain-empty-copy,
+.brain-pre-fallback {
+  color: rgba(255,255,255,0.7);
+}
+
+@media (max-width: 820px) {
+  .brain-daily-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .brain-daily-header,
+  .brain-reader-header,
+  .brain-dashboard-list-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .brain-dashboard-title-wrap h1 {
+    font-size: 28px;
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "meta": {
+    "version": 1,
+    "path": "/home/user/.openclaw/workspace/navi-os/src/data/chiefs-council.json",
+    "updatedAt": "2026-03-31T22:53:43.269Z"
+  },
+  "topics": [
+    {
+      "id": "topic-1",
+      "title": "Hauriem de prioritzar producte o infrastructura?",
+      "description": "Aleix vol créixer ràpidament. Hem de deixar-ho tot per producte o hem de construir infrastructura sòlida primer?",
+      "createdAt": "2026-03-31T10:00:00.000Z",
+      "responses": [
+        {
+          "chiefId": "elom",
+          "text": "Producte, clar i ras. La infrastructura és un luxe. Si no tens clients, no tens res. Construieix el que pensin els clients que funciona i itera ràpid. La infrastructura ve sola quan tens input real.",
+          "timestamp": "2026-03-31T10:15:00.000Z"
+        },
+        {
+          "chiefId": "warren",
+          "text": "Discrepo fortament. Sense infrastructura sòlida, cada feature nova és un risc. Si l'any 1 acumulem debt tècnic, l'any 3 estarem pagant interessos. Jo recomano un 60% infrastructura, 40% producte.",
+          "timestamp": "2026-03-31T10:22:00.000Z"
+        },
+        {
+          "chiefId": "jeff",
+          "text": "Processos first. Tant producte com infrastructura fallen quan no hi ha processos clars de deploy, testing i rollback. Construieixo el sistema de desplegament automatitzat primer, i llavors tot el demés accelera.",
+          "timestamp": "2026-03-31T10:30:00.000Z"
+        },
+        {
+          "chiefId": "sam",
+          "text": "IA first. Amb els models actuals puc generar molta infrastructura i producte automàticament. La pregunta correcta no és producte vs infrastructura sinó: com utilitzem IA per fer les dues coses alhora?",
+          "timestamp": "2026-03-31T10:18:00.000Z"
+        }
+      ]
+    },
+    {
+      "id": "topic-2",
+      "title": " Quin preu hauriem de posar als nostres serveis d'implementacio OpenClaw?",
+      "description": "Estem preparant la primera proposta per a un client i no sabem quin rang de preus posicionar-nos.",
+      "createdAt": "2026-03-30T14:00:00.000Z",
+      "responses": [
+        {
+          "chiefId": "elom",
+          "text": "Premium. Si poses preus baixos et tractaran com a barats. Posa't un preu que reflecteixi valor real i estaràs obligat a entregar valor real. Els clients millors paguen més i donen menys problemes.",
+          "timestamp": "2026-03-30T14:20:00.000Z"
+        },
+        {
+          "chiefId": "warren",
+          "text": "Preu just, no necessàriament baix. Hem d'entendre exactament el cost del nostre temps i posar un marge raonable. Competir per preu és una cursa cap al següent会在最低工资上. Fes anàlisi de costos primer.",
+          "timestamp": "2026-03-30T14:35:00.000Z"
+        },
+        {
+          "chiefId": "jeff",
+          "text": "Models de preus múltiples. Un preu fix per projecte, un preu per hores com a backup, i un preu mensual de retainer per clients recurrents. Això ens dona flexibilitat i recurrència.",
+          "timestamp": "2026-03-30T14:50:00.000Z"
+        },
+        {
+          "chiefId": "sam",
+          "text": "0€ enDemo, poi something. If we can do the first integration work for free or nearly free as a proof of concept, we de-risk the sale enormously for the client and prove our value before asking for large contracts.",
+          "timestamp": "2026-03-30T14:25:00.000Z"
+        }
+      ]
+    },
+    {
+      "id": "topic-3",
+      "title": "Hauriem de subcontractar o fer-ho internament?",
+      "description": "Tenim oportunitats però no tenim capacitat per fer-ho tot nosaltres. Terceritzar o dir no a projectes?",
+      "createdAt": "2026-03-28T09:00:00.000Z",
+      "responses": [
+        {
+          "chiefId": "elom",
+          "text": "Terceritzar és escalar. Nosaltres som el cervell, subcontractem les mans. Això és com SpaceX subcontracta components però manté el control del disseny. Fes-ho.",
+          "timestamp": "2026-03-28T09:30:00.000Z"
+        },
+        {
+          "chiefId": "warren",
+          "text": "No. Subcontractar sense controls de qualitat sòlids és una recepta per a desastre. El risc reputacional d'un treball mediocre sota el nostre nom és massa alt. Dir que no a algunes coses és saviesa.",
+          "timestamp": "2026-03-28T09:45:00.000Z"
+        },
+        {
+          "chiefId": "jeff",
+          "text": "Terceritzar les parts no crítiques, internalitzar les crítiques. Identifica què és el teu core (disseny, arquitectura, relació client) i subcontracta la resta amb SLAs clars.",
+          "timestamp": "2026-03-28T10:00:00.000Z"
+        },
+        {
+          "chiefId": "sam",
+          "text": "MEc test",
+          "timestamp": "2026-03-31T22:53:43.269Z"
+        }
+      ]
+    }
+  ]
+}

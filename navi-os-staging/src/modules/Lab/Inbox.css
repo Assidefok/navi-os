@@ -1,0 +1,406 @@
+.inbox-module {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-bottom: 40px;
+}
+
+.inbox-header {
+  margin-bottom: 4px;
+}
+
+.inbox-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.inbox-title-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.inbox-icon {
+  color: #f59e0b;
+}
+
+.inbox-title-group h2 {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--ops-amber);
+}
+
+.inbox-subtitle {
+  font-size: 13px;
+  color: rgba(255,255,255,0.45);
+  line-height: 1.5;
+}
+
+.inbox-add-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: rgba(245,158,11,0.12);
+  border: 1px solid rgba(245,158,11,0.25);
+  color: #f59e0b;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: 'Ubuntu', sans-serif;
+  transition: all 0.2s ease;
+}
+
+.inbox-add-btn:hover {
+  background: rgba(245,158,11,0.2);
+  border-color: rgba(245,158,11,0.4);
+}
+
+/* Filters */
+.inbox-filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.filter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.6);
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 12px;
+  font-family: 'Ubuntu', sans-serif;
+  transition: all 0.15s;
+}
+
+.filter-pill:hover {
+  background: rgba(255,255,255,0.08);
+}
+
+.filter-pill.active {
+  background: rgba(245,158,11,0.15);
+  border-color: rgba(245,158,11,0.3);
+  color: #f59e0b;
+}
+
+.filter-count {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 10px;
+  background: rgba(255,255,255,0.08);
+  padding: 1px 5px;
+  border-radius: 8px;
+  min-width: 18px;
+  text-align: center;
+}
+
+.filter-pill.active .filter-count {
+  background: rgba(245,158,11,0.2);
+}
+
+/* List */
+.inbox-loading,
+.inbox-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 40px 0;
+  color: rgba(255,255,255,0.3);
+  font-size: 13px;
+}
+
+.inbox-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Cards */
+.inbox-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.inbox-card:hover {
+  border-color: rgba(255,255,255,0.14);
+}
+
+.inbox-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  cursor: pointer;
+  gap: 12px;
+}
+
+.inbox-card-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.inbox-card-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.inbox-card-title {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.92);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.inbox-card-tags-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.inbox-date {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 10px;
+  color: rgba(255,255,255,0.35);
+}
+
+.inbox-tag {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 10px;
+  color: rgba(99,102,241,0.8);
+  background: rgba(99,102,241,0.1);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+.inbox-card-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.inbox-status-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+
+.inbox-chevron {
+  color: rgba(255,255,255,0.35);
+  transition: transform 0.2s;
+}
+
+.inbox-chevron.rotated {
+  transform: rotate(180deg);
+}
+
+.inbox-card-body {
+  padding: 0 16px 14px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.inbox-card-content {
+  font-size: 13px;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+.inbox-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.inbox-status-select {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  color: rgba(255,255,255,0.85);
+  padding: 5px 10px;
+  font-size: 12px;
+  font-family: 'Ubuntu', sans-serif;
+  cursor: pointer;
+}
+
+.inbox-delete-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid rgba(239,68,68,0.2);
+  background: rgba(239,68,68,0.08);
+  color: rgba(239,68,68,0.7);
+  cursor: pointer;
+  transition: all 0.15s;
+  margin-left: auto;
+}
+
+.inbox-delete-btn:hover {
+  background: rgba(239,68,68,0.15);
+  border-color: rgba(239,68,68,0.35);
+  color: #ef4444;
+}
+
+/* Form */
+.inbox-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.form-field label {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.form-field input,
+.form-field textarea,
+.form-field select {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  color: rgba(255,255,255,0.92);
+  padding: 10px 12px;
+  font-size: 13px;
+  font-family: 'Ubuntu', sans-serif;
+  resize: vertical;
+}
+
+.form-field input:focus,
+.form-field textarea:focus,
+.form-field select:focus {
+  outline: none;
+  border-color: rgba(245,158,11,0.4);
+}
+
+.form-field textarea {
+  min-height: 100px;
+}
+
+.form-field-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  padding-top: 4px;
+}
+
+.btn-cancel {
+  padding: 8px 16px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.6);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: 'Ubuntu', sans-serif;
+  transition: all 0.15s;
+}
+
+.btn-cancel:hover {
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.85);
+}
+
+.btn-save {
+  padding: 8px 18px;
+  background: rgba(245,158,11,0.15);
+  border: 1px solid rgba(245,158,11,0.3);
+  color: #f59e0b;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: 'Ubuntu', sans-serif;
+  font-weight: 600;
+  transition: all 0.15s;
+}
+
+.btn-save:hover {
+  background: rgba(245,158,11,0.25);
+  border-color: rgba(245,158,11,0.5);
+}
+
+/* Modal */
+.inbox-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 18px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.inbox-modal-header h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.9);
+}
+
+.modal-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: none;
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.6);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.modal-close:hover {
+  background: rgba(239,68,68,0.15);
+  color: #ef4444;
+}

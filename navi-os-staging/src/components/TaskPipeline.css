@@ -1,0 +1,363 @@
+.task-pipeline {
+  margin-bottom: 40px;
+}
+
+.tp-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  gap: 12px;
+}
+
+.tp-header h2 {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--ops-amber);
+}
+
+.tp-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.task-count {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  color: rgba(255, 184, 0, 0.6);
+  background: rgba(255, 184, 0, 0.08);
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.tp-add-btn,
+.tp-agent-pill,
+.task-action-btn,
+.task-icon-btn {
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.85);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tp-add-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+}
+
+.tp-agent-filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.tp-agent-pill {
+  padding: 7px 12px;
+  font-size: 12px;
+}
+
+.tp-agent-pill.active,
+.tp-add-btn:hover,
+.task-action-btn:hover,
+.task-icon-btn:hover {
+  background: rgba(255, 184, 0, 0.14);
+  border-color: rgba(255, 184, 0, 0.3);
+  color: #ffb800;
+}
+
+.kanban-board {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 12px;
+  align-items: flex-start;
+}
+
+.kanban-column {
+  flex: 0 0 290px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 14px;
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+}
+
+.column-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 14px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.column-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.column-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.column-title {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 13px;
+  color: rgba(255,255,255,0.9);
+}
+
+.column-count {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+  color: rgba(255,255,255,0.45);
+}
+
+.column-body {
+  flex: 1;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.column-empty {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.18);
+}
+
+.task-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.task-card-header,
+.task-meta,
+.task-actions-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.task-card-header {
+  margin-bottom: 8px;
+}
+
+.task-agent-badge {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+  color: rgba(255,255,255,0.8);
+}
+
+.priority-badge {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+
+.task-title {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 14px;
+  color: rgba(255,255,255,0.94);
+  margin-bottom: 6px;
+}
+
+.task-desc {
+  font-size: 12px;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 10px;
+  line-height: 1.45;
+}
+
+.task-client,
+.task-due,
+.done-history-meta,
+.done-history-link {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+  color: rgba(255,255,255,0.45);
+}
+
+.task-blockers {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin-top: 8px;
+  margin-bottom: 10px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  color: #ffb800;
+  font-size: 11px;
+}
+
+.task-actions-row {
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.task-action-btn {
+  padding: 6px 10px;
+  font-size: 11px;
+}
+
+.task-action-btn.success {
+  background: rgba(48, 209, 88, 0.15);
+  border-color: rgba(48, 209, 88, 0.25);
+  color: #30d158;
+}
+
+.task-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+}
+
+.task-icon-btn.danger:hover {
+  background: rgba(255, 69, 58, 0.15);
+  border-color: rgba(255, 69, 58, 0.25);
+  color: #ff453a;
+}
+
+.done-history-panel {
+  margin-top: 24px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.done-history-panel h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  color: rgba(255,255,255,0.8);
+  font-size: 13px;
+}
+
+.done-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.done-history-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.tp-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+  padding: 20px;
+}
+
+.tp-modal {
+  width: 100%;
+  max-width: 560px;
+  background: #1a1a2e;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.tp-modal-header,
+.tp-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 16px 18px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.tp-modal-footer {
+  border-bottom: none;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  justify-content: flex-end;
+}
+
+.tp-modal-body {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.tp-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tp-field label {
+  font-size: 12px;
+  color: rgba(255,255,255,0.7);
+}
+
+.tp-field input,
+.tp-field textarea,
+.tp-field select {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  color: rgba(255,255,255,0.92);
+  padding: 10px 12px;
+}
+
+.tp-field textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+.tp-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 768px) {
+  .tp-header,
+  .tp-header-actions,
+  .done-history-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .tp-grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .kanban-column {
+    flex-basis: 260px;
+  }
+}

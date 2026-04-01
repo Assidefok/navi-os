@@ -8,8 +8,19 @@ import subprocess
 from datetime import datetime
 
 TELEGRAM_CHAT_ID = "267107022"
-BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
 DATE = datetime.now().strftime("%d/%m/%Y")
+
+def get_bot_token():
+    """Llegeix el token de OpenClaw config"""
+    config_path = os.path.expanduser("~/.openclaw/openclaw.json")
+    try:
+        with open(config_path, 'r') as f:
+            config = json.load(f)
+        return config.get("channels", {}).get("telegram", {}).get("botToken", "")
+    except:
+        return os.environ.get("TELEGRAM_BOT_TOKEN", "")
+
+BOT_TOKEN = get_bot_token()
 MEMORY_BASE = "/home/user/.openclaw/workspace/memory"
 
 def get_latest_news(category):

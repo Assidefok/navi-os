@@ -1,0 +1,14 @@
+[Unit]
+Description=Navi OS API Server
+After=network.target
+
+[Service]
+Type=simple
+User=user
+WorkingDirectory=/home/user/.openclaw/workspace/navi-os
+ExecStart=/home/user/.nvm/versions/node/v24.14.1/bin/node server.js
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
