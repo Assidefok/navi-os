@@ -2,7 +2,7 @@
   "meta": {
     "version": 1,
     "createdAt": "2026-03-31T21:58:00.000Z",
-    "updatedAt": "2026-03-31T22:53:15.008Z",
+    "updatedAt": "2026-04-01T05:45:09.374Z",
     "path": "/home/user/.openclaw/workspace/data/automations.json"
   },
   "automations": [
@@ -107,6 +107,73 @@
       ],
       "lastTriggered": "2026-03-31T22:53:10.601Z",
       "triggerCount": 1
+    },
+    {
+      "id": "somiar-de-dia",
+      "name": "Somiar de Dia",
+      "description": "De 9:00 a 20:00: cada 30 min revisa si no hi ha activitat i proposa millores del sistema.",
+      "enabled": false,
+      "trigger": {
+        "type": "cron.interval30",
+        "label": "Cada 30 min (9-20h)",
+        "window": "9:00-20:00"
+      },
+      "conditions": [
+        {
+          "type": "user.inactive",
+          "minutes": 30
+        }
+      ],
+      "actions": [
+        {
+          "type": "chiefs.review",
+          "label": "Revisió chiefs",
+          "params": {
+            "depth": "light"
+          }
+        },
+        {
+          "type": "proposal.create_if_issues",
+          "label": "Crear proposta si cal",
+          "params": {}
+        }
+      ],
+      "lastTriggered": null,
+      "triggerCount": 0,
+      "updatedAt": "2026-04-01T05:51:20.645Z"
+    },
+    {
+      "id": "somiar-de-nit",
+      "name": "Somiar de Nit",
+      "description": "De 20:00 a 6:00: cada 30 min revisa si no hi ha activitat i fa anàlisi profunda del sistema.",
+      "enabled": true,
+      "trigger": {
+        "type": "cron.interval30",
+        "label": "Cada 30 min (20-6h)",
+        "window": "20:00-06:00"
+      },
+      "conditions": [
+        {
+          "type": "user.inactive",
+          "minutes": 30
+        }
+      ],
+      "actions": [
+        {
+          "type": "chiefs.review",
+          "label": "Revisió profunda chiefs",
+          "params": {
+            "depth": "deep"
+          }
+        },
+        {
+          "type": "system.snapshot",
+          "label": "Snapshot del sistema",
+          "params": {}
+        }
+      ],
+      "lastTriggered": null,
+      "triggerCount": 0
     }
   ],
   "executionLog": [

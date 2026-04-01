@@ -725,3 +725,230 @@
 
 .green { color: #00ff41; }
 .amber { color: #ffb800; }
+
+/* ─── Somiar Section ──────────────────────────────────────────── */
+.somiar-section {
+  margin-bottom: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.somiar-section-header {
+  padding: 0 0 4px;
+}
+
+.somiar-section-header h3 {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.9);
+  margin-bottom: 4px;
+}
+
+.somiar-section-header p {
+  font-size: 12px;
+  color: rgba(255,255,255,0.45);
+}
+
+.somiar-card {
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 14px 16px;
+  transition: all 0.2s ease;
+}
+
+.somiar-card.enabled {
+  border-width: 1px;
+}
+
+.somiar-card.disabled {
+  opacity: 0.75;
+}
+
+.somiar-loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,255,255,0.4);
+  font-size: 13px;
+  padding: 8px 0;
+}
+
+.somiar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+  margin-bottom: 8px;
+}
+
+.somiar-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.somiar-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.somiar-title {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.92);
+}
+
+.somiar-window {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+  color: rgba(255,255,255,0.45);
+}
+
+.somiar-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.somiar-header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.somiar-last,
+.somiar-cycles {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+}
+
+.somiar-toggle,
+.somiar-run {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.7);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.somiar-toggle:hover:not(:disabled) {
+  background: rgba(245,158,11,0.15);
+  border-color: rgba(245,158,11,0.3);
+  color: #f59e0b;
+}
+
+.somiar-run:hover:not(:disabled) {
+  background: rgba(34,197,94,0.15);
+  border-color: rgba(34,197,94,0.3);
+  color: #22c55e;
+}
+
+.somiar-toggle:disabled,
+.somiar-run:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.somiar-chevron {
+  color: rgba(255,255,255,0.35);
+  transition: transform 0.2s;
+}
+
+.somiar-chevron.rotated {
+  transform: rotate(180deg);
+}
+
+.somiar-description {
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.somiar-details {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255,255,255,0.07);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.detail-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.45);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.somiar-chiefs .chiefs-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.chief-tag {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(255,255,255,0.06);
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.somiar-conditions,
+.somiar-actions {
+  font-size: 12px;
+  color: rgba(255,255,255,0.6);
+}
+
+.somiar-actions ul {
+  margin: 4px 0 0 16px;
+  padding: 0;
+}
+
+.somiar-actions li {
+  margin-bottom: 3px;
+}
+
+.somiar-refresh {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px 0;
+  transition: color 0.15s;
+  align-self: flex-start;
+}
+
+.somiar-refresh:hover {
+  color: rgba(255,255,255,0.7);
+}

@@ -6,7 +6,7 @@
 import express from 'express'
 import cors from 'cors'
 import { execSync } from 'child_process'
-import { readFileSync, readdirSync, statSync, existsSync, writeFileSync, mkdirSync, createReadStream } from 'fs'
+import { readFileSync, readdirSync, statSync, existsSync, writeFileSync, mkdirSync, createReadStream, unlinkSync } from 'fs'
 import { join, resolve, dirname } from 'path'
 import { fileURLToPath } from 'url'
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -1667,6 +1667,80 @@ app.post('/api/internal/automations/fire', async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message })
   }
+})
+
+// ─── Somiar de Dia / de Nit ─────────────────────────────────────────────────
+const SOMIAR_ENABLED_DAY = join(WORKSPACE, '.somiar-de-dia.enabled')
+const SOMIAR_ENABLED_NIT = join(WORKSPACE, '.somiar-de-nit.enabled')
+
+function getSomiarEnabled(mode) {
+  const file = mode === 'dia' ? SOMIAR_ENABLED_DAY : SOMIAR_ENABLED_NIT
+  return existsSync(file)
+}
+
+function setSomiarEnabled(mode, enabled) {
+  const file = mode === 'dia' ? SOMIAR_ENABLED_DAY : SOMIAR_ENABLED_NIT
+  if (enabled) {
+    writeFileSync(file, new Date().toISOString())
+  } else {
+    if (existsSync(file)) unlinkSync(file)
+  }
+  // Also update the automations.json entry
+  try {
+    const data = JSON.parse(readFileSync(AUTOMATIONS_FILE, 'utf-8'))
+    const id = mode === 'dia' ? 'somiar-de-dia' : 'somiar-de-nit'
+    const idx = (data.automations || []).findIndex(a => a.id === id)
+    if (idx !== -1) {
+      data.automations[idx].enabled = enabled
+      data.automations[idx].updatedAt = new Date().toISOString()
+      writeFileSync(AUTOMATIONS_FILE, JSON.stringify(data, null, 2))
+    }
+  } catch {}
+}
+
+app.get('/api/somiar/:mode/status', (req, res) => {
+  const mode = req.params.mode // 'dia' or 'nit'
+  if (!['dia', 'nit'].includes(mode)) return res.status(400).json({ error: 'Invalid mode' })
+  const enabled = getSomiarEnabled(mode)
+  const lastRun = (() => {
+    try {
+      const f = mode === 'dia'
+        ? join(WORKSPACE, '.somiar-de-dia.last')
+        : join(WORKSPACE, '.somiar-de-nit.last')
+      return existsSync(f) ? readFileSync(f, 'utf-8').trim() : null
+    } catch { return null }
+  })()
+  const scriptsDir = join(WORKSPACE, '.somiar-cycles')
+  const cycles = existsSync(scriptsDir)
+    ? readdirSync(scriptsDir).filter(f => f.includes(`somiar-de-${mode}`)).length
+    : 0
+  res.json({ mode, enabled, lastRun, cycles })
+})
+
+app.post('/api/somiar/:mode/toggle', (req, res) => {
+  const mode = req.params.mode
+  if (!['dia', 'nit'].includes(mode)) return res.status(400).json({ error: 'Invalid mode' })
+  const current = getSomiarEnabled(mode)
+  setSomiarEnabled(mode, !current)
+  res.json({ ok: true, enabled: !current })
+})
+
+app.post('/api/somiar/:mode/run', async (req, res) => {
+  const mode = req.params.mode
+  if (!['dia', 'nit'].includes(mode)) return res.status(400).json({ error: 'Invalid mode' })
+  if (!getSomiarEnabled(mode)) {
+    return res.json({ ok: false, reason: 'Somiar is disabled' })
+  }
+  // Run the script asynchronously
+  const { exec } = await import('child_process')
+  const script = mode === 'dia'
+    ? `${WORKSPACE}/scripts/somiar-de-dia.sh`
+    : `${WORKSPACE}/scripts/somiar-de-nit.sh`
+  exec(`bash ${script}`, { cwd: WORKSPACE }, (err, stdout, stderr) => {
+    if (err) console.error(`Somiar ${mode} error:`, err)
+    else console.log(`Somiar ${mode} output:`, stdout.slice(0, 200))
+  })
+  res.json({ ok: true, message: `Somiar de ${mode} triggered`, time: new Date().toISOString() })
 })
 
 // ─── Serve static React build ─────────────────────────────────────────────────

@@ -6,6 +6,7 @@ import {
   BarChart3, ToggleLeft, ToggleRight
 } from 'lucide-react'
 import Modal from '../../../components/ui/Modal'
+import SomiarSection from './SomiarSection'
 import './AutomationsBoard.css'
 
 const TRIGGER_TYPES = [
@@ -431,6 +432,7 @@ export default function AutomationsBoard() {
         </div>
       ) : (
         <div className="automations-list">
+          <SomiarSection />
           {automations.map(auto => (
             <AutomationCard
               key={auto.id}
