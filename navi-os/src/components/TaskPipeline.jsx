@@ -4,11 +4,9 @@ import './TaskPipeline.css'
 
 const STAGES = [
   { id: 'intake', label: 'Intake', color: '#a78bfa' },
-  { id: 'scoping', label: 'Scoping', color: '#60a5fa' },
   { id: 'active', label: 'Active', color: '#34d399' },
   { id: 'review', label: 'Review', color: '#fbbf24' },
-  { id: 'delivered', label: 'Delivered', color: '#f97316' },
-  { id: 'renewal', label: 'Renewal', color: '#e879f9' }
+  { id: 'delivered', label: 'Delivered', color: '#f97316' }
 ]
 
 const PRIORITY_CONFIG = {
@@ -18,14 +16,12 @@ const PRIORITY_CONFIG = {
   critica: { label: 'Critica', color: '#ef4444', bg: 'rgba(239, 68, 68, 0.15)' }
 }
 
-// API status mapping: pipeline stages -> pm-board statuses
+// API status mapping: pipeline stages <-> pm-board statuses
 const STAGE_TO_STATUS = {
   intake: 'todo',
-  scoping: 'todo',
   active: 'in-progress',
   review: 'review',
-  delivered: 'done',
-  renewal: 'done'
+  delivered: 'done'
 }
 
 const STATUS_TO_STAGE = {
@@ -54,17 +50,22 @@ export default function TaskPipeline() {
       if (!res.ok) throw new Error('Failed to fetch')
       const data = await res.json()
       // Convert API tasks to pipeline format
-      const pipelineTasks = (data.tasks || []).map(task => ({
-        id: task.id,
-        title: task.title,
-        description: task.description,
-        client: task.assignee || 'Unknown',
-        priority: task.priority || 'media',
-        stage: STATUS_TO_STAGE[task.status] || 'intake',
-        dueDate: task.dueDate,
-        updatedAt: task.updatedDate,
-        blockers: task.notes || []
-      }))
+      const pipelineTasks = (data.tasks || []).map(task => {
+        // Use assigneeChief name if available, otherwise fallback to assignee ID
+        const clientName = task.assigneeChief?.name || task.assignee || 'Unknown'
+        const clientEmoji = task.assigneeChief?.emoji || ''
+        return {
+          id: task.id,
+          title: task.title,
+          description: task.description,
+          client: `${clientEmoji} ${clientName}`,
+          priority: task.priority || 'media',
+          stage: STATUS_TO_STAGE[task.status] || 'intake',
+          dueDate: task.dueDate,
+          updatedAt: task.updatedDate,
+          blockers: task.notes || []
+        }
+      })
       setTasks(pipelineTasks)
       setError(null)
     } catch (err) {
@@ -81,28 +82,32 @@ export default function TaskPipeline() {
   }
 
   // Persist to API and localStorage backup
-  const persistTasks = async (newTasks) => {
+  // Only syncs the dragged task to avoid wrong status mappings
+  const persistTasks = async (newTasks, changedTaskId, newStage) => {
     setTasks(newTasks)
     // Backup to localStorage
     localStorage.setItem('navi_ops_tasks', JSON.stringify(newTasks))
 
-    // Sync to API for each changed task
-    for (const task of newTasks) {
-      try {
-        const apiStatus = STAGE_TO_STATUS[task.stage] || 'todo'
-        await fetch(`/api/pm-board/${task.id}`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            title: task.title,
-            description: task.description,
-            status: apiStatus,
-            priority: task.priority,
-            notes: task.blockers || []
+    // Only sync the changed task
+    if (changedTaskId) {
+      const task = newTasks.find(t => t.id === changedTaskId)
+      if (task) {
+        try {
+          const apiStatus = STAGE_TO_STATUS[newStage] || 'todo'
+          await fetch(`/api/pm-board/${changedTaskId}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              title: task.title,
+              description: task.description,
+              status: apiStatus,
+              priority: task.priority,
+              notes: task.blockers || []
+            })
           })
-        })
-      } catch (err) {
-        console.error('Error syncing task to API:', err)
+        } catch (err) {
+          console.error('Error syncing task to API:', err)
+        }
       }
     }
   }
@@ -130,7 +135,7 @@ export default function TaskPipeline() {
         ? { ...t, stage: stageId, updatedAt: new Date().toISOString() }
         : t
     )
-    persistTasks(updated)
+    persistTasks(updated, draggedTask.id, stageId)
     setDraggedTask(null)
     setDraggedOverStage(null)
   }
