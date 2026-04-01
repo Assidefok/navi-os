@@ -8,7 +8,7 @@
       "track": "A",
       "category": "business",
       "impact": "high",
-      "status": "concept"
+      "status": "rejected"
     },
     {
       "id": "idea-002",
@@ -18,7 +18,7 @@
       "track": "A",
       "category": "automation",
       "impact": "medium",
-      "status": "concept"
+      "status": "rejected"
     },
     {
       "id": "idea-003",
@@ -28,7 +28,7 @@
       "track": "B",
       "category": "finance",
       "impact": "medium",
-      "status": "backlog"
+      "status": "rejected"
     },
     {
       "id": "idea-004",
@@ -38,7 +38,7 @@
       "track": "B",
       "category": "sales",
       "impact": "low",
-      "status": "backlog"
+      "status": "rejected"
     }
   ]
 }

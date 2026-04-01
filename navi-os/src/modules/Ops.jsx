@@ -327,17 +327,12 @@ function SessionsModule() {
 function CronModule() {
   const [jobs, setJobs] = useState([])
   const [loading, setLoading] = useState(true)
-  const [expanded, setExpanded] = useState(null)
 
   const loadCron = () => {
     setLoading(true)
     fetch('/api/cron-health')
       .then(r => r.json())
-      .then(d => {
-        const nextJobs = d.jobs || []
-        setJobs(nextJobs)
-        setExpanded(prev => prev || nextJobs[0]?.name || null)
-      })
+      .then(d => setJobs(d.jobs || []))
       .catch(() => setJobs([]))
       .finally(() => setLoading(false))
   }
@@ -364,42 +359,53 @@ function CronModule() {
       ) : jobs.length === 0 ? (
         <div className="ops-empty-state">No hi ha cron jobs detectats</div>
       ) : (
-        <div className="ops-list-stack cron">
-          {jobs.map(job => {
-            const isOpen = expanded === job.name
-            return (
-              <div key={job.name} className={`ops-cron-card ${job.status}`}>
-                <button className="ops-cron-header" onClick={() => setExpanded(isOpen ? null : job.name)}>
-                  <div className="ops-cron-left">
-                    <div className="ops-cron-name">{job.name}</div>
-                    <div className="ops-cron-inline">
-                      <span className={`ops-mini-pill ${job.status}`}>{job.status}</span>
-                      <span>{formatRelative(job.lastRun)}</span>
-                      <span>→ Proxima: {job.nextRun ? formatDate(job.nextRun) : '—'}</span>
-                    </div>
-                  </div>
-                  <span className="ops-cron-arrow">{isOpen ? '−' : '+'}</span>
-                </button>
-
-                {isOpen && (
-                  <div className="ops-cron-body">
-                    <div className="ops-meta-grid">
-                      <div><span>Schedule</span><strong>{job.nameLabel || job.schedule || '—'}</strong></div>
-                      <div><span>Estat</span><strong>{job.status}</strong></div>
-                      <div><span>Ultima execucio</span><strong>{formatDate(job.lastRun)}</strong></div>
-                      <div><span>Seguent execucio</span><strong>{formatDate(job.nextRun)}</strong></div>
-                    </div>
-                    {job.error && (
-                      <div className="ops-error-box">
-                        <span className="ops-error-label">Ultim error</span>
-                        <code>{job.error}</code>
-                      </div>
-                    )}
-                  </div>
-                )}
+        <div className="ops-cron-grid">
+          {jobs.map(job => (
+            <article key={job.name} className={`ops-cron-card modern ${job.status}`}>
+              <div className="ops-cron-topbar">
+                <span className="ops-cron-kind">{job.scheduleKind || 'cron'}</span>
+                <span className={`ops-status-pill ${job.status}`}>{job.status}</span>
               </div>
-            )
-          })}
+
+              <div className="ops-cron-name">{job.name}</div>
+              <div className="ops-cron-subtitle">{job.scheduleLabel || job.nameLabel || 'Schedule no disponible'}</div>
+
+              <div className="ops-cron-meta-cards">
+                <div className="ops-cron-meta-card">
+                  <span>Ultima execucio</span>
+                  <strong>{formatDate(job.lastRun)}</strong>
+                  <em>{formatRelative(job.lastRun)}</em>
+                </div>
+                <div className="ops-cron-meta-card">
+                  <span>Seguent execucio</span>
+                  <strong>{formatDate(job.nextRun)}</strong>
+                  <em>{job.nextRun ? 'programada' : 'sense dada'}</em>
+                </div>
+              </div>
+
+              <div className="ops-cron-footer-row cron-three">
+                <div className="ops-cron-footer-item">
+                  <span>Tipus</span>
+                  <strong>{job.scheduleType || job.scheduleKind || '—'}</strong>
+                </div>
+                <div className="ops-cron-footer-item">
+                  <span>Timezone</span>
+                  <strong>{job.timezone || 'UTC'}</strong>
+                </div>
+                <div className="ops-cron-footer-item">
+                  <span>Expressio</span>
+                  <strong>{job.scheduleExpr || (job.intervalMs ? `${Math.round(job.intervalMs / 60000)} min` : '—')}</strong>
+                </div>
+              </div>
+
+              {job.error && (
+                <div className="ops-error-box cron-inline">
+                  <span className="ops-error-label">Ultim error</span>
+                  <code>{job.error}</code>
+                </div>
+              )}
+            </article>
+          ))}
         </div>
       )}
     </OpsShell>

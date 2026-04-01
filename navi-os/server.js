@@ -410,53 +410,75 @@ app.get('/api/sessions', (req, res) => {
 
 app.get('/api/cron-health', (req, res) => {
   try {
-    const jobs = []
-    
-    const schedules = {
-      'repo-backup':   { label: 'Diari 02:00', interval: 86400000 },
-      'overnight-audit': { label: 'Diari 03:00', interval: 86400000 },
-      'daily-brief':   { label: 'Diari 08:00', interval: 86400000 },
-      'daily-news':    { label: 'Diari 07:00', interval: 86400000 },
-      'rolling-docs':  { label: 'Cada 6h',    interval: 21600000 },
+    const cronJobsFile = '/home/user/.openclaw/cron/jobs.json'
+    const raw = readJsonSafe(cronJobsFile, { jobs: [] })
+    const now = Date.now()
+
+    const formatEvery = (everyMs) => {
+      if (!everyMs) return 'Interval desconegut'
+      const minutes = Math.round(everyMs / 60000)
+      const hours = Math.round(everyMs / 3600000)
+      const days = Math.round(everyMs / 86400000)
+      if (minutes < 60) return `Cada ${minutes} min`
+      if (hours < 24 && everyMs % 3600000 === 0) return `Cada ${hours} h`
+      if (everyMs % 86400000 === 0) return `Cada ${days} dia(es)`
+      return `Cada ${minutes} min`
     }
-    
-    const scriptsDir = join(WORKSPACE, 'scripts')
-    if (existsSync(scriptsDir)) {
-      const cronFiles = readdirSync(scriptsDir).filter(f => f.endsWith('.sh') && !f.startsWith('.'))
-      
-      for (const file of cronFiles) {
-        const fullPath = join(scriptsDir, file)
-        const content = readFileSync(fullPath, 'utf-8')
-        const stat = statSync(fullPath)
-        const name = file.replace(/^\d+-/, '').replace('.sh', '')
-        const sched = schedules[name] || { label: 'Personalitzat', interval: 86400000 }
-        const disabled = /^\s*#\s*DISABLED/m.test(content) || /^\s*#DISABLED/m.test(content)
-        const errorMatch = content.match(/# LAST ERROR: (.+)/)
-        
-        // Use file mtime as last run time (cron jobs touch their scripts on execution)
-        let lastRun = stat.mtime.toISOString()
-        
-        // Check if last run is within expected interval (with 10% tolerance)
-        const now = Date.now()
-        const elapsed = now - new Date(lastRun).getTime()
-        const expectedInterval = sched.interval
-        const isStale = elapsed > expectedInterval * 1.1
-        
-        let status = disabled ? 'disabled' : (isStale ? 'failed' : 'healthy')
-        
-        const nextRun = new Date(new Date(lastRun).getTime() + expectedInterval).toISOString()
-        
-        jobs.push({
-          name,
-          nameLabel: sched.label,
-          status,
-          lastRun,
-          nextRun,
-          error: disabled ? 'Manually disabled' : (errorMatch ? errorMatch[1] : null),
-        })
+
+    const scheduleTypeLabel = (schedule = {}) => {
+      if (schedule.kind === 'cron') return 'Cron expression'
+      if (schedule.kind === 'every') return 'Recurring interval'
+      if (schedule.kind === 'at') return 'One-shot'
+      return 'Desconegut'
+    }
+
+    const scheduleLabel = (schedule = {}) => {
+      if (schedule.kind === 'cron') return schedule.expr || 'Cron sense expressio'
+      if (schedule.kind === 'every') return formatEvery(schedule.everyMs)
+      if (schedule.kind === 'at') return schedule.at || 'Execucio unica'
+      return 'Schedule desconegut'
+    }
+
+    const deriveStatus = (job) => {
+      if (!job.enabled) return 'disabled'
+      const state = job.state || {}
+      if (state.lastStatus === 'error' || state.lastRunStatus === 'error') return 'failed'
+      if (typeof state.nextRunAtMs === 'number' && state.nextRunAtMs < now && state.consecutiveErrors > 0) return 'failed'
+      return 'healthy'
+    }
+
+    const jobs = (raw.jobs || []).map(job => {
+      const schedule = job.schedule || {}
+      const state = job.state || {}
+      const lastRun = state.lastRunAtMs ? new Date(state.lastRunAtMs).toISOString() : null
+      const nextRun = state.nextRunAtMs ? new Date(state.nextRunAtMs).toISOString() : null
+      const status = deriveStatus(job)
+      const timezone = schedule.tz || 'UTC'
+      const scheduleKind = schedule.kind || 'unknown'
+      const error = state.lastError || state.lastErrorReason || null
+
+      return {
+        id: job.id,
+        name: job.name || 'Unnamed job',
+        description: job.description || '',
+        status,
+        enabled: !!job.enabled,
+        lastRun,
+        nextRun,
+        error,
+        schedule,
+        scheduleKind,
+        scheduleType: scheduleTypeLabel(schedule),
+        scheduleLabel: scheduleLabel(schedule),
+        scheduleExpr: schedule.expr || null,
+        intervalMs: schedule.everyMs || null,
+        timezone,
+        sessionTarget: job.sessionTarget || null,
+        deliveryMode: job.delivery?.mode || null,
+        nameLabel: scheduleLabel(schedule),
       }
-    }
-    
+    })
+
     res.json({ jobs })
   } catch (err) {
     res.status(500).json({ error: err.message, jobs: [] })
