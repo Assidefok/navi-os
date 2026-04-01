@@ -1,5 +1,9 @@
 import { useState, useEffect } from 'react'
-import { Activity, Zap, Link, FolderSync, Shield, Database, Users, LayoutList, LayoutDashboard, Server, Moon, CheckCircle2, AlertCircle, MessageSquare } from 'lucide-react'
+import {
+  Activity, Zap, Link, FolderSync, Shield, Database, Users, LayoutList,
+  Moon, CheckCircle2, AlertCircle, MessageSquare, Clock, RefreshCw,
+  Server, Brain
+} from 'lucide-react'
 import TaskPipeline from '../components/TaskPipeline'
 import Standups from './Ops/Standups'
 import ChiefsCouncil from './Ops/ChiefsCouncil/ChiefsCouncil'
@@ -7,7 +11,6 @@ import DeliverableTracker from '../components/DeliverableTracker'
 import TaskManager from '../components/TaskManager'
 import MissionControl from './MissionControl'
 import OrgChart from './OrgChart'
-import Status from '../components/Status'
 import Files from '../components/Files'
 import Security from '../components/Security'
 import Sync from '../components/Sync'
@@ -15,7 +18,37 @@ import ProposalsBoard from './Proposals/ProposalsBoard'
 import AutomationsBoard from './Ops/Automations/AutomationsBoard'
 import './Ops.css'
 
-// ─── Overnight Summary ─────────────────────────────────────────────────────────
+function formatDate(iso) {
+  if (!iso) return '—'
+  try {
+    return new Date(iso).toLocaleString('ca-ES', {
+      day: '2-digit',
+      month: 'short',
+      hour: '2-digit',
+      minute: '2-digit',
+    })
+  } catch {
+    return iso
+  }
+}
+
+function formatRelative(iso) {
+  if (!iso) return '—'
+  try {
+    const diffMs = Date.now() - new Date(iso).getTime()
+    const mins = Math.floor(diffMs / 60000)
+    const hours = Math.floor(mins / 60)
+    const days = Math.floor(hours / 24)
+    if (mins < 1) return 'ara mateix'
+    if (mins < 60) return `fa ${mins} min`
+    if (hours < 24) return `fa ${hours} h`
+    return `fa ${days} d`
+  } catch {
+    return '—'
+  }
+}
+
+// ─── Shared OPS blocks ────────────────────────────────────────────────────────
 
 function OvernightSummary() {
   const [cronJobs, setCronJobs] = useState([])
@@ -43,7 +76,7 @@ function OvernightSummary() {
   const formatTime = (iso) => {
     if (!iso) return '—'
     try {
-      return new Date(iso).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })
+      return new Date(iso).toLocaleTimeString('ca-ES', { hour: '2-digit', minute: '2-digit' })
     } catch { return iso }
   }
 
@@ -51,7 +84,7 @@ function OvernightSummary() {
     <div className="overnight-summary">
       <div className="summary-header">
         <Moon size={16} className="amber" />
-        <h3>Resum Overnight (desde 22h)</h3>
+        <h3>Resum Overnight (des de les 22h)</h3>
       </div>
       <div className="summary-stats">
         <span className="summary-stat">
@@ -79,8 +112,6 @@ function OvernightSummary() {
   )
 }
 
-// ─── System Modules Panel ──────────────────────────────────────────────────────
-
 function SystemModules() {
   const [sessions, setSessions] = useState([])
 
@@ -93,10 +124,10 @@ function SystemModules() {
 
   const modules = [
     { name: 'Gateway', status: 'operational', desc: 'OpenClaw Gateway' },
-    { name: 'Sessions', status: sessions.length > 0 ? 'operational' : 'idle', desc: `${sessions.length} sessio(s)` },
+    { name: 'Sessions', status: sessions.length > 0 ? 'operational' : 'idle', desc: `${sessions.length} sessio(ns)` },
     { name: 'Files', status: 'operational', desc: 'Workspace' },
     { name: 'Cron', status: 'operational', desc: 'Tasques programades' },
-    { name: 'Memory', status: 'operational', desc: 'Vector store' },
+    { name: 'Memory', status: 'operational', desc: 'Base de coneixement' },
   ]
 
   return (
@@ -114,8 +145,6 @@ function SystemModules() {
     </div>
   )
 }
-
-// ─── Health Errors Summary ─────────────────────────────────────────────────────
 
 function HealthErrors() {
   const [errors, setErrors] = useState([])
@@ -146,7 +175,7 @@ function HealthErrors() {
   const formatTime = (iso) => {
     if (!iso) return '—'
     try {
-      return new Date(iso).toLocaleString('es-ES', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+      return new Date(iso).toLocaleString('ca-ES', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
     } catch { return '—' }
   }
 
@@ -182,163 +211,400 @@ function HealthErrors() {
   )
 }
 
-// ─── Main Ops ─────────────────────────────────────────────────────────────────
+// ─── New OPS primary modules ────────────────────────────────────────────────
 
-// ─── Placeholder Views ────────────────────────────────────────────────────────
+function OpsShell({ title, icon: Icon, children, onRefresh }) {
+  return (
+    <section className="ops-module-shell">
+      <div className="ops-module-header">
+        <div className="ops-module-title-wrap">
+          <div className="ops-module-icon"><Icon size={18} /></div>
+          <div>
+            <h2 className="ops-module-title">{title}</h2>
+          </div>
+        </div>
+        {onRefresh && (
+          <button className="ops-refresh-btn" onClick={onRefresh}>
+            <RefreshCw size={14} /> Actualitzar
+          </button>
+        )}
+      </div>
+      <div className="ops-module-content">{children}</div>
+    </section>
+  )
+}
+
+function KpiCard({ label, value, tone = 'neutral' }) {
+  return (
+    <div className={`ops-kpi-card ${tone}`}>
+      <span className="ops-kpi-value">{value}</span>
+      <span className="ops-kpi-label">{label}</span>
+    </div>
+  )
+}
+
+function SessionsModule() {
+  const [sessions, setSessions] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [filter, setFilter] = useState('all')
+
+  const loadSessions = () => {
+    setLoading(true)
+    fetch('/api/sessions')
+      .then(r => r.json())
+      .then(d => setSessions(d.sessions || []))
+      .catch(() => setSessions([]))
+      .finally(() => setLoading(false))
+  }
+
+  useEffect(() => {
+    loadSessions()
+  }, [])
+
+  const filtered = filter === 'all' ? sessions : sessions.filter(s => s.type === filter)
+  const active = sessions.filter(s => s.status === 'running' || s.status === 'active').length
+  const mainCount = sessions.filter(s => s.type === 'main').length
+  const subagents = sessions.filter(s => s.type === 'subagent').length
+  const cronCount = sessions.filter(s => s.type === 'cron').length
+
+  return (
+    <OpsShell title="Sessions" icon={MessageSquare} onRefresh={loadSessions}>
+      <div className="ops-kpi-grid">
+        <KpiCard label="Totals" value={sessions.length} tone="amber" />
+        <KpiCard label="Actives" value={active} tone="green" />
+        <KpiCard label="Subagents" value={subagents} tone="sky" />
+        <KpiCard label="Cron" value={cronCount} tone="violet" />
+      </div>
+
+      <div className="ops-filter-tabs">
+        {[
+          ['all', 'Totes'],
+          ['main', 'Main'],
+          ['subagent', 'Subagents'],
+          ['cron', 'Cron'],
+        ].map(([id, label]) => (
+          <button
+            key={id}
+            className={`ops-filter-tab ${filter === id ? 'active' : ''}`}
+            onClick={() => setFilter(id)}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
+      {loading ? (
+        <div className="ops-empty-state">Carregant sessions...</div>
+      ) : filtered.length === 0 ? (
+        <div className="ops-empty-state">No hi ha sessions per mostrar</div>
+      ) : (
+        <div className="ops-list-stack">
+          {filtered.map(session => (
+            <div key={session.id} className="ops-list-card">
+              <div className="ops-list-top">
+                <div>
+                  <div className="ops-list-title">{session.label || session.id}</div>
+                  <div className="ops-list-subtitle">{session.channel || 'sense canal'} · {session.model || 'sense model'}</div>
+                </div>
+                <span className={`ops-status-pill ${session.status || 'unknown'}`}>{session.status || 'unknown'}</span>
+              </div>
+              <div className="ops-meta-grid compact">
+                <div><span>Tipus</span><strong>{session.type || 'main'}</strong></div>
+                <div><span>Inici</span><strong>{formatDate(session.startedAt)}</strong></div>
+                <div><span>Tokens</span><strong>{(session.totalTokens || 0).toLocaleString()}</strong></div>
+                <div><span>Runtime</span><strong>{session.runtimeMs ? `${Math.round(session.runtimeMs / 1000)}s` : '—'}</strong></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div className="ops-module-footer-note">Main: {mainCount} · Sessions vives: {active}</div>
+    </OpsShell>
+  )
+}
+
+function CronModule() {
+  const [jobs, setJobs] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [expanded, setExpanded] = useState(null)
+
+  const loadCron = () => {
+    setLoading(true)
+    fetch('/api/cron-health')
+      .then(r => r.json())
+      .then(d => {
+        const nextJobs = d.jobs || []
+        setJobs(nextJobs)
+        setExpanded(prev => prev || nextJobs[0]?.name || null)
+      })
+      .catch(() => setJobs([]))
+      .finally(() => setLoading(false))
+  }
+
+  useEffect(() => {
+    loadCron()
+  }, [])
+
+  const healthy = jobs.filter(j => j.status === 'healthy').length
+  const failed = jobs.filter(j => j.status === 'failed').length
+  const disabled = jobs.filter(j => j.status === 'disabled').length
+
+  return (
+    <OpsShell title="Cron Manager" icon={Clock} onRefresh={loadCron}>
+      <div className="ops-kpi-grid">
+        <KpiCard label="Jobs" value={jobs.length} tone="amber" />
+        <KpiCard label="Actius" value={healthy} tone="green" />
+        <KpiCard label="Errors" value={failed} tone={failed > 0 ? 'red' : 'neutral'} />
+        <KpiCard label="Desactivats" value={disabled} tone="neutral" />
+      </div>
+
+      {loading ? (
+        <div className="ops-empty-state">Carregant crons...</div>
+      ) : jobs.length === 0 ? (
+        <div className="ops-empty-state">No hi ha cron jobs detectats</div>
+      ) : (
+        <div className="ops-list-stack cron">
+          {jobs.map(job => {
+            const isOpen = expanded === job.name
+            return (
+              <div key={job.name} className={`ops-cron-card ${job.status}`}>
+                <button className="ops-cron-header" onClick={() => setExpanded(isOpen ? null : job.name)}>
+                  <div className="ops-cron-left">
+                    <div className="ops-cron-name">{job.name}</div>
+                    <div className="ops-cron-inline">
+                      <span className={`ops-mini-pill ${job.status}`}>{job.status}</span>
+                      <span>{formatRelative(job.lastRun)}</span>
+                      <span>→ Proxima: {job.nextRun ? formatDate(job.nextRun) : '—'}</span>
+                    </div>
+                  </div>
+                  <span className="ops-cron-arrow">{isOpen ? '−' : '+'}</span>
+                </button>
+
+                {isOpen && (
+                  <div className="ops-cron-body">
+                    <div className="ops-meta-grid">
+                      <div><span>Schedule</span><strong>{job.nameLabel || job.schedule || '—'}</strong></div>
+                      <div><span>Estat</span><strong>{job.status}</strong></div>
+                      <div><span>Ultima execucio</span><strong>{formatDate(job.lastRun)}</strong></div>
+                      <div><span>Seguent execucio</span><strong>{formatDate(job.nextRun)}</strong></div>
+                    </div>
+                    {job.error && (
+                      <div className="ops-error-box">
+                        <span className="ops-error-label">Ultim error</span>
+                        <code>{job.error}</code>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            )
+          })}
+        </div>
+      )}
+    </OpsShell>
+  )
+}
+
+function ActivityModule({ onOpenTool }) {
+  const [logs, setLogs] = useState([])
+  const [pm2, setPm2] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  const loadActivity = () => {
+    setLoading(true)
+    Promise.all([
+      fetch('/api/logs').then(r => r.json()).catch(() => ({ logs: [] })),
+      fetch('/api/pm2-status').then(r => r.json()).catch(() => ({ processes: [] })),
+    ])
+      .then(([logData, pm2Data]) => {
+        setLogs(logData.logs || [])
+        setPm2(pm2Data.processes || [])
+      })
+      .finally(() => setLoading(false))
+  }
+
+  useEffect(() => {
+    loadActivity()
+  }, [])
+
+  const quickTools = [
+    ['orgchart', 'Org Chart', Users],
+    ['pipeline', 'PM Board', LayoutList],
+    ['manager', 'Task Manager', Activity],
+    ['files', 'Files', FolderSync],
+    ['sync', 'Sync', Database],
+    ['security', 'Security', Shield],
+    ['automation', 'Automations', Zap],
+    ['chiefs', 'Chiefs Council', MessageSquare],
+    ['standups', 'Standups', Users],
+    ['integration', 'Integrations', Link],
+  ]
+
+  return (
+    <OpsShell title="Activity" icon={Brain} onRefresh={loadActivity}>
+      <HealthErrors />
+      <SystemModules />
+
+      <div className="ops-activity-grid">
+        <div className="ops-panel-box">
+          <div className="ops-panel-box-header">PM2</div>
+          {loading ? (
+            <div className="ops-empty-state small">Carregant...</div>
+          ) : pm2.length === 0 ? (
+            <div className="ops-empty-state small">Sense processos</div>
+          ) : (
+            <div className="ops-mini-list">
+              {pm2.map(proc => (
+                <div key={proc.name} className="ops-mini-row">
+                  <div>
+                    <strong>{proc.name}</strong>
+                    <span>{proc.uptime ? `${Math.round(proc.uptime / 1000)}s uptime` : '—'}</span>
+                  </div>
+                  <span className={`ops-status-pill ${proc.status}`}>{proc.status}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="ops-panel-box">
+          <div className="ops-panel-box-header">Logs recents</div>
+          {loading ? (
+            <div className="ops-empty-state small">Carregant...</div>
+          ) : logs.length === 0 ? (
+            <div className="ops-empty-state small">Sense logs recents</div>
+          ) : (
+            <div className="ops-mini-list">
+              {logs.slice(0, 8).map(log => (
+                <div key={log.file} className="ops-mini-row vertical">
+                  <div>
+                    <strong>{log.title}</strong>
+                    <span>{log.type} · {log.date}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="ops-tools-section">
+        <div className="ops-tools-title">Eines OPS</div>
+        <div className="ops-tools-grid">
+          {quickTools.map(([id, label, Icon]) => (
+            <button key={id} className="ops-tool-card" onClick={() => onOpenTool(id)}>
+              <Icon size={16} />
+              <span>{label}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+    </OpsShell>
+  )
+}
 
 function IntegrationView() {
   return (
     <div className="placeholder-view">
       <div className="placeholder-icon"><Link size={48} className="amber" /></div>
-      <h2>Integrations</h2>
-      <p>En desenvolupament</p>
-      <p>Connexions externes: API, webhooks, serveis de tercers.</p>
+      <h2>Integracions</h2>
+      <p>Connexions externes: API, webhooks i serveis de tercers.</p>
     </div>
   )
 }
 
 export default function Ops() {
-  const [viewMode, setViewMode] = useState('hub')
+  const [viewMode, setViewMode] = useState('mission')
+
+  const primaryTabs = [
+    { id: 'mission', label: 'Mission Control' },
+    { id: 'sessions', label: 'Sessions' },
+    { id: 'cron', label: 'Cron' },
+    { id: 'activity', label: 'Activity' },
+  ]
+
+  const utilityTabs = [
+    ['orgchart', 'Org Chart', Users],
+    ['pipeline', 'PM Board', LayoutList],
+    ['manager', 'Task Manager', Activity],
+    ['files', 'Files', FolderSync],
+    ['sync', 'Sync', Database],
+    ['security', 'Security', Shield],
+    ['automation', 'Automations', Zap],
+    ['integration', 'Integrations', Link],
+    ['chiefs', 'Chiefs Council', MessageSquare],
+    ['standups', 'Standups', Users],
+  ]
+
+  const renderPrimary = () => {
+    if (viewMode === 'mission') return (
+      <>
+        <OvernightSummary />
+        <MissionControl />
+      </>
+    )
+    if (viewMode === 'sessions') return <SessionsModule />
+    if (viewMode === 'cron') return <CronModule />
+    if (viewMode === 'activity') return <ActivityModule onOpenTool={setViewMode} />
+    return null
+  }
+
+  const renderUtility = () => {
+    if (viewMode === 'orgchart') return <OrgChart />
+    if (viewMode === 'pipeline') return (
+      <>
+        <TaskPipeline />
+        <ProposalsBoard />
+        <DeliverableTracker />
+      </>
+    )
+    if (viewMode === 'manager') return <TaskManager />
+    if (viewMode === 'files') return <Files />
+    if (viewMode === 'sync') return <Sync />
+    if (viewMode === 'security') return <Security />
+    if (viewMode === 'automation') return <AutomationsBoard />
+    if (viewMode === 'integration') return <IntegrationView />
+    if (viewMode === 'chiefs') return <ChiefsCouncil />
+    if (viewMode === 'standups') return <Standups />
+    return null
+  }
+
+  const isPrimary = primaryTabs.some(tab => tab.id === viewMode)
 
   return (
     <div className="module-view ops">
       <h1 className="dashboard-title amber neon-amber">Operacions</h1>
 
-      {/* Navigation Toggles */}
-      <div className="ops-toggles">
-        <button
-          className={`toggle-btn ${viewMode === 'hub' ? 'active' : ''}`}
-          onClick={() => setViewMode('hub')}
-        >
-          <LayoutDashboard size={15} />
-          Mission Control
-        </button>
-        <button
-          className={`toggle-btn ${viewMode === 'orgchart' ? 'active' : ''}`}
-          onClick={() => setViewMode('orgchart')}
-        >
-          <Users size={15} />
-          Org Chart
-        </button>
-        <button
-          className={`toggle-btn ${viewMode === 'pipeline' ? 'active' : ''}`}
-          onClick={() => setViewMode('pipeline')}
-        >
-          <LayoutList size={15} />
-          PM Board
-        </button>
-        <button
-          className={`toggle-btn ${viewMode === 'manager' ? 'active' : ''}`}
-          onClick={() => setViewMode('manager')}
-        >
-          <Activity size={15} />
-          Task Manager
-        </button>
-        <button
-          className={`toggle-btn ${viewMode === 'files' ? 'active' : ''}`}
-          onClick={() => setViewMode('files')}
-        >
-          <FolderSync size={15} />
-          Files
-        </button>
-        <button
-          className={`toggle-btn ${viewMode === 'sync' ? 'active' : ''}`}
-          onClick={() => setViewMode('sync')}
-        >
-          <Database size={15} />
-          Sync
-        </button>
-        <button
-          className={`toggle-btn ${viewMode === 'security' ? 'active' : ''}`}
-          onClick={() => setViewMode('security')}
-        >
-          <Shield size={15} />
-          Security
-        </button>
-        <button
-          className={`toggle-btn ${viewMode === 'automation' ? 'active' : ''}`}
-          onClick={() => setViewMode('automation')}
-        >
-          <Zap size={15} />
-          Automations
-        </button>
-        <button
-          className={`toggle-btn ${viewMode === 'integration' ? 'active' : ''}`}
-          onClick={() => setViewMode('integration')}
-        >
-          <Link size={15} />
-          Integrations
-        </button>
-        <button
-          className={`toggle-btn ${viewMode === 'chiefs' ? 'active' : ''}`}
-          onClick={() => setViewMode('chiefs')}
-        >
-          <MessageSquare size={15} />
-          Chiefs Council
-        </button>
-        <button
-          className={`toggle-btn ${viewMode === 'standups' ? 'active' : ''}`}
-          onClick={() => setViewMode('standups')}
-        >
-          <Users size={15} />
-          Standups
-        </button>
+      <div className="ops-primary-tabs">
+        {primaryTabs.map(tab => (
+          <button
+            key={tab.id}
+            className={`ops-primary-tab ${viewMode === tab.id ? 'active' : ''}`}
+            onClick={() => setViewMode(tab.id)}
+          >
+            {tab.label}
+          </button>
+        ))}
       </div>
 
-      {/* Hub View */}
-      {viewMode === 'hub' && (
-        <>
-          <OvernightSummary />
-          <HealthErrors />
-          <MissionControl />
-          <Status />
-          <Files />
-          <Security />
-          <Sync />
-          <SystemModules />
-        </>
-      )}
+      {isPrimary ? renderPrimary() : renderUtility()}
 
-      {/* Org Chart View */}
-      {viewMode === 'orgchart' && <OrgChart />}
-
-      {/* Task Views */}
-      {viewMode === 'pipeline' && (
-        <>
-          <OvernightSummary />
-          <TaskPipeline />
-          <ProposalsBoard />
-          <DeliverableTracker />
-        </>
-      )}
-
-      {viewMode === 'manager' && (
-        <>
-          <OvernightSummary />
-          <TaskManager />
-        </>
-      )}
-
-      {/* Files View */}
-      {viewMode === 'files' && <Files />}
-
-      {/* Sync View */}
-      {viewMode === 'sync' && <Sync />}
-
-      {/* Security View */}
-      {viewMode === 'security' && <Security />}
-
-      {/* Automation View */}
-      {viewMode === 'automation' && <AutomationsBoard />}
-
-      {/* Integration View */}
-      {viewMode === 'integration' && <IntegrationView />}
-
-      {/* Chiefs Council View */}
-      {viewMode === 'chiefs' && <ChiefsCouncil />}
-
-      {/* Standups View */}
-      {viewMode === 'standups' && <Standups />}
+      <div className="ops-secondary-toolbar">
+        <div className="ops-secondary-title">Utilitats OPS</div>
+        <div className="ops-toggles compact">
+          {utilityTabs.map(([id, label, Icon]) => (
+            <button
+              key={id}
+              className={`toggle-btn ${viewMode === id ? 'active' : ''}`}
+              onClick={() => setViewMode(id)}
+            >
+              <Icon size={15} />
+              {label}
+            </button>
+          ))}
+        </div>
+      </div>
     </div>
   )
 }
