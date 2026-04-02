@@ -1,0 +1,404 @@
+{
+  "meta": {
+    "version": 1,
+    "createdAt": "2026-03-31T21:58:00.000Z",
+    "updatedAt": "2026-04-01T21:56:03.694Z",
+    "path": "/home/user/.openclaw/workspace/data/automations.json"
+  },
+  "automations": [
+    {
+      "id": "auto-proposal-status-changed",
+      "name": "Proposta: Canvi d'estat",
+      "description": "Quan qualsevol proposta canvia d'estat, registra el canvi i notifica si passa a debat o accepted",
+      "enabled": true,
+      "trigger": {
+        "type": "proposal.status_changed",
+        "label": "Canvi d'estat de proposta"
+      },
+      "conditions": [],
+      "actions": [
+        {
+          "type": "message.send",
+          "label": "Registrar canvi al flux",
+          "params": {
+            "template": "[{oldStatus} → {newStatus}] {title}",
+            "channel": "internal"
+          }
+        }
+      ],
+      "lastTriggered": "2026-04-01T21:56:03.694Z",
+      "triggerCount": 2
+    },
+    {
+      "id": "auto-pm-task-delivered",
+      "name": "PM: Tasca delivered",
+      "description": "Quan una tasca es mou a Delivered, registra l'entrega",
+      "enabled": true,
+      "trigger": {
+        "type": "pm.task.delivered",
+        "label": "Tasca marcada com delivered"
+      },
+      "conditions": [],
+      "actions": [
+        {
+          "type": "message.send",
+          "label": "Registrar entrega",
+          "params": {
+            "template": "✓ TASCA ENTREGADA: {taskTitle} (assignee: {assignee})",
+            "channel": "internal"
+          }
+        }
+      ],
+      "lastTriggered": null,
+      "triggerCount": 0
+    },
+    {
+      "id": "auto-pm-task-review",
+      "name": "PM: Tasca en Review",
+      "description": "Quan una tasca es mou a Review, registra que cal revisió",
+      "enabled": true,
+      "trigger": {
+        "type": "pm.task.review",
+        "label": "Tasca en revisió"
+      },
+      "conditions": [],
+      "actions": [
+        {
+          "type": "message.send",
+          "label": "Notificar en review",
+          "params": {
+            "template": "👁 TASCA EN REVIEW: {taskTitle} - awaiting warren sign-off",
+            "channel": "internal"
+          }
+        }
+      ],
+      "lastTriggered": null,
+      "triggerCount": 0
+    },
+    {
+      "id": "auto-idea-debat",
+      "name": "Idea → Debat amb el Chief assignat",
+      "description": "Quan s'accepta una idea al Lab, crea automàticament una proposta de debat i assigna al chief proposat per gestionar-la",
+      "enabled": true,
+      "trigger": {
+        "type": "idea.accepted",
+        "label": "Idea acceptada al Lab"
+      },
+      "conditions": [],
+      "actions": [
+        {
+          "type": "proposal.create",
+          "label": "Crear proposta de debat",
+          "params": {
+            "track": "B",
+            "priority": "alta",
+            "status": "debate",
+            "notifyAuthor": true
+          }
+        }
+      ],
+      "lastTriggered": "2026-03-31T22:53:15.007Z",
+      "triggerCount": 1
+    },
+    {
+      "id": "auto-debat-approved-to-pm",
+      "name": "Debat aprovat → Tasca PM per l'agent",
+      "description": "Quan un debat s'aprova, crea una tasca al PM Board assignada a l'agent corresponent i l'afegeix al seu BACKLOG",
+      "enabled": true,
+      "trigger": {
+        "type": "debate.approved",
+        "label": "Debat aprovat"
+      },
+      "conditions": [],
+      "actions": [
+        {
+          "type": "pm_board.create_task",
+          "label": "Crear tasca al PM Board",
+          "params": {}
+        },
+        {
+          "type": "backlog.add",
+          "label": "Afegir al BACKLOG de l'agent",
+          "params": {}
+        }
+      ],
+      "lastTriggered": "2026-04-01T21:55:26.219Z",
+      "triggerCount": 1
+    },
+    {
+      "id": "auto-debat-rejected",
+      "name": "Debat refusat → Proposta rebutjada",
+      "description": "Quan un debat es rebutja, marca la proposta com a rebutjada i notifica el proponent",
+      "enabled": true,
+      "trigger": {
+        "type": "debate.rejected",
+        "label": "Debat rebutjat"
+      },
+      "conditions": [],
+      "actions": [
+        {
+          "type": "proposal.update_status",
+          "label": "Marcar com rebutjada",
+          "params": {
+            "status": "rejected"
+          }
+        },
+        {
+          "type": "notification.send",
+          "label": "Notificar proponent",
+          "params": {
+            "channel": "telegram",
+            "message": "La teva proposta ha estat refusada al debat. Revisa els comentaris."
+          }
+        }
+      ],
+      "lastTriggered": "2026-03-31T22:52:19.665Z",
+      "triggerCount": 1
+    },
+    {
+      "id": "auto-pm-board-agent-notify",
+      "name": "Nova tasca PM → Notificar agent",
+      "description": "Quan es crea una tasca al PM Board assignada a un agent, notifica'l automàticament",
+      "enabled": true,
+      "trigger": {
+        "type": "pm_board.task_assigned",
+        "label": "Tasca assignada a un agent"
+      },
+      "conditions": [],
+      "actions": [
+        {
+          "type": "message.send",
+          "label": "Enviar missatge a l'agent",
+          "params": {
+            "template": "Nova tasca assignada: {title}. Prioritat: {priority}. Data límit: {dueDate}"
+          }
+        }
+      ],
+      "lastTriggered": "2026-03-31T22:53:10.601Z",
+      "triggerCount": 1
+    },
+    {
+      "id": "somiar-de-dia",
+      "name": "Somiar de Dia",
+      "description": "De 9:00 a 20:00: cada 30 min revisa si no hi ha activitat i proposa millores del sistema.",
+      "enabled": false,
+      "trigger": {
+        "type": "cron.interval30",
+        "label": "Cada 30 min (9-20h)",
+        "window": "9:00-20:00"
+      },
+      "conditions": [
+        {
+          "type": "user.inactive",
+          "minutes": 30
+        }
+      ],
+      "actions": [
+        {
+          "type": "chiefs.review",
+          "label": "Revisió chiefs",
+          "params": {
+            "depth": "light"
+          }
+        },
+        {
+          "type": "proposal.create_if_issues",
+          "label": "Crear proposta si cal",
+          "params": {}
+        }
+      ],
+      "lastTriggered": null,
+      "triggerCount": 0,
+      "updatedAt": "2026-04-01T05:51:20.645Z"
+    },
+    {
+      "id": "somiar-de-nit",
+      "name": "Somiar de Nit",
+      "description": "De 20:00 a 6:00: cada 30 min revisa si no hi ha activitat i fa anàlisi profunda del sistema.",
+      "enabled": true,
+      "trigger": {
+        "type": "cron.interval30",
+        "label": "Cada 30 min (20-6h)",
+        "window": "20:00-06:00"
+      },
+      "conditions": [
+        {
+          "type": "user.inactive",
+          "minutes": 30
+        }
+      ],
+      "actions": [
+        {
+          "type": "chiefs.review",
+          "label": "Revisió profunda chiefs",
+          "params": {
+            "depth": "deep"
+          }
+        },
+        {
+          "type": "system.snapshot",
+          "label": "Snapshot del sistema",
+          "params": {}
+        }
+      ],
+      "lastTriggered": null,
+      "triggerCount": 0
+    }
+  ],
+  "executionLog": [
+    {
+      "automationId": "auto-debat-rejected",
+      "automationName": "Debat refusat → Proposta rebutjada",
+      "trigger": "debate.rejected",
+      "triggerData": {
+        "proposalId": "prop-003",
+        "proposalTitle": "TEST - Proposta AUTOMATICA",
+        "debateNotes": []
+      },
+      "results": [
+        {
+          "action": "proposal.update_status",
+          "success": true,
+          "result": {
+            "proposalId": "prop-003",
+            "newStatus": "rejected"
+          }
+        },
+        {
+          "action": "notification.send",
+          "success": true,
+          "result": {
+            "notification": "La teva proposta ha estat refusada al debat. Revisa els comentaris.",
+            "channel": "telegram",
+            "sent": true
+          }
+        }
+      ],
+      "executedAt": "2026-03-31T22:52:19.665Z",
+      "success": true
+    },
+    {
+      "automationId": "auto-pm-board-agent-notify",
+      "automationName": "Nova tasca PM → Notificar agent",
+      "trigger": "pm_board.task_assigned",
+      "triggerData": {},
+      "results": [
+        {
+          "action": "message.send",
+          "success": true,
+          "result": {
+            "message": "Nova tasca assignada: . Prioritat: . Data límit: {dueDate}",
+            "sent": true,
+            "channel": "internal"
+          }
+        }
+      ],
+      "executedAt": "2026-03-31T22:53:10.601Z",
+      "success": true
+    },
+    {
+      "automationId": "auto-idea-debat",
+      "automationName": "Idea → Debat amb el Chief assignat",
+      "trigger": "idea.accepted",
+      "triggerData": {},
+      "results": [
+        {
+          "action": "proposal.create",
+          "success": true,
+          "result": {
+            "proposalId": "proposal-1774997595008",
+            "status": "debate"
+          }
+        }
+      ],
+      "executedAt": "2026-03-31T22:53:15.007Z",
+      "success": true
+    },
+    {
+      "automationId": "auto-debat-approved-to-pm",
+      "automationName": "Debat aprovat → Tasca PM per l'agent",
+      "trigger": "debate.approved",
+      "triggerData": {
+        "proposalId": "proposal-1774997595008",
+        "proposalTitle": "Idea → Debat amb el Chief assignat",
+        "description": "Quan s'accepta una idea al Lab, crea automàticament una proposta de debat i assigna al chief proposat per gestionar-la",
+        "author": "navi",
+        "assignee": null,
+        "priority": "alta",
+        "debateNotes": []
+      },
+      "results": [
+        {
+          "action": "pm_board.create_task",
+          "success": true,
+          "result": {
+            "taskId": "pm-auto-1775080526219"
+          }
+        },
+        {
+          "action": "backlog.add",
+          "success": true,
+          "result": {
+            "agentId": "navi",
+            "added": false,
+            "error": "Backlog file not found"
+          }
+        }
+      ],
+      "executedAt": "2026-04-01T21:55:26.219Z",
+      "success": true
+    },
+    {
+      "automationId": "auto-proposal-status-changed",
+      "automationName": "Proposta: Canvi d'estat",
+      "trigger": "proposal.status_changed",
+      "triggerData": {
+        "proposalId": "proposal-1774997595008",
+        "proposalTitle": "Idea → Debat amb el Chief assignat",
+        "description": "Quan s'accepta una idea al Lab, crea automàticament una proposta de debat i assigna al chief proposat per gestionar-la",
+        "author": "navi",
+        "assignee": null,
+        "priority": "alta",
+        "oldStatus": "debate",
+        "newStatus": "accepted"
+      },
+      "results": [
+        {
+          "action": "message.send",
+          "success": true,
+          "result": {
+            "message": "[debate → accepted] ",
+            "sent": true,
+            "channel": "internal"
+          }
+        }
+      ],
+      "executedAt": "2026-04-01T21:55:26.222Z",
+      "success": true
+    },
+    {
+      "automationId": "auto-proposal-status-changed",
+      "automationName": "Proposta: Canvi d'estat",
+      "trigger": "proposal.status_changed",
+      "triggerData": {
+        "proposalId": "prop-003",
+        "proposalTitle": "TEST - Proposta AUTOMATICA",
+        "oldStatus": "rejected",
+        "newStatus": "pending"
+      },
+      "results": [
+        {
+          "action": "message.send",
+          "success": true,
+          "result": {
+            "message": "[rejected → pending] ",
+            "sent": true,
+            "channel": "internal"
+          }
+        }
+      ],
+      "executedAt": "2026-04-01T21:56:03.694Z",
+      "success": true
+    }
+  ]
+}

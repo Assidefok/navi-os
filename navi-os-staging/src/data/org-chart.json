@@ -1,0 +1,76 @@
+{
+  "human": {
+    "name": "Aleix",
+    "role": "Human Owner",
+    "emoji": "🧑‍💼",
+    "chatId": "267107022"
+  },
+  "orchestrator": {
+    "agentId": "navi",
+    "name": "Navi",
+    "emoji": "🧚",
+    "role": "Chief of Staff / Orchestrator",
+    "source": "built-in",
+    "workspace": "/home/user/.openclaw/workspace",
+    "description": "Main orchestrator agent - coordinates all chiefs",
+    "model": "minimax-portal/MiniMax-M2.7"
+  },
+  "chiefs": [
+    {
+      "agentId": "elom",
+      "name": "ELOM",
+      "emoji": "🚀",
+      "role": "Chief Visionary Officer",
+      "department": "Strategy & Vision",
+      "inspiredBy": "Elon Musk",
+      "workspace": "/home/user/.openclaw/workspace/team/elom",
+      "heartbeatInterval": 120,
+      "model": "openai-codex/gpt-5.4",
+      "modelReason": "Strategic vision needs frontier-level reasoning. Bold 10x decisions require the most capable model.",
+      "source": "custom",
+      "description": "Defines vision and strategic direction"
+    },
+    {
+      "agentId": "warren",
+      "name": "WARREN",
+      "emoji": "📊",
+      "role": "Chief Quality Officer",
+      "department": "Quality & Standards",
+      "inspiredBy": "Warren Buffett",
+      "workspace": "/home/user/.openclaw/workspace/team/warren",
+      "heartbeatInterval": 135,
+      "model": "openai-codex/gpt-5.4",
+      "modelReason": "Quality audits and risk assessment demand rigorous, careful analysis. Missing details = failed inspections.",
+      "source": "custom",
+      "description": "Guarantees quality standards and audits"
+    },
+    {
+      "agentId": "jeff",
+      "name": "JEFF",
+      "emoji": "⚡",
+      "role": "Chief Operations Officer",
+      "department": "Operations & Execution",
+      "inspiredBy": "Jeff Bezos",
+      "workspace": "/home/user/.openclaw/workspace/team/jeff",
+      "heartbeatInterval": 150,
+      "model": "openai-codex/gpt-5.3-codex",
+      "modelReason": "Execution and process optimization are technical by nature. Codex specialization means better code/script generation.",
+      "source": "custom",
+      "description": "Builds scalable systems and ensures delivery"
+    },
+    {
+      "agentId": "sam",
+      "name": "SAM",
+      "emoji": "🤖",
+      "role": "Chief AI Officer / CTO d'IA",
+      "department": "AI & Technology",
+      "inspiredBy": "Sam Altman",
+      "workspace": "/home/user/.openclaw/workspace/team/sam",
+      "heartbeatInterval": 180,
+      "model": "minimax-portal/MiniMax-M2.7",
+      "modelReason": "AI strategy involves high-volume coordination and evaluations. Cost-efficient for daily work; switch to GPT 5.4 for complex architecture decisions.",
+      "source": "custom",
+      "description": "Leads AI strategy and automation"
+    }
+  ]
+}

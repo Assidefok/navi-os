@@ -1,0 +1,13 @@
+{
+  "name": "20260402-020235-workspace-repo-backup",
+  "type": "workspace",
+  "label": "repo-backup",
+  "createdAt": "2026-04-02T02:02:35+02:00",
+  "host": "n100",
+  "workspace": "/home/user/.openclaw/workspace",
+  "branch": "master",
+  "commit": "9322069",
+  "archive": "/home/user/.openclaw/workspace/backups/workspace/20260402-020235-workspace-repo-backup/20260402-020235-workspace-repo-backup.tar.gz",
+  "size": "308K",
+  "sha256": "dca33abb1b572ae2568b61e8a2930ac02e661d7f7283232a2bf968a294719b73"
+}
