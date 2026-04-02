@@ -893,6 +893,23 @@ app.post('/api/self-improvement/deny', (req, res) => {
   }
 })
 
+app.post('/api/self-improvement/finalize', (req, res) => {
+  try {
+    const { proposalId, generatedDate } = req.body
+    if (!proposalId || !generatedDate) {
+      return res.status(400).json({ error: 'proposalId and generatedDate required' })
+    }
+    const approvalFile = join(WORKSPACE, 'memory', `approved-${generatedDate}-${proposalId}.json`)
+    const data = existsSync(approvalFile) ? JSON.parse(readFileSync(approvalFile, 'utf-8')) : { proposalId, generatedDate, approvedAt: new Date().toISOString(), status: 'approved' }
+    data.status = 'executed'
+    data.executedAt = new Date().toISOString()
+    writeFileSync(approvalFile, JSON.stringify(data, null, 2))
+    res.json({ ok: true, message: `Proposal ${proposalId} finalized`, proposalId, generatedDate, status: 'executed' })
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
+
 // Get pending approved proposals (for dreaming agents)
 app.get('/api/self-improvement/pending-deployments', (req, res) => {
   try {

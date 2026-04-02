@@ -185,3 +185,8 @@
 [2026-04-02 20:22:14] [SOMIAR-NIT] === Starting ===
 [2026-04-02 20:22:15] [SOMIAR-NIT] Deep Cycle: SN-20260402-2022
 [2026-04-02 20:22:15] [SOMIAR-NIT] Dirty git (63 changes). Committing...
+[2026-04-02 20:22:17] [SOMIAR-NIT] Report: /home/user/.openclaw/workspace/.somiar-cycles/somiar-de-nit-SN-20260402-2022.md
+[2026-04-02 20:22:17] [SOMIAR-NIT] === Done ===
+[2026-04-02 22:22:14] [SOMIAR-NIT] === Starting ===
+[2026-04-02 22:22:14] [SOMIAR-NIT] Deep Cycle: SN-20260402-2222
+[2026-04-02 22:22:15] [SOMIAR-NIT] Dirty git (17 changes). Committing...

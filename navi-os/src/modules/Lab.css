@@ -42,6 +42,23 @@
   min-height: 660px;
 }
 
+.lab-lab-shell {
+  padding: 20px;
+}
+
+.lab-lab-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 18px;
+}
+
+.lab-lab-main,
+.lab-lab-side {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
 .lab-shell {
   background: radial-gradient(circle at center, rgba(18, 86, 92, 0.18), transparent 30%), linear-gradient(180deg, rgba(11, 24, 49, 0.97), rgba(6, 15, 36, 0.98));
   border: 1px solid rgba(108, 138, 186, 0.12);
@@ -213,6 +230,11 @@
 .lab-pill.running {
   color: #72f7b6;
   background: rgba(114,247,182,0.12);
+}
+
+.lab-pill.warning {
+  color: #ffd36b;
+  background: rgba(255,211,107,0.12);
 }
 
 .lab-pill.failed {
@@ -795,4 +817,112 @@
 .lab-pill.ok {
   color: #72f7b6;
   background: rgba(114, 247, 182, 0.15);
+}
+
+.lab-proposal-card-clickable {
+  width: 100%;
+  text-align: left;
+}
+
+.lab-proposal-header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.lab-proposal-card-footer {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: rgba(255,255,255,0.72);
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 12px;
+}
+
+.lab-proposal-status-banner {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.04);
+  margin-bottom: 18px;
+}
+
+.lab-proposal-status-banner.running {
+  background: rgba(114,247,182,0.08);
+  border-color: rgba(114,247,182,0.18);
+}
+
+.lab-proposal-status-banner.failed {
+  background: rgba(255,142,142,0.08);
+  border-color: rgba(255,142,142,0.18);
+}
+
+.lab-proposal-status-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.lab-proposal-status-copy strong,
+.lab-proposal-detail-block h4 {
+  margin: 0;
+  color: #fff;
+  font-family: 'Ubuntu', sans-serif;
+}
+
+.lab-proposal-status-copy span,
+.lab-proposal-detail-block p,
+.lab-proposal-detail-list,
+.lab-proposal-detail-steps {
+  color: rgba(255,255,255,0.74);
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.lab-proposal-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.lab-proposal-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.lab-proposal-detail-block {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.lab-proposal-detail-list {
+  display: grid;
+  gap: 8px;
+}
+
+.lab-proposal-detail-steps {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.lab-proposal-actions-detail {
+  padding-top: 4px;
+}
+
+@media (max-width: 900px) {
+  .lab-proposal-detail-grid {
+    grid-template-columns: 1fr;
+  }
 }
