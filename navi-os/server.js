@@ -17,6 +17,7 @@ const DATA_DIR = join(WORKSPACE, 'data')
 const ORG_CHART_FILE = join(DATA_DIR, 'org-chart.json')
 const PM_BOARD_FILE = join(DATA_DIR, 'pm-board.json')
 const CHIEFS_COUNCIL_FILE = join(WORKSPACE, 'navi-os', 'src', 'data', 'chiefs-council.json')
+const INTERNAL_PORT = globalThis.process?.env?.PORT || 3001
 
 const app = express()
 app.use(cors())
@@ -1496,7 +1497,7 @@ app.post('/api/ideas/:id/accept', (req, res) => {
     
     // Fire automations for idea.accepted
     try {
-      fetch('http://localhost:3001/api/internal/automations/fire', {
+      fetch('http://localhost:/api/internal/automations/fire', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -1536,7 +1537,7 @@ app.post('/api/ideas/:id/reject', (req, res) => {
     
     // Fire automations for idea.rejected
     try {
-      fetch('http://localhost:3001/api/internal/automations/fire', {
+      fetch('http://localhost:/api/internal/automations/fire', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -1617,7 +1618,7 @@ app.patch('/api/proposals/:id', (req, res) => {
       // Fire the debate.* trigger for debate column transitions
       if (['debate.approved', 'debate.rejected', 'debate.status_changed'].includes(triggerType)) {
         try {
-          fetch('http://localhost:3001/api/internal/automations/fire', {
+          fetch('http://localhost:/api/internal/automations/fire', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -1637,7 +1638,7 @@ app.patch('/api/proposals/:id', (req, res) => {
       }
       // Always fire proposal.status_changed for any transition (including pending→debate, debate→processing, etc.)
       try {
-        fetch('http://localhost:3001/api/internal/automations/fire', {
+        fetch('http://localhost:/api/internal/automations/fire', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -2455,6 +2456,6 @@ if (existsSync(distPath)) {
 }
 
 const PORT = globalThis.process?.env?.PORT || 3001
-app.listen(PORT, () => {
-  console.log(`Navi OS API server running on http://localhost:${PORT}`)
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Navi OS API server running on http://0.0.0.0:${PORT}`)
 })

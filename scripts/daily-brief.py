@@ -1,14 +1,36 @@
 #!/usr/bin/env python3
-"""Daily Brief Generator - llegeix notícies i envia a Telegram"""
+"""Daily Brief Generator - llegeix notícies i envia a Telegram (missatges separats, traduïts)"""
 
 import json
 import os
 import sys
 import subprocess
 from datetime import datetime
+from deep_translator import GoogleTranslator
 
 TELEGRAM_CHAT_ID = "267107022"
 DATE = datetime.now().strftime("%d/%m/%Y")
+
+# Translator cache per no repetir traduccions
+_translator_cache = {}
+
+def translate(text, source="en", target="ca"):
+    """Tradueix text amb cache per evitar repeticions"""
+    if not text:
+        return text
+    
+    cache_key = f"{source}|{target}|{text}"
+    if cache_key in _translator_cache:
+        return _translator_cache[cache_key]
+    
+    try:
+        t = GoogleTranslator(source=source, target=target)
+        result = t.translate(text)
+        _translator_cache[cache_key] = result
+        return result
+    except Exception as e:
+        print(f"  ⚠️ Traducció fallida: {e}")
+        return text
 
 def get_bot_token():
     """Llegeix el token de OpenClaw config"""
@@ -37,7 +59,6 @@ def get_latest_news(category):
     if not entries:
         return None
     
-    # Agafar el més recent
     latest = entries[0]
     filename = latest.get("filename")
     if not filename:
@@ -64,12 +85,9 @@ def parse_news_content(news_data, max_items=3):
     
     items = []
     content = news_data.get("content", "")
-    headlines = news_data.get("headlines", [])
     
-    # Processar cada item del fitxer
     lines = content.split("\n")
     current_item = None
-    current_lines = []
     in_summary = False
     
     for line in lines:
@@ -79,7 +97,6 @@ def parse_news_content(news_data, max_items=3):
             current_item = {"title": line[4:].strip(), "link": "", "summary": ""}
             in_summary = False
         elif "**Source:**" in line or "**Link:**" in line:
-            # Extreure URL
             if "**Link:**" in line:
                 url = line.split("**Link:**")[-1].strip()
                 if current_item:
@@ -104,52 +121,6 @@ def parse_news_content(news_data, max_items=3):
     
     return items[:max_items]
 
-def format_telegram_message(news_categories):
-    """Formata el missatge complet per Telegram"""
-    message = f"*🧚 Bon dia, Aleix! | {DATE}*\n"
-    message += "━━━━━━━━━━━━━━━━━━━━\n"
-    
-    category_configs = [
-        ("AI-News", "🤖 INTEL·LIGÈNCIA ARTIFICIAL", "ai"),
-        ("World-News", "🌍 MON", "world"),
-        ("Iran-War", "⚔️ GUERRA D'IRÀ", "iran"),
-        ("Stock-Market", "📈 BORSA", "stock"),
-    ]
-    
-    for category_id, category_name, key in category_configs:
-        message += f"\n*{category_name}*\n"
-        
-        news_data = news_categories.get(key)
-        if not news_data or not news_data.get("content"):
-            message += "▸ Sense notícies disponibles\n"
-            continue
-        
-        items = parse_news_content(news_data, max_items=3)
-        if not items:
-            message += "▸ Sense notícies disponibles\n"
-            continue
-        
-        for item in items:
-            title = item.get("title", "")[:80]
-            link = item.get("link", "")
-            summary = item.get("summary", "")[:150]
-            
-            message += f"▸ {title}\n"
-            if link:
-                message += f"[Font]({link})\n"
-            if summary:
-                message += f"- {summary}...\n"
-            message += "\n"
-    
-    message += "━━━━━━━━━━━━━━━━━━━━\n"
-    message += f"*Fonts: TechCrunch, BBC, Al Jazeera, Yahoo Finance | Navi OS · {DATE}*"
-    
-    # Limitar a ~4000 caràcters
-    if len(message) > 4000:
-        message = message[:3990] + "[...]"
-    
-    return message
-
 def send_telegram(message):
     """Envia el missatge a Telegram"""
     if not BOT_TOKEN:
@@ -169,37 +140,72 @@ def send_telegram(message):
     result = subprocess.run(cmd, capture_output=True, text=True)
     return result.returncode == 0
 
+def format_category_message(category_name, emoji, items, source_name):
+    """Formata un missatge per una categoria (amb traduccions)"""
+    message = f"*{emoji} {category_name}*\n"
+    message += "━━━━━━━━━━━━━━━━━━━━\n\n"
+    
+    if not items:
+        message += "▸ Sense notícies disponibles\n"
+        return message
+    
+    for item in items:
+        title_en = item.get("title", "")[:80]
+        link = item.get("link", "")
+        summary_en = item.get("summary", "")[:150]
+        
+        # Traduir al català
+        title_ca = translate(title_en)
+        summary_ca = translate(summary_en)
+        
+        message += f"▸ {title_ca}\n"
+        if link:
+            message += f"[{source_name}]({link})\n"
+        if summary_ca:
+            message += f"- {summary_ca}...\n"
+        message += "\n"
+    
+    return message.strip()
+
 def main():
     print(f"Generant Daily Brief per {DATE}...")
     
-    # Carregar totes les categories
-    categories = {}
-    for key in ["ai", "world", "iran", "stock"]:
-        category_map = {
-            "ai": "AI-News",
-            "world": "World-News", 
-            "iran": "Iran-War",
-            "stock": "Stock-Market"
-        }
-        news = get_latest_news(category_map[key])
-        categories[key] = news
+    category_configs = [
+        ("AI-News", "INTEL·LIGÈNCIA ARTIFICIAL", "ai", "TechCrunch", "🤖"),
+        ("World-News", "MON", "world", "BBC", "🌍"),
+        ("Iran-War", "GUERRA D'IRÀ", "iran", "Al Jazeera", "⚔️"),
+        ("Stock-Market", "BORSA", "stock", "Yahoo Finance", "📈"),
+    ]
+    
+    total_sent = 0
+    total_items = 0
+    
+    for category_id, category_name, key, source_name, emoji in category_configs:
+        news = get_latest_news(category_id)
         print(f"  {key}: {'OK' if news else 'BUIT'}")
+        
+        items = []
+        if news:
+            items = parse_news_content(news, max_items=3)
+        
+        message = format_category_message(category_name, emoji, items, source_name)
+        
+        if send_telegram(message):
+            total_sent += 1
+            total_items += len(items) if items else 0
+            print(f"  ✅ {category_name} enviat ({len(items)} items)")
+        else:
+            print(f"  ❌ Error enviant {category_name}")
     
-    # Generar missatge
-    message = format_telegram_message(categories)
+    print(f"\n✅ {total_sent}/4 categories enviades ({total_items} notícies)")
     
-    # Guardar per debug
+    # Guardar resum per debug
     with open("/tmp/daily_brief_debug.txt", "w") as f:
-        f.write(message)
-    print(f"\nMissatge generat ({len(message)} chars)")
+        f.write(f"Data: {DATE}\n")
+        f.write(f"Categories enviades: {total_sent}/4\n")
+        f.write(f"Total notícies: {total_items}\n")
     
-    # Enviar
-    if send_telegram(message):
-        print("✅ Brief enviat a Telegram")
-        return 0
-    else:
-        print("❌ Error enviant a Telegram")
-        return 1
+    return 0 if total_sent == 4 else 1
 
 if __name__ == "__main__":
     sys.exit(main())

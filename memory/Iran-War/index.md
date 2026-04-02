@@ -4,7 +4,7 @@ category: Guerra d'Iran
 icon: ⚔️
 description: Iran war and Middle East conflict news
 tags: ['iran', 'middle-east', 'war', 'conflict']
-created: 2026-04-01 13:25
+created: 2026-04-02 06:45
 ---
 
 # ⚔️ Guerra d'Iran
@@ -13,13 +13,19 @@ Iran war and Middle East conflict news
 
 ## Meta
 - **Carpeta:** `memory/Iran-War/`
-- **Total entrades:** 3
-- **Darrer update:** 2026-04-01 13:25
+- **Total entrades:** 4
+- **Darrer update:** 2026-04-02 06:45
 
 ## Tags
 #iran #middle-east #war #conflict
 
 ## Entrades recents
+
+### [[2026-04-02-06.00.md|2026-04-02 06:00]] 
+
+- Iran war live: Trump claims goals nearing completion, vows to ‘finish job’...
+- NASA moon mission a ‘contrast’ to US war on Iran, says US senator...
+- Smoke and embers seen over Iran’s Isfahan after strike...
 
 ### [[2026-04-01-06.00.md|2026-04-01 06:00]] 
 

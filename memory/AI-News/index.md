@@ -4,7 +4,7 @@ category: AI News
 icon: 🤖
 description: Artificial Intelligence and Machine Learning news
 tags: ['ai', 'ml', 'llm', 'openai', 'anthropic', 'startups']
-created: 2026-04-01 13:25
+created: 2026-04-02 06:45
 ---
 
 # 🤖 AI News
@@ -13,13 +13,19 @@ Artificial Intelligence and Machine Learning news
 
 ## Meta
 - **Carpeta:** `memory/AI-News/`
-- **Total entrades:** 3
-- **Darrer update:** 2026-04-01 13:25
+- **Total entrades:** 4
+- **Darrer update:** 2026-04-02 06:45
 
 ## Tags
 #ai #ml #llm #openai #anthropic #startups
 
 ## Entrades recents
+
+### [[2026-04-02-06.00.md|2026-04-02 06:00]] #anthropic
+
+- Anthropic took down thousands of GitHub repos trying to yank its leaked source c...
+- Meta’s natural gas binge could power South Dakota...
+- Cognichip wants AI to design the chips that power AI, and just raised $60M to tr...
 
 ### [[2026-04-01-06.00.md|2026-04-01 06:00]] #anthropic #openai #startups
 

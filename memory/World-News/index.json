@@ -1,6 +1,29 @@
 {
   "entries": [
     {
+      "filename": "2026-04-02-06.00.md",
+      "headlines": [
+        "Watch the moment Artemis II blasts into space",
+        "Trump leaves key questions unanswered as he seeks to calm nerves over Iran war",
+        "Magnitude 7.4 earthquake hits off Indonesia, killing one",
+        "Israel intensifies Lebanon attacks and hits areas not in Hezbollah's control",
+        "Utah teen identified as victim of serial killer Ted Bundy",
+        "US Supreme Court appears sceptical of US birthright citizenship challenge",
+        "Mass robotaxi malfunction halts traffic in Chinese city",
+        "Families cram into Greek court for trial into deadliest train crash",
+        "Devastated Italians reckon with 'third apocalypse' of World Cup failure",
+        "Explosions at Burundi ammunition depot kill civilians, witnesses say"
+      ],
+      "regions": [
+        "Middle East",
+        "US"
+      ],
+      "date": "2026-04-02",
+      "hour": "06",
+      "timestamp": "2026-04-02 06:45:15",
+      "item_count": 10
+    },
+    {
       "filename": "2026-04-01-06.00.md",
       "headlines": [
         "Iran using children in security roles in war, reports and witnesses say",
@@ -77,5 +100,5 @@
       "item_count": 10
     }
   ],
-  "last_updated": "2026-04-01 06:45:16"
+  "last_updated": "2026-04-02 06:45:15"
 }

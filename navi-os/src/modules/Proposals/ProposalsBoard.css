@@ -308,6 +308,105 @@
   justify-content: flex-end;
 }
 
+.pb-move-btn.staging {
+  --ac: #f97316;
+}
+
+.pb-move-btn.done {
+  --ac: #30d158;
+}
+
+.pb-move-btn.replan {
+  --ac: #bf5af2;
+}
+
+.pb-card-area {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.05);
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+/* ── Reject Modal ──────────────────────────────────────────── */
+.pb-reject-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pb-reject-desc {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.5;
+}
+
+.pb-reject-modal textarea {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  padding: 12px;
+  color: #fff;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 13px;
+  resize: vertical;
+  min-height: 80px;
+  outline: none;
+}
+
+.pb-reject-modal textarea:focus {
+  border-color: rgba(191, 90, 242, 0.5);
+}
+
+.pb-reject-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.pb-btn-cancel {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  padding: 10px 16px;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.pb-btn-cancel:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.pb-btn-reject {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(191, 90, 242, 0.15);
+  border: 1px solid rgba(191, 90, 242, 0.4);
+  border-radius: 8px;
+  padding: 10px 16px;
+  color: #bf5af2;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.pb-btn-reject:hover:not(:disabled) {
+  background: rgba(191, 90, 242, 0.25);
+}
+
+.pb-btn-reject:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 /* ── Form ───────────────────────────────────────────────────── */
 .pb-form-overlay {
   position: fixed;
@@ -428,6 +527,89 @@
 
 .pb-form-submit:hover {
   background: rgba(255, 184, 0, 0.25);
+}
+
+/* ── SLA Badge ──────────────────────────────────────────────── */
+.pb-sla-badge {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(0, 180, 216, 0.15);
+  color: #00b4d8;
+}
+
+.pb-sla-badge.warning {
+  background: rgba(255, 184, 0, 0.15);
+  color: #ffb800;
+}
+
+.pb-sla-badge.overdue {
+  background: rgba(255, 69, 58, 0.15);
+  color: #ff453a;
+}
+
+/* ── Overdue Card ───────────────────────────────────────────── */
+.pb-card.overdue {
+  border-left-color: #ff453a !important;
+  background: rgba(255, 69, 58, 0.05);
+}
+
+.pb-overdue-count {
+  color: #ff453a;
+}
+
+/* ── Rejection Reason ───────────────────────────────────────── */
+.pb-rejection-reason {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 8px 10px;
+  background: rgba(191, 90, 242, 0.1);
+  border: 1px solid rgba(191, 90, 242, 0.2);
+  border-radius: 6px;
+  margin-bottom: 8px;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.4;
+}
+
+.pb-rejection-reason svg {
+  color: #bf5af2;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* ── Pipeline Legend ────────────────────────────────────────── */
+.pb-pipeline-legend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+  overflow-x: auto;
+  flex-wrap: wrap;
+}
+
+.pb-pipeline-legend span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.pb-pipeline-legend svg {
+  opacity: 0.6;
 }
 
 /* ── Loading ─────────────────────────────────────────────────── */

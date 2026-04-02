@@ -17,6 +17,7 @@ const DATA_DIR = join(WORKSPACE, 'data')
 const ORG_CHART_FILE = join(DATA_DIR, 'org-chart.json')
 const PM_BOARD_FILE = join(DATA_DIR, 'pm-board.json')
 const CHIEFS_COUNCIL_FILE = join(WORKSPACE, 'navi-os', 'src', 'data', 'chiefs-council.json')
+const INTERNAL_PORT = globalThis.process?.env?.PORT || 3001
 
 const app = express()
 app.use(cors())
@@ -714,6 +715,232 @@ app.get('/api/ideas', (req, res) => {
   }
 })
 
+// ─── Self-Improvement Proposals ──────────────────────────────────────────────
+
+app.get('/api/self-improvement/proposals', (req, res) => {
+  try {
+    const improvementDir = join(WORKSPACE, 'navi-os-improvement', 'reports')
+    const proposals = []
+    
+    if (!existsSync(improvementDir)) {
+      return res.json({ proposals: [] })
+    }
+    
+    const files = readdirSync(improvementDir)
+      .filter(f => f.endsWith('-improvements.md'))
+      .sort()
+      .reverse()
+    
+    for (const file of files.slice(0, 7)) { // Latest 7 days
+      const filePath = join(improvementDir, file)
+      const content = readFileSync(filePath, 'utf-8')
+      
+      // Extract date from filename (2026-04-01-23.00-improvements.md)
+      const dateMatch = file.match(/^(\d{4}-\d{2}-\d{2})/)
+      const generatedDate = dateMatch ? dateMatch[1] : file
+      
+      // Check for corresponding execution file
+      const execFile = file.replace('-improvements.md', '-execution.md')
+      const execFilePath = join(improvementDir, execFile)
+      const hasExecution = existsSync(execFilePath)
+      
+      // Parse improvements from markdown
+      const improvementBlocks = content.split(/^### IMP-/m).filter(Boolean)
+      
+      for (const block of improvementBlocks) {
+        const lines = block.trim().split('\n')
+        const firstLine = lines[0] || ''
+        
+        // Extract ID and title from first line: "2026-04-01-01 — PM2 Ecosystem Fix: Separar API i Vite"
+        const idMatch = firstLine.match(/^(\d{4}-\d{2}-\d{2}-\d{2})\s*—\s*(.+)/)
+        const id = idMatch ? `IMP-${idMatch[1]}` : null
+        const title = idMatch ? idMatch[2].trim() : firstLine
+        
+        // Extract metadata from **field:** lines
+        const getField = (field) => {
+          const line = lines.find(l => l.startsWith(`**${field}:**`))
+          return line ? line.replace(`**${field}:**`, '').trim() : ''
+        }
+        
+        const area = getField('Area')
+        const type = getField('Type')
+        const priority = getField('Priority')
+        const impact = getField('Impact')
+        const risk = getField('Risk')
+        
+        // Extract steps
+        const stepsSection = block.match(/\*\*Implementation Steps:\*\*([\s\S]*?)(?=\n\*\*Risk:)/)
+        const steps = stepsSection 
+          ? stepsSection[1].trim().split('\n').filter(l => l.match(/^\d+\./)).map(l => l.replace(/^\d+\.\s*/, '').trim())
+          : []
+        
+        if (id) {
+          // Check for approval/denial files to determine actual status
+          const approvedFile = join(WORKSPACE, 'memory', `approved-${generatedDate}-${id}.json`)
+          const deniedFile = join(WORKSPACE, 'memory', `denied-${generatedDate}-${id}.json`)
+          
+          let status = hasExecution ? 'executed' : 'pending'
+          let approvedAt = null
+          let deniedAt = null
+          
+          if (existsSync(approvedFile)) {
+            try {
+              const approvalData = JSON.parse(readFileSync(approvedFile, 'utf-8'))
+              status = approvalData.status || (approvalData.executedAt ? 'executed' : 'approved')
+              approvedAt = approvalData.approvedAt
+            } catch {}
+          } else if (existsSync(deniedFile)) {
+            status = 'denied'
+            try {
+              const denialData = JSON.parse(readFileSync(deniedFile, 'utf-8'))
+              deniedAt = denialData.deniedAt
+            } catch {}
+          }
+          
+          proposals.push({
+            id,
+            title,
+            area,
+            type,
+            priority,
+            impact,
+            risk,
+            description: impact || '',
+            generatedDate,
+            buildLog: execFile,
+            hasExecution,
+            status,
+            approvedAt,
+            deniedAt,
+            steps,
+          })
+        }
+      }
+    }
+    
+    // Sort by date descending, then by ID
+    proposals.sort((a, b) => {
+      const dateCmp = b.generatedDate.localeCompare(a.generatedDate)
+      if (dateCmp !== 0) return dateCmp
+      return b.id.localeCompare(a.id)
+    })
+    
+    res.json({ proposals })
+  } catch (err) {
+    res.status(500).json({ error: err.message, proposals: [] })
+  }
+})
+
+app.post('/api/self-improvement/approve', (req, res) => {
+  try {
+    const { proposalId, generatedDate } = req.body
+    
+    if (!proposalId || !generatedDate) {
+      return res.status(400).json({ error: 'proposalId and generatedDate required' })
+    }
+    
+    // Mark proposal as approved (will be executed by dreaming agents)
+    const approvalFile = join(WORKSPACE, 'memory', `approved-${generatedDate}-${proposalId}.json`)
+    const approvalData = {
+      proposalId,
+      generatedDate,
+      approvedAt: new Date().toISOString(),
+      status: 'approved',
+      executedAt: null,
+    }
+    writeFileSync(approvalFile, JSON.stringify(approvalData, null, 2))
+    
+    res.json({ 
+      ok: true, 
+      message: `Proposal ${proposalId} approved — will be deployed tonight`,
+      proposalId,
+      generatedDate,
+      status: 'approved'
+    })
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
+
+app.post('/api/self-improvement/deny', (req, res) => {
+  try {
+    const { proposalId, generatedDate, reason } = req.body
+    
+    if (!proposalId || !generatedDate) {
+      return res.status(400).json({ error: 'proposalId and generatedDate required' })
+    }
+    
+    // Mark proposal as denied
+    const denialFile = join(WORKSPACE, 'memory', `denied-${generatedDate}-${proposalId}.json`)
+    const denialData = {
+      proposalId,
+      generatedDate,
+      deniedAt: new Date().toISOString(),
+      status: 'denied',
+      reason: reason || null,
+    }
+    writeFileSync(denialFile, JSON.stringify(denialData, null, 2))
+    
+    res.json({ 
+      ok: true, 
+      message: `Proposal ${proposalId} denied`,
+      proposalId,
+      generatedDate,
+      status: 'denied'
+    })
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
+
+// Get pending approved proposals (for dreaming agents)
+app.get('/api/self-improvement/pending-deployments', (req, res) => {
+  try {
+    const memoryDir = join(WORKSPACE, 'memory')
+    const approved = []
+    
+    const files = readdirSync(memoryDir)
+    for (const file of files) {
+      if (file.startsWith('approved-') && file.endsWith('.json')) {
+        try {
+          const data = JSON.parse(readFileSync(join(memoryDir, file), 'utf-8'))
+          if (data.status === 'approved' && !data.executedAt) {
+            approved.push(data)
+          }
+        } catch {}
+      }
+    }
+    
+    approved.sort((a, b) => new Date(a.approvedAt) - new Date(b.approvedAt))
+    res.json({ pending: approved })
+  } catch (err) {
+    res.status(500).json({ error: err.message, pending: [] })
+  }
+})
+
+// Mark a proposal as executed
+app.post('/api/self-improvement/mark-executed', (req, res) => {
+  try {
+    const { proposalId, generatedDate } = req.body
+    
+    if (!proposalId || !generatedDate) {
+      return res.status(400).json({ error: 'proposalId and generatedDate required' })
+    }
+    
+    const approvalFile = join(WORKSPACE, 'memory', `approved-${generatedDate}-${proposalId}.json`)
+    if (existsSync(approvalFile)) {
+      const data = JSON.parse(readFileSync(approvalFile, 'utf-8'))
+      data.status = 'executed'
+      data.executedAt = new Date().toISOString()
+      writeFileSync(approvalFile, JSON.stringify(data, null, 2))
+    }
+    
+    res.json({ ok: true, proposalId, generatedDate })
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
+
 // ─── Git Commit Detail ─────────────────────────────────────────────────────────
 
 app.get('/api/git-commit/:hash', (req, res) => {
@@ -1270,7 +1497,7 @@ app.post('/api/ideas/:id/accept', (req, res) => {
     
     // Fire automations for idea.accepted
     try {
-      fetch('http://localhost:3001/api/internal/automations/fire', {
+      fetch('http://localhost:/api/internal/automations/fire', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -1310,7 +1537,7 @@ app.post('/api/ideas/:id/reject', (req, res) => {
     
     // Fire automations for idea.rejected
     try {
-      fetch('http://localhost:3001/api/internal/automations/fire', {
+      fetch('http://localhost:/api/internal/automations/fire', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -1391,7 +1618,7 @@ app.patch('/api/proposals/:id', (req, res) => {
       // Fire the debate.* trigger for debate column transitions
       if (['debate.approved', 'debate.rejected', 'debate.status_changed'].includes(triggerType)) {
         try {
-          fetch('http://localhost:3001/api/internal/automations/fire', {
+          fetch('http://localhost:/api/internal/automations/fire', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -1411,7 +1638,7 @@ app.patch('/api/proposals/:id', (req, res) => {
       }
       // Always fire proposal.status_changed for any transition (including pending→debate, debate→processing, etc.)
       try {
-        fetch('http://localhost:3001/api/internal/automations/fire', {
+        fetch('http://localhost:/api/internal/automations/fire', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -2228,7 +2455,7 @@ if (existsSync(distPath)) {
   })
 }
 
-const PORT = globalThis.process?.env?.PORT || 3002
-app.listen(PORT, () => {
-  console.log(`Navi OS API server running on http://localhost:${PORT}`)
+const PORT = globalThis.process?.env?.PORT || 3001
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Navi OS API server running on http://0.0.0.0:${PORT}`)
 })

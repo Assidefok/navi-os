@@ -1,6 +1,24 @@
 {
   "entries": [
     {
+      "filename": "2026-04-02-06.00.md",
+      "headlines": [
+        "Anthropic took down thousands of GitHub repos trying to yank its leaked source c",
+        "Meta\u2019s natural gas binge could power South Dakota",
+        "Cognichip wants AI to design the chips that power AI, and just raised $60M to tr",
+        "Less than a month: StrictlyVC San Francisco brings leaders from TDK Ventures, Re",
+        "Mercor says it was hit by cyberattack tied to compromise of open source LiteLLM "
+      ],
+      "topics": [
+        "Anthropic"
+      ],
+      "tags": [],
+      "date": "2026-04-02",
+      "hour": "06",
+      "timestamp": "2026-04-02 06:45:06",
+      "item_count": 5
+    },
+    {
       "filename": "2026-04-01-06.00.md",
       "headlines": [
         "Mercor says it was hit by cyberattack tied to compromise of open-source LiteLLM ",
@@ -58,5 +76,5 @@
       "item_count": 5
     }
   ],
-  "last_updated": "2026-04-01 06:45:07"
+  "last_updated": "2026-04-02 06:45:06"
 }

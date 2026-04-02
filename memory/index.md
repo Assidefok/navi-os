@@ -1,7 +1,7 @@
 ---
 type: vault-index
 name: Navi OS Memory Vault
-created: 2026-04-01 13:25
+created: 2026-04-02 06:45
 ---
 
 # 🧚 Navi OS Memory Vault
@@ -14,32 +14,32 @@ Sistema de coneixement estructurat estil Obsidian.
 
 Artificial Intelligence and Machine Learning news
 
-- **Entrades totals:** 3
-- **Darrera entrada:** 2026-04-01
+- **Entrades totals:** 4
+- **Darrera entrada:** 2026-04-02
 - **Tags:** #ai #ml #llm #openai #anthropic #startups
 
 ## 🌍 [[World-News/index.md|World News]]
 
 Top world news from international sources
 
-- **Entrades totals:** 3
-- **Darrera entrada:** 2026-04-01
+- **Entrades totals:** 4
+- **Darrera entrada:** 2026-04-02
 - **Tags:** #world #politics #international
 
 ## ⚔️ [[Iran-War/index.md|Guerra d'Iran]]
 
 Iran war and Middle East conflict news
 
-- **Entrades totals:** 3
-- **Darrera entrada:** 2026-04-01
+- **Entrades totals:** 4
+- **Darrera entrada:** 2026-04-02
 - **Tags:** #iran #middle-east #war #conflict
 
 ## 📈 [[Stock-Market/index.md|Borsa]]
 
 Stock market and finance news
 
-- **Entrades totals:** 4
-- **Darrera entrada:** 2026-04-01
+- **Entrades totals:** 5
+- **Darrera entrada:** 2026-04-02
 - **Tags:** #stocks #markets #finance #investing
 
 
@@ -66,4 +66,4 @@ memory/
 - #iran #middle-east #war
 
 ---
-*Generat per Navi OS | 2026-04-01 13:25*
+*Generat per Navi OS | 2026-04-02 06:45*

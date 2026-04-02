@@ -4,7 +4,7 @@ category: World News
 icon: 🌍
 description: Top world news from international sources
 tags: ['world', 'politics', 'international']
-created: 2026-04-01 13:25
+created: 2026-04-02 06:45
 ---
 
 # 🌍 World News
@@ -13,13 +13,19 @@ Top world news from international sources
 
 ## Meta
 - **Carpeta:** `memory/World-News/`
-- **Total entrades:** 3
-- **Darrer update:** 2026-04-01 13:25
+- **Total entrades:** 4
+- **Darrer update:** 2026-04-02 06:45
 
 ## Tags
 #world #politics #international
 
 ## Entrades recents
+
+### [[2026-04-02-06.00.md|2026-04-02 06:00]] #middle-east #us
+
+- Watch the moment Artemis II blasts into space...
+- Trump leaves key questions unanswered as he seeks to calm nerves over Iran war...
+- Magnitude 7.4 earthquake hits off Indonesia, killing one...
 
 ### [[2026-04-01-06.00.md|2026-04-01 06:00]] #middle-east #us #asia
 

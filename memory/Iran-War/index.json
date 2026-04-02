@@ -1,6 +1,32 @@
 {
   "entries": [
     {
+      "filename": "2026-04-02-06.00.md",
+      "headlines": [
+        "Iran war live: Trump claims goals nearing completion, vows to \u2018finish job\u2019",
+        "NASA moon mission a \u2018contrast\u2019 to US war on Iran, says US senator",
+        "Smoke and embers seen over Iran\u2019s Isfahan after strike",
+        "\u2018Which interests being served by war?\u2019 Iran\u2019s Pezeshkian asks US public",
+        "Central Israel hit by one of Iran\u2019s largest missile barrages in weeks"
+      ],
+      "date": "2026-04-02",
+      "hour": "06",
+      "timestamp": "2026-04-02 06:45:24",
+      "item_count": 5,
+      "keywords": [
+        "iran",
+        "iranian",
+        "tehran",
+        "isfahan",
+        "persian",
+        "middle east war",
+        "us-iran",
+        "iran war",
+        "iran attack",
+        "iran nuclear"
+      ]
+    },
+    {
       "filename": "2026-04-01-06.00.md",
       "headlines": [
         "Al-Sharaa says Syria to stay out of war on Iran unless attacked",
@@ -79,5 +105,5 @@
       ]
     }
   ],
-  "last_updated": "2026-04-01 06:45:24"
+  "last_updated": "2026-04-02 06:45:24"
 }
