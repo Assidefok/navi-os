@@ -110,3 +110,6 @@
 [2026-04-02 01:51:44] [SOMIAR-NIT] Found 1 approved proposals to deploy. Processing...
 [2026-04-02 01:51:45] [SOMIAR-NIT] Report: /home/user/.openclaw/workspace/.somiar-cycles/somiar-de-nit-SN-20260402-0151.md
 [2026-04-02 01:51:45] [SOMIAR-NIT] === Done ===
+[2026-04-02 02:21:42] [SOMIAR-NIT] === Starting ===
+[2026-04-02 02:21:42] [SOMIAR-NIT] Deep Cycle: SN-20260402-0221
+[2026-04-02 02:21:42] [SOMIAR-NIT] Dirty git (3 changes). Committing...
