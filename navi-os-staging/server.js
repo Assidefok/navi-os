@@ -893,6 +893,23 @@ app.post('/api/self-improvement/deny', (req, res) => {
   }
 })
 
+app.post('/api/self-improvement/finalize', (req, res) => {
+  try {
+    const { proposalId, generatedDate } = req.body
+    if (!proposalId || !generatedDate) {
+      return res.status(400).json({ error: 'proposalId and generatedDate required' })
+    }
+    const approvalFile = join(WORKSPACE, 'memory', `approved-${generatedDate}-${proposalId}.json`)
+    const data = existsSync(approvalFile) ? JSON.parse(readFileSync(approvalFile, 'utf-8')) : { proposalId, generatedDate, approvedAt: new Date().toISOString(), status: 'approved' }
+    data.status = 'executed'
+    data.executedAt = new Date().toISOString()
+    writeFileSync(approvalFile, JSON.stringify(data, null, 2))
+    res.json({ ok: true, message: `Proposal ${proposalId} finalized`, proposalId, generatedDate, status: 'executed' })
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
+
 // Get pending approved proposals (for dreaming agents)
 app.get('/api/self-improvement/pending-deployments', (req, res) => {
   try {
@@ -2379,6 +2396,12 @@ function getSomiarEnabled(mode) {
   return existsSync(file)
 }
 
+function isSomiarInWindow(mode) {
+  const hour = new Date().getHours()
+  if (mode === 'dia') return hour >= 9 && hour < 20
+  return hour >= 20 || hour < 6
+}
+
 function setSomiarEnabled(mode, enabled) {
   const file = mode === 'dia' ? SOMIAR_ENABLED_DAY : SOMIAR_ENABLED_NIT
   if (enabled) {
@@ -2415,7 +2438,7 @@ app.get('/api/somiar/:mode/status', (req, res) => {
   const cycles = existsSync(scriptsDir)
     ? readdirSync(scriptsDir).filter(f => f.includes(`somiar-de-${mode}`)).length
     : 0
-  res.json({ mode, enabled, lastRun, cycles })
+  res.json({ mode, enabled, lastRun, cycles, inWindow: isSomiarInWindow(mode) })
 })
 
 app.post('/api/somiar/:mode/toggle', (req, res) => {
@@ -2428,9 +2451,13 @@ app.post('/api/somiar/:mode/toggle', (req, res) => {
 
 app.post('/api/somiar/:mode/run', async (req, res) => {
   const mode = req.params.mode
+  const force = !!req.body?.force
   if (!['dia', 'nit'].includes(mode)) return res.status(400).json({ error: 'Invalid mode' })
   if (!getSomiarEnabled(mode)) {
     return res.json({ ok: false, reason: 'Somiar is disabled' })
+  }
+  if (!force && !isSomiarInWindow(mode)) {
+    return res.json({ ok: false, reason: mode === 'dia' ? 'Somiar de Dia només funciona de 9:00 a 20:00' : 'Somiar de Nit només funciona de 20:00 a 06:00' })
   }
   // Run the script asynchronously
   const { exec } = await import('child_process')

@@ -9,6 +9,7 @@ import {
   CheckCircle2,
   Clock,
   ChevronRight,
+  BookOpen,
 } from 'lucide-react'
 import './Brain.css'
 
@@ -58,6 +59,7 @@ function BrainTabs({ activeTab, setActiveTab }) {
   const tabs = [
     { key: 'dashboard', label: 'Dashboard' },
     { key: 'briefs', label: 'Daily Briefs' },
+    { key: 'memory', label: 'Memory' },
   ]
 
   return (
@@ -121,7 +123,9 @@ function DailyBriefCard({ briefs, loading, onOpenBriefs }) {
   )
 }
 
-function DashboardView({ briefs, loading, onOpenBriefs }) {
+function DashboardView({ briefs, loading, onOpenBriefs, memoryFiles, onOpenMemory }) {
+  const pinnedMemory = memoryFiles.slice(0, 3)
+
   return (
     <div className="brain-dashboard-shell">
       <div className="brain-dashboard-hero">
@@ -134,7 +138,126 @@ function DashboardView({ briefs, loading, onOpenBriefs }) {
         </div>
       </div>
 
-      <DailyBriefCard briefs={briefs} loading={loading} onOpenBriefs={onOpenBriefs} />
+      <div className="brain-dashboard-grid">
+        <DailyBriefCard briefs={briefs} loading={loading} onOpenBriefs={onOpenBriefs} />
+        <section className="brain-dashboard-card">
+          <div className="brain-dashboard-card-header">
+            <div className="brain-dashboard-card-title">
+              <div className="brain-dashboard-icon"><BookOpen size={18} /></div>
+              <div>
+                <h3>Memory</h3>
+                <p>Arxius i record persistent</p>
+              </div>
+            </div>
+          </div>
+          <div className="brain-dashboard-card-body">
+            <div className="brain-block-label">Pinned Memory</div>
+            {pinnedMemory.length === 0 ? (
+              <div className="brain-dashboard-list-empty">Sense memòries</div>
+            ) : (
+              <div className="brain-dashboard-list">
+                {pinnedMemory.map(file => (
+                  <button key={file.path} className="brain-dashboard-list-item" onClick={() => onOpenMemory(file)}>
+                    <div className="brain-dashboard-list-left">
+                      <FileText size={14} />
+                      <div>
+                        <strong>{file.name}</strong>
+                        <span>{formatDateTime(file.modified)}</span>
+                      </div>
+                    </div>
+                    <div className="brain-dashboard-list-right">
+                      <ChevronRight size={14} />
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+      </div>
+    </div>
+  )
+}
+
+function MemoryView({ memoryFiles, loading, onRefresh }) {
+  const [selectedFile, setSelectedFile] = useState(null)
+  const [fileContent, setFileContent] = useState('')
+  const [contentLoading, setContentLoading] = useState(false)
+
+  useEffect(() => {
+    if (!memoryFiles.length) {
+      setSelectedFile(null)
+      setFileContent('')
+      return
+    }
+    setSelectedFile(prev => memoryFiles.find(f => f.path === prev?.path) || memoryFiles[0])
+  }, [memoryFiles])
+
+  useEffect(() => {
+    if (!selectedFile) return
+    setContentLoading(true)
+    fetch(`${API_BASE}/memory/file?path=${encodeURIComponent(selectedFile.name || selectedFile.path.replace(/^.*\/memory\//, ''))}`)
+      .then(r => r.json())
+      .then(d => setFileContent(d.content || ''))
+      .catch(() => setFileContent('# Error\nNo s’ha pogut carregar la memòria.'))
+      .finally(() => setContentLoading(false))
+  }, [selectedFile])
+
+  return (
+    <div className="brain-daily-shell">
+      <div className="brain-daily-header">
+        <div>
+          <h2>Memory</h2>
+          <p>Fitxers persistents del sistema</p>
+        </div>
+        <button className="brain-refresh-btn" onClick={onRefresh}>
+          <RefreshCw size={14} /> Actualitzar
+        </button>
+      </div>
+
+      <div className="brain-daily-layout">
+        <aside className="brain-daily-sidebar">
+          <div className="brain-block-label">Files</div>
+          <div className="brain-daily-history">
+            {loading ? (
+              <div className="brain-dashboard-list-empty">Carregant...</div>
+            ) : memoryFiles.length === 0 ? (
+              <div className="brain-dashboard-list-empty">Sense fitxers</div>
+            ) : (
+              memoryFiles.map(file => (
+                <button
+                  key={file.path}
+                  className={`brain-history-item ${selectedFile?.path === file.path ? 'active' : ''}`}
+                  onClick={() => setSelectedFile(file)}
+                >
+                  <div className="brain-history-date small">{file.name}</div>
+                  <div className="brain-history-subdate">{formatDate(file.modified)}</div>
+                </button>
+              ))
+            )}
+          </div>
+        </aside>
+
+        <section className="brain-daily-reader">
+          {selectedFile ? (
+            <>
+              <div className="brain-reader-header">
+                <h3>{selectedFile.name}</h3>
+                <span className="brain-status-badge pinned">{selectedFile.pinned ? 'pinned' : 'file'}</span>
+              </div>
+              <div className="brain-reader-meta">
+                <span>{formatDate(selectedFile.modified)}</span>
+                <span>{selectedFile.size} bytes</span>
+              </div>
+              <div className="brain-reader-content">
+                {contentLoading ? <div className="brain-dashboard-list-empty">Carregant contingut...</div> : renderMarkdown(fileContent)}
+              </div>
+            </>
+          ) : (
+            <div className="brain-dashboard-list-empty large">Selecciona un fitxer</div>
+          )}
+        </section>
+      </div>
     </div>
   )
 }
@@ -227,6 +350,7 @@ function DailyBriefsView({ briefs, loading, onRefresh }) {
 export default function Brain() {
   const [activeTab, setActiveTab] = useState('dashboard')
   const [briefs, setBriefs] = useState([])
+  const [memoryFiles, setMemoryFiles] = useState([])
   const [loading, setLoading] = useState(true)
 
   const loadBriefs = () => {
@@ -238,8 +362,16 @@ export default function Brain() {
       .finally(() => setLoading(false))
   }
 
+  const loadMemoryFiles = () => {
+    fetch(`${API_BASE}/memory/files`)
+      .then(r => r.json())
+      .then(d => setMemoryFiles((d.files || []).filter(f => f.name.endsWith('.md'))))
+      .catch(() => setMemoryFiles([]))
+  }
+
   useEffect(() => {
     loadBriefs()
+    loadMemoryFiles()
   }, [])
 
   return (
@@ -248,10 +380,19 @@ export default function Brain() {
 
       <div className="brain-content structured">
         {activeTab === 'dashboard' && (
-          <DashboardView briefs={briefs} loading={loading} onOpenBriefs={() => setActiveTab('briefs')} />
+          <DashboardView
+            briefs={briefs}
+            loading={loading}
+            onOpenBriefs={() => setActiveTab('briefs')}
+            memoryFiles={memoryFiles}
+            onOpenMemory={() => setActiveTab('memory')}
+          />
         )}
         {activeTab === 'briefs' && (
           <DailyBriefsView briefs={briefs} loading={loading} onRefresh={loadBriefs} />
+        )}
+        {activeTab === 'memory' && (
+          <MemoryView memoryFiles={memoryFiles} loading={loading} onRefresh={loadMemoryFiles} />
         )}
       </div>
     </div>

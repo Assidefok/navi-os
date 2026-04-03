@@ -1,6 +1,6 @@
 # MEMORY.md - ELOM
 
-_Last updated: 2026-04-01T14:54:00.000Z_
+_Last updated: 2026-04-02T22:15:00.000Z_
 
 ---
 
@@ -27,6 +27,7 @@ _Last updated: 2026-04-01T14:54:00.000Z_
 | Data | decisió | Impacte | Estat |
 |------|---------|---------|-------|
 | 2026-03-31 | ELOM pren leadership de visió estratègica | Alto | Vigent |
+| 2026-04-02 | Política de models dels subagents: gpt-5.4-mini → MiniMax M2.7 → Ollama | Mitjà | Vigent |
 
 ---
 
@@ -76,3 +77,28 @@ _Primera setmana d'operacions — no hi ha lliçons enregistrades encara._
 ---
 
 _ELOM opera amb la pregunta: "Això ens porta al futur que volem?"_
+
+---
+
+## 🏛️ Memory Constitution (ELOM - Visionari)
+
+**NORMES OBLIGATÒRIES per a TOTS els agents:**
+
+| Norma | Detall |
+|-------|--------|
+| **Frontmatter obligatori** | Projects/, Decisions/, Daily/, _inbox/ requereixen YAML vàlid |
+| **UUID obligatori** | Cada entrada ha de tenir `id: UUID-v4` |
+| **Inbox 7 dies** | _inbox/ vida màxima 7 dies - auto-processament |
+| **Semantic Index** | _meta/semantic-index.json actualitzat cada 24h |
+| **Estructura immutable** | Només carpetes autoritzades |
+
+**Visió ELOM:** El sistema de memòria ha de créixer cap a intel·ligència semàntica real (embeddings vectors). Fase 2: Qdrant.
+
+**Per crear projecte:**
+```bash
+cp memory/_templates/project.md memory/Projects/{nom}/README.md
+```
+
+**Scripts clau:**
+- `scripts/validate-memory.js` - Validar compliment
+- `scripts/semantic-index-generator.js` - Regenerar índex semàntic

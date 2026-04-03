@@ -1,6 +1,6 @@
 # MEMORY.md - JEFF
 
-_Last updated: 2026-04-02T16:10:00.000Z_
+_Last updated: 2026-04-02T22:15:00.000Z_
 
 ---
 
@@ -17,6 +17,7 @@ _Last updated: 2026-04-02T16:10:00.000Z_
 |------|---------|--------|--------|
 | 2026-03-31 | JEFF owns operational efficiency and process design | Alto | Vigent |
 | 2026-04-01 | JEFF adopts baseline efficiency metrics (Efficiency Index, Automation Coverage, On-time Delivery, Resource Utilization) | Mitjà | Vigent |
+| 2026-04-02 | Política de models dels subagents: gpt-5.4-mini → MiniMax M2.7 → Ollama | Mitjà | Vigent |
 
 ---
 
@@ -93,3 +94,35 @@ _Last updated: 2026-04-02T16:10:00.000Z_
 ---
 
 _JEFF measures the operational pulse. Every inefficiency is an opportunity._
+
+---
+
+## 🏛️ Memory Constitution (JEFF - Execució)
+
+**NORMES OBLIGATÒRIES per a TOTS els agents:**
+
+| Norma | Detall |
+|-------|--------|
+| **Frontmatter AUTO-GENERAT** | Plantilles pre-pobleuen YAML - no manual mai |
+| **Navimap diari** | _meta/daily-navimap.md generat cada nit (cron 23:59) |
+| **Scripts automatitzats** | inbox-cleanup.js, navimap-generator.js, validate-memory.js |
+| **Processes/** | Playbooks operatius van aquí |
+
+**Automatitzacions que implemento:**
+
+| Script | CRON | Propòsit |
+|--------|------|----------|
+| `inbox-cleanup.js` | Dilluns 00:00 | Processa inbox caducat |
+| `navimap-generator.js` | Diari 23:59 | Map "qui va fer què" |
+| `validate-memory.js` | Manual | Validar compliment |
+| `semantic-index-generator.js` | Cada 24h | Regenerar índex vectors |
+
+**Frontmatter mínim per a Projects:**
+```yaml
+id: "UUID"
+created: "YYYY-MM-DD"
+updated: "YYYY-MM-DD"
+status: "in-progress" | "blocked" | "on-hold" | "done"
+owner: "agent-name"
+blocker: null
+```

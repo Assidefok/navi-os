@@ -1,6 +1,6 @@
 # MEMORY.md - WARREN
 
-_Last updated: 2026-03-31T23:26:00.000Z_
+_Last updated: 2026-04-02T22:15:00.000Z_
 
 ---
 
@@ -65,6 +65,7 @@ _Last updated: 2026-03-31T23:26:00.000Z_
 | Data | decisió | Impacte | Estat |
 |------|---------|---------|-------|
 | 2026-03-31 | Cron delivery targets should use numeric chatId, not @handle | Baix | En procés |
+| 2026-04-02 | Política de models dels subagents: gpt-5.4-mini → MiniMax M2.7 → Ollama | Mitjà | Vigent |
 
 ---
 
@@ -108,3 +109,27 @@ _Last updated: 2026-03-31T23:26:00.000Z_
 ---
 
 _WARREN manté el registre de la qualitat. Cada error és una oportunitat de millora._
+
+---
+
+## 🏛️ Memory Constitution (WARREN - Qualitat)
+
+**NORMES OBLIGATÒRIES per a TOTS els agents:**
+
+| Norma | Detall |
+|-------|--------|
+| **Frontmatter obligatori** | Projects/, Decisions/, Daily/, _inbox/ requereixen YAML vàlid |
+| **Validador actiu** | `scripts/validate-memory.js` - rebutja entrades malformades |
+| **Freshness check** | Si _meta/semantic-index.json > 24h → ALERTA |
+| **Inbox 7 dies** | _inbox/ vida màxima 7 dies - Cron dilluns 00:00 |
+| **4 Condicions meves** | ✅ Frontmatter validator, ✅ Freshness check, ✅ Inbox automation, ✅ Prioritat cerca |
+
+**Auditories de qualitat:**
+- `scripts/validate-memory.js` - executa manualment o al cron
+- Validar TOTS els fitxers markdown periòdicament
+- Reportar incompliments al standup
+
+**Prioritat de cerca (si resultats contradictoris):**
+1. `memory_search` (OpenClaw)
+2. `_meta/semantic-index.json` (vectors)
+3. `ripgrep` (text)

@@ -1,5 +1,5 @@
 import { useState, lazy, Suspense } from 'react'
-import { BrowserRouter, Routes, Route, useLocation, useNavigate } from 'react-router-dom'
+import { HashRouter, Routes, Route, useLocation, useNavigate } from 'react-router-dom'
 import TopBar from './components/TopBar'
 import Dock from './components/Dock'
 import Settings from './components/Settings'
@@ -71,7 +71,7 @@ function AppContent() {
 function App() {
   return (
     <ErrorBoundary>
-      <BrowserRouter>
+      <HashRouter>
         <Routes>
           <Route path="/" element={<AppContent />} />
           <Route path="/ops" element={<AppContent />} />
@@ -80,7 +80,7 @@ function App() {
           <Route path="/proposals" element={<AppContent />} />
           <Route path="*" element={<AppContent />} />
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </ErrorBoundary>
   )
 }

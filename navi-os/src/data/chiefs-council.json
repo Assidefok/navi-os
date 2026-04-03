@@ -2,9 +2,16 @@
   "meta": {
     "version": 1,
     "path": "/home/user/.openclaw/workspace/navi-os/src/data/chiefs-council.json",
-    "updatedAt": "2026-03-31T22:53:43.269Z"
+    "updatedAt": "2026-04-02T20:49:31.961Z"
   },
   "topics": [
+    {
+      "id": "topic-1775162971961",
+      "title": "Vull arreglar el sistema",
+      "description": "Vull arreglar el sistema estic fart de que falli!",
+      "createdAt": "2026-04-02T20:49:31.961Z",
+      "responses": []
+    },
     {
       "id": "topic-1",
       "title": "Hauriem de prioritzar producte o infrastructura?",

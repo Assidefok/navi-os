@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { User, Sparkles, Rocket, Shield, Zap, Brain } from 'lucide-react'
-import TeamOverview, { AgentDetailModal, loadAgentDetailsFromWorkspace } from '../components/TeamOverview'
+import { AgentDetailModal, loadAgentDetailsFromWorkspace } from '../components/TeamOverview'
 import { orgHumans, orgAgents } from '../data/org-chart'
 import './OrgChart.css'
 
@@ -29,11 +29,21 @@ function OrgNode({ member, onClick }) {
   )
 }
 
+function ChiefRow({ chiefs, onClick }) {
+  return (
+    <div className="org-chief-row">
+      {chiefs.map(chief => (
+        <OrgNode key={chief.id} member={chief} onClick={() => onClick(chief)} />
+      ))}
+    </div>
+  )
+}
+
 export default function OrgChart() {
   const [selectedAgent, setSelectedAgent] = useState(null)
 
   const human = orgHumans.find(h => h.visible)
-  const mainAgent = orgAgents.find(a => a.visible && a.level === 2)
+  const navi = orgAgents.find(a => a.visible && a.id === 'navi')
   const chiefs = orgAgents.filter(a => a.visible && a.level === 3)
 
   async function handleNaviClick(agent) {
@@ -65,9 +75,9 @@ export default function OrgChart() {
           <div className="connector-branch" />
         </div>
 
-        {mainAgent && (
+        {navi && (
           <div className="org-level">
-            <OrgNode member={mainAgent} onClick={() => handleNaviClick(mainAgent)} />
+            <OrgNode member={navi} onClick={() => handleNaviClick(navi)} />
           </div>
         )}
 
@@ -76,9 +86,7 @@ export default function OrgChart() {
           <div className="connector-branch multi" />
         </div>
 
-        <div className="org-level overview-level">
-          <TeamOverview />
-        </div>
+        <ChiefRow chiefs={chiefs} onClick={handleNaviClick} />
       </div>
 
       {selectedAgent && (

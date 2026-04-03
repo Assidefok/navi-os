@@ -1,28 +1,28 @@
 # SUBAGENTS.md - WARREN (Chief Quality Officer)
 
-_Last updated: 2026-03-31_
+_Last updated: 2026-04-02_
 
 ---
 
 ## Subagents Especialitzats
 
 ### 1. QUALITY_AUDITOR
-- **Model:** `gpt-5.3-codex` (optimitzat per anàlisi de codi i documentació)
+- **Model:** `gpt-5.4-mini` (primari) → fallback `minimax-portal/MiniMax-M2.7` → fallback `ollama` (qualsevol model disponible)
 - **Tasca:** Audita deliverables, revisa qualitat de codi, valida que els outputs compleixin els estàndards establerts. Detecta defects, inconsistències, i code smells.
 - **Trigger:** Quan un projecte arriba a milestone o quan JEFF demana validation.
 
 ### 2. RISK_ASSESSOR
-- **Model:** `minimax-2.5` (prou capaç per anàlisi de risc, ràpid)
+- **Model:** `gpt-5.4-mini` (primari) → fallback `minimax-portal/MiniMax-M2.7` → fallback `ollama` (qualsevol model disponible)
 - **Tasca:** Avalua riscos associats a decisions, arquitectura, o canvis proposats. Genera matrius de risc (impacte vs probabilitat) i proposa mitigacions.
 - **Trigger:** Abans de decisions importants o quan ELOM proposa canvis estratègics.
 
 ### 3. COMPLIANCE_CHECKER
-- **Model:** `gpt-5.2` (model lleuger per validacions rutinàries)
+- **Model:** `gpt-5.4-mini` (primari) → fallback `minimax-portal/MiniMax-M2.7` → fallback `ollama` (qualsevol model disponible)
 - **Tasca:** Verifica que els processos i deliverables compleixin regulations, best practices, i els estàndards interns de l'organització. Genera reports de compliance.
 - **Trigger:** Per entrega de projectes a clients, o periòdicament (audit cicle).
 
 ### 4. PROCESS_CRITIC
-- **Model:** `ollama` (quan estigui configurat) o `gpt-5.2` fallback
+- **Model:** `gpt-5.4-mini` (primari) → fallback `minimax-portal/MiniMax-M2.7` → fallback `ollama` (qualsevol model disponible)
 - **Tasca:** Analitza i critica processos existents des de la perspectiva de qualitat. Identifica colls d'ampolla, ineficiències, i riscos ocults en workflows.
 - **Trigger:** Quan JEFF dissenya nous processos o quan un procés falla.
 
@@ -59,10 +59,10 @@ Navi → Warren → [DELIBERACIÓ] → Warren fa o subagent
 
 ## Models Disponibles (prioritat)
 
-1. `ollama` — preferit per tasques locals (quan configurat)
-2. `gpt-5.3-codex` — anàlisi tècnica profunda
-3. `gpt-5.2` — tasques lleugeres, compliance
-4. `minimax-2.5` — anàlisi ràpida de risc
+1. `gpt-5.4-mini` — preferit per defecte
+2. `minimax-portal/MiniMax-M2.7` — fallback principal
+3. `ollama` — fallback local quan estigui disponible
+4. Qualsevol altre model d’Ollama — fallback final si cal
 
 ---
 

@@ -345,6 +345,149 @@
   gap: 12px;
 }
 
+/* ── Skeleton loading ─────────────────────────────────────── */
+
+.tp-skeleton-board {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.tp-skeleton-column {
+  flex: 0 0 240px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tp-skeleton-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  margin-bottom: 4px;
+}
+
+.tp-skeleton-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.skeleton-pill,
+.skeleton-row {
+  background: rgba(255,255,255,0.08);
+  border-radius: 4px;
+  animation: skeleton-pulse 1.4s ease-in-out infinite;
+}
+
+.skeleton-row {
+  display: block;
+  width: 100%;
+}
+
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* ── Error bar ─────────────────────────────────────────────── */
+
+.tp-error-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 10px;
+  margin-bottom: 14px;
+  color: #f87171;
+  font-size: 13px;
+}
+
+.tp-retry-info {
+  font-size: 12px;
+  opacity: 0.7;
+  margin-left: auto;
+}
+
+.tp-retry-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: auto;
+  padding: 5px 12px;
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  border-radius: 8px;
+  color: #fca5a5;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background 0.2s;
+}
+
+.tp-retry-btn:hover {
+  background: rgba(239, 68, 68, 0.35);
+}
+
+/* ── Fallback banner ──────────────────────────────────────── */
+
+.tp-fallback-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: rgba(251, 191, 36, 0.1);
+  border: 1px solid rgba(251, 191, 36, 0.25);
+  border-radius: 10px;
+  margin-bottom: 14px;
+  color: #fbbf24;
+  font-size: 13px;
+}
+
+.tp-banner-retry {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: auto;
+  padding: 5px 12px;
+  background: rgba(251, 191, 36, 0.15);
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  border-radius: 8px;
+  color: #fcd34d;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background 0.2s;
+}
+
+.tp-banner-retry:hover {
+  background: rgba(251, 191, 36, 0.25);
+}
+
+/* ── Toast notification ────────────────────────────────────── */
+
+.tp-toast {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: rgba(52, 211, 153, 0.12);
+  border: 1px solid rgba(52, 211, 153, 0.3);
+  border-radius: 10px;
+  margin-bottom: 14px;
+  color: #34d399;
+  font-size: 13px;
+  animation: toast-in 0.3s ease-out;
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 @media (max-width: 768px) {
   .tp-header,
   .tp-header-actions,

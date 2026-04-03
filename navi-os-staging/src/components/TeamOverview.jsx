@@ -247,15 +247,14 @@ export default function TeamOverview() {
         const data = await res.json()
         
         const chiefList = []
-        if (data.chiefs && data.chiefs.length > 0) {
-          for (const chief of data.chiefs) {
-            chiefList.push({
-              ...chief,
-              icon: CHIEF_ICONS[chief.agentId] || Bot,
-              status: chief.status || 'offline',
-              description: chief.description || `Chief of ${chief.department || chief.role}`
-            })
-          }
+        const sourceChiefs = Array.isArray(data.chiefs) ? data.chiefs : []
+        for (const chief of sourceChiefs) {
+          chiefList.push({
+            ...chief,
+            icon: CHIEF_ICONS[chief.agentId] || Bot,
+            status: chief.status || 'offline',
+            description: chief.description || `Chief of ${chief.department || chief.role}`
+          })
         }
         
         setChiefs(chiefList)

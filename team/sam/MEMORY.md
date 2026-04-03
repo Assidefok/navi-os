@@ -1,6 +1,6 @@
 # MEMORY.md - SAM
 
-_Last updated: 2026-04-01T01:10:00.000Z_
+_Last updated: 2026-04-02T22:15:00.000Z_
 
 ---
 
@@ -93,3 +93,42 @@ Navi OS (React + Vite)
 ---
 
 _SAM keeps the AI and technical registry. Every automation is a victory._
+
+---
+
+## 🏛️ Memory Constitution (SAM - Tecnologia)
+
+**NORMES OBLIGATÒRIES per a TOTS els agents:**
+
+| Norma | Detall |
+|-------|--------|
+| **Semantic Index** | _meta/semantic-index.json amb estructura JSON lean |
+| **Near-future:** sqlite-vss | Només si mesurem que JSON no escala (NO ara) |
+| **Embeddings locals** | Per ara: vectors pre-computats en JSON |
+| **Tag index** | Actualitzar quan es modifiquin fitxers |
+
+**Estructura _meta/semantic-index.json:**
+```json
+{
+  "version": "1.0",
+  "last_updated": "ISO-8601",
+  "entries": [
+    {
+      "id": "UUID",
+      "path": "relative/path.md",
+      "type": "project|decision|daily",
+      "vector": [0.1, -0.2, ...],
+      "text": "Contingut resumit",
+      "metadata": { "title": "...", "status": "...", ... },
+      "timestamp": "ISO-8601",
+      "checksum": "sha256:..."
+    }
+  ]
+}
+```
+
+**Scripts de cerca:**
+- `scripts/semantic-index-generator.js` - Regenera índex
+- Quan buscar: `memory_search` (text) → `semantic-index.json` (vectors)
+
+**Regla SAM:** Lean first, measure, then optimize. No sqlite-vss fins que JSON proving insufficient.

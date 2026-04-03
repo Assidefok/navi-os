@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import {
   Activity, Zap, Link, FolderSync, Shield, Database, Users, LayoutList,
   Moon, CheckCircle2, AlertCircle, MessageSquare, Clock, RefreshCw,
@@ -799,28 +799,62 @@ function IntegrationView() {
   )
 }
 
+const OPS_TAB_STORAGE_KEY = 'navi-os.ops.tab-order.v1'
+
 export default function Ops() {
   const [viewMode, setViewMode] = useState('mission')
 
-  const primaryTabs = [
+  const defaultPrimaryTabs = [
     { id: 'mission', label: 'Mission Control' },
     { id: 'sessions', label: 'Sessions' },
     { id: 'cron', label: 'Cron' },
     { id: 'activity', label: 'Activity' },
+    { id: 'orgchart', label: 'Org Chart' },
+    { id: 'pipeline', label: 'PM Board' },
+    { id: 'automation', label: 'Automations' },
   ]
 
   const utilityTabs = [
-    ['orgchart', 'Org Chart', Users],
-    ['pipeline', 'PM Board', LayoutList],
     ['manager', 'Task Manager', Activity],
     ['files', 'Files', FolderSync],
     ['sync', 'Sync', Database],
     ['security', 'Security', Shield],
-    ['automation', 'Automations', Zap],
     ['integration', 'Integrations', Link],
     ['chiefs', 'Chiefs Council', MessageSquare],
     ['standups', 'Standups', Users],
   ]
+
+  const [primaryOrder, setPrimaryOrder] = useState(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem(OPS_TAB_STORAGE_KEY) || 'null')
+      if (Array.isArray(saved) && saved.length) return saved
+    } catch {}
+    return defaultPrimaryTabs.map(t => t.id)
+  })
+
+  useEffect(() => {
+    try { localStorage.setItem(OPS_TAB_STORAGE_KEY, JSON.stringify(primaryOrder)) } catch {}
+  }, [primaryOrder])
+
+  const primaryTabs = useMemo(() => {
+    const map = new Map(defaultPrimaryTabs.map(t => [t.id, t]))
+    const ordered = primaryOrder.map(id => map.get(id)).filter(Boolean)
+    defaultPrimaryTabs.forEach(tab => { if (!ordered.find(t => t.id === tab.id)) ordered.push(tab) })
+    return ordered
+  }, [primaryOrder])
+
+  const moveTab = (fromId, toId) => {
+    if (fromId === toId) return
+    setPrimaryOrder(prev => {
+      const next = prev.filter(id => id !== fromId)
+      const idx = next.indexOf(toId)
+      if (idx === -1) next.push(fromId)
+      else next.splice(idx, 0, fromId)
+      return next
+    })
+  }
+
+  const [draggedTab, setDraggedTab] = useState(null)
 
   const renderPrimary = () => {
     if (viewMode === 'mission') return (
@@ -865,7 +899,12 @@ export default function Ops() {
         {primaryTabs.map(tab => (
           <button
             key={tab.id}
-            className={`ops-primary-tab ${viewMode === tab.id ? 'active' : ''}`}
+            className={`ops-primary-tab ${viewMode === tab.id ? 'active' : ''} ${draggedTab === tab.id ? 'dragging' : ''}`}
+            draggable
+            onDragStart={() => setDraggedTab(tab.id)}
+            onDragOver={e => e.preventDefault()}
+            onDrop={() => { if (draggedTab) moveTab(draggedTab, tab.id); setDraggedTab(null) }}
+            onDragEnd={() => setDraggedTab(null)}
             onClick={() => setViewMode(tab.id)}
           >
             <span>{tab.label}</span>

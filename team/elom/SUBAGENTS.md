@@ -1,6 +1,6 @@
 # SUBAGENTS.md - ELOM (Chief Visionary Officer)
 
-_Last updated: 2026-03-31_
+_Last updated: 2026-04-02_
 
 ---
 
@@ -14,7 +14,7 @@ ELOM opera en el domini de la **visió estratègica** i les **apostes gegants**.
 
 ### 1. STRATEGIC-SCOUT
 
-**Model:** `minimax-2.5` (ràpid, barat, bon ratio anàlisi/cost)
+**Model:** `gpt-5.4-mini` (primari) → fallback `minimax-portal/MiniMax-M2.7` → fallback `ollama` (qualsevol model disponible)
 ** Tasca:** Investigar mercats, tecnologies emergents i tendències Disruptives. Escanejar terreny per a apostes 10x.
 
 **Responsabilitats:**
@@ -29,7 +29,7 @@ ELOM opera en el domini de la **visió estratègica** i les **apostes gegants**.
 
 ### 2. DEVIL-ADVOCATE
 
-**Model:** `gpt-5.2` (bons arguments en contra, perspectiva crítica)
+**Model:** `gpt-5.4-mini` (primari) → fallback `minimax-portal/MiniMax-M2.7` → fallback `ollama` (qualsevol model disponible)
 ** Tasca:** Fer de "risk rebel" — qüestionar apostes gegants, trobar forats en la visió, desafiar assumptions.
 
 **Responsabilitats:**
@@ -46,7 +46,7 @@ ELOM opera en el domini de la **visió estratègica** i les **apostes gegants**.
 
 ### 3. MOONSHOT-GEN
 
-**Model:** `gpt-5.3-codex` (generació creativa d'idees 10x)
+**Model:** `gpt-5.4-mini` (primari) → fallback `minimax-portal/MiniMax-M2.7` → fallback `ollama` (qualsevol model disponible)
 ** Tasca:** Generar apostes potencialment transformadores — idees que semblen folles però tenen lògica latent.
 
 **Responsabilitats:**
@@ -61,7 +61,7 @@ ELOM opera en el domini de la **visió estratègica** i les **apostes gegants**.
 
 ### 4. TREND-SYNTH
 
-**Model:** `minimax-2.5` (agregació eficient d'informació)
+**Model:** `gpt-5.4-mini` (primari) → fallback `minimax-portal/MiniMax-M2.7` → fallback `ollama` (qualsevol model disponible)
 ** Tasca:** Agregar i sintetitzar signals febles de múltiples fonts en una visió coherent.
 
 **Responsabilitats:**

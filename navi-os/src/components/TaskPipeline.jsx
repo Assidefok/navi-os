@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Plus, GripVertical, AlertCircle } from 'lucide-react'
+import { Plus, GripVertical, AlertCircle, RefreshCw, CheckCircle2 } from 'lucide-react'
 import './TaskPipeline.css'
 
 const STAGES = [
@@ -16,7 +16,6 @@ const PRIORITY_CONFIG = {
   critica: { label: 'Critica', color: '#ef4444', bg: 'rgba(239, 68, 68, 0.15)' }
 }
 
-// API status mapping: pipeline stages <-> pm-board statuses
 const STAGE_TO_STATUS = {
   intake: 'todo',
   active: 'in-progress',
@@ -31,27 +30,61 @@ const STATUS_TO_STAGE = {
   'done': 'delivered'
 }
 
+const MAX_RETRIES = 3
+
+function SkeletonBoard() {
+  return (
+    <div className="tp-skeleton-board">
+      {STAGES.map(stage => (
+        <div key={stage.id} className="tp-skeleton-column">
+          <div className="tp-skeleton-header">
+            <div className="skeleton-pill" style={{ width: `${40 + (stage.id.length * 8)}px` }} />
+            <div className="skeleton-pill" style={{ width: '20px' }} />
+          </div>
+          {[1, 2, 3].map(i => (
+            <div key={i} className="tp-skeleton-card" style={{ animationDelay: `${i * 80}ms` }}>
+              <div className="skeleton-row" style={{ width: '30%', height: '10px', marginBottom: '8px' }} />
+              <div className="skeleton-row" style={{ width: '90%', height: '14px', marginBottom: '6px' }} />
+              <div className="skeleton-row" style={{ width: '70%', height: '10px', marginBottom: '10px' }} />
+              <div className="skeleton-row" style={{ width: '50%', height: '10px' }} />
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  )
+}
+
 export default function TaskPipeline() {
   const [tasks, setTasks] = useState([])
   const [draggedTask, setDraggedTask] = useState(null)
   const [draggedOverStage, setDraggedOverStage] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [retryCount, setRetryCount] = useState(0)
+  const [usingLocalStorage, setUsingLocalStorage] = useState(false)
+  const [showToast, setShowToast] = useState(false)
 
-  // Load tasks from API on mount
   useEffect(() => {
     fetchTasks()
   }, [])
+
+  // Auto-hide toast after 3s
+  useEffect(() => {
+    if (showToast) {
+      const t = setTimeout(() => setShowToast(false), 3000)
+      return () => clearTimeout(t)
+    }
+  }, [showToast])
 
   const fetchTasks = async () => {
     try {
       setLoading(true)
       const res = await fetch('/api/pm-board')
-      if (!res.ok) throw new Error('Failed to fetch')
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
       const data = await res.json()
-      // Convert API tasks to pipeline format
+
       const pipelineTasks = (data.tasks || []).map(task => {
-        // Use assigneeChief name if available, otherwise fallback to assignee ID
         const clientName = task.assigneeChief?.name || task.assignee || 'Unknown'
         const clientEmoji = task.assigneeChief?.emoji || ''
         return {
@@ -66,15 +99,34 @@ export default function TaskPipeline() {
           blockers: task.notes || []
         }
       })
+
+      // If we were using localStorage fallback and API recovered
+      if (usingLocalStorage) {
+        setShowToast(true)
+        setUsingLocalStorage(false)
+      }
+
       setTasks(pipelineTasks)
       setError(null)
+      setRetryCount(0)
     } catch (err) {
       console.error('Error fetching tasks:', err)
       setError(err.message)
-      // Fallback to localStorage if API fails
+
+      // Fallback to localStorage
       const stored = localStorage.getItem('navi_ops_tasks')
       if (stored) {
-        setTasks(JSON.parse(stored))
+        try {
+          setTasks(JSON.parse(stored))
+          setUsingLocalStorage(true)
+        } catch {}
+      }
+
+      // Retry with exponential backoff
+      if (retryCount < MAX_RETRIES) {
+        const delay = Math.min(1000 * Math.pow(2, retryCount), 8000)
+        setRetryCount(prev => prev + 1)
+        setTimeout(fetchTasks, delay)
       }
     } finally {
       setLoading(false)
@@ -82,13 +134,10 @@ export default function TaskPipeline() {
   }
 
   // Persist to API and localStorage backup
-  // Only syncs the dragged task to avoid wrong status mappings
   const persistTasks = async (newTasks, changedTaskId, newStage) => {
     setTasks(newTasks)
-    // Backup to localStorage
     localStorage.setItem('navi_ops_tasks', JSON.stringify(newTasks))
 
-    // Only sync the changed task
     if (changedTaskId) {
       const task = newTasks.find(t => t.id === changedTaskId)
       if (task) {
@@ -107,7 +156,6 @@ export default function TaskPipeline() {
           })
           const data = await res.json()
 
-          // Fire automations when task moves to done
           if (newStage === 'delivered' && data?.task) {
             fetch('/api/internal/automations/fire', {
               method: 'POST',
@@ -125,7 +173,6 @@ export default function TaskPipeline() {
             }).catch(() => {})
           }
 
-          // Fire automations when task moves to review
           if (newStage === 'review' && data?.task) {
             fetch('/api/internal/automations/fire', {
               method: 'POST',
@@ -191,28 +238,50 @@ export default function TaskPipeline() {
     )
   }
 
-  if (loading) {
+  if (loading && tasks.length === 0) {
     return (
-      <div className="task-pipeline loading">
-        <div className="loading-spinner">Carregant tasques...</div>
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className="task-pipeline error">
-        <div className="error-message">
-          <AlertCircle size={16} />
-          <span>Error: {error}</span>
-          <button onClick={fetchTasks}>Retry</button>
+      <div className="task-pipeline">
+        <div className="tp-header">
+          <h2>Task Pipeline</h2>
         </div>
+        <SkeletonBoard />
       </div>
     )
   }
 
   return (
     <div className="task-pipeline">
+      {usingLocalStorage && (
+        <div className="tp-fallback-banner">
+          <AlertCircle size={14} />
+          <span>Sincronitzant desde localStorage — API no disponible</span>
+          <button className="tp-banner-retry" onClick={() => { setUsingLocalStorage(false); fetchTasks() }}>
+            <RefreshCw size={12} /> Reconnectar
+          </button>
+        </div>
+      )}
+
+      {showToast && (
+        <div className="tp-toast">
+          <CheckCircle2 size={14} />
+          <span>Connectivitat recuperada — sincronitzant amb API</span>
+        </div>
+      )}
+
+      {error && !usingLocalStorage && (
+        <div className="tp-error-bar">
+          <AlertCircle size={14} />
+          <span>Error: {error}</span>
+          {retryCount < MAX_RETRIES ? (
+            <span className="tp-retry-info">Reintent {retryCount}/{MAX_RETRIES}...</span>
+          ) : (
+            <button className="tp-retry-btn" onClick={() => { setRetryCount(0); fetchTasks() }}>
+              <RefreshCw size={12} /> Reintentar
+            </button>
+          )}
+        </div>
+      )}
+
       <div className="tp-header">
         <h2>Task Pipeline</h2>
         <span className="task-count">{tasks.length} tasques</span>
@@ -220,6 +289,7 @@ export default function TaskPipeline() {
           ⟳
         </button>
       </div>
+
       <div className="kanban-board">
         {STAGES.map(stage => {
           const stageTasks = getTasksForStage(stage.id)

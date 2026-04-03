@@ -52,6 +52,15 @@
   max-width: 900px;
 }
 
+.org-chief-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 18px;
+  width: 100%;
+  max-width: 1100px;
+}
+
 /* Node base styles */
 .org-node {
   display: flex;

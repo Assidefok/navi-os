@@ -25,6 +25,11 @@
           "at": "2026-03-31T07:25:00.000Z",
           "by": "Navi",
           "text": "ELOM ha pres aquesta tasca com a prioritat estratègica"
+        },
+        {
+          "at": "2026-04-02T06:34:00.000Z",
+          "by": "Navi",
+          "text": "⛔ CRITICAL BLOCKER: Standup 02/04 — sense Aleix approval, JEFF i WARREN romanen bloquejats. ELOM prepara pitch executiu avui."
         }
       ],
       "history": [
@@ -304,6 +309,11 @@
           "at": "2026-03-31T00:55:00.000Z",
           "by": "Gary",
           "text": "Gary picked this up in standup"
+        },
+        {
+          "at": "2026-04-02T06:34:00.000Z",
+          "by": "Navi",
+          "text": "⚠️ STALE: +38h sense update. JEFF ha fet flag a standup 02/04. Cal actualització o reassignació."
         }
       ],
       "history": [
@@ -370,7 +380,8 @@
       "status": "todo",
       "priority": "alta",
       "createdDate": "2026-04-01T21:55:26.219Z",
-      "updatedDate": "2026-04-01T21:55:26.219Z",
+      "updatedDate": "2026-04-02T06:34:00.000Z",
+    "standupNote": "02/04/2026 — CRITICAL: Aleix approval needed on pm-elom-1 (visio-2026.md) to unblock JEFF and WARREN. GARY stale (+38h on pm-gary-1). Warren needs to sign-off pm-sam-1 today.",
       "deliverableLink": "",
       "notes": [
         "Creat automàticament per: Debat aprovat → Tasca PM per l'agent"

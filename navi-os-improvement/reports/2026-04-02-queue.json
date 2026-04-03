@@ -1,0 +1,160 @@
+{
+  "queue": "navi-os-improvement-2026-04-02",
+  "generated": "2026-04-02T21:00:00Z",
+  "generated_by": "Navi OS Improvement Proposer",
+  "executed_by": "Navi OS Improvement Executor",
+  "execution_completed": "2026-04-02T21:50:00Z",
+  "source": "navi-os/src + server.js analysis",
+  "build_status": "PASSED",
+  "build_time_ms": 452,
+  "improvements": [
+    {
+      "id": "NAV IOS-2026-04-02-01",
+      "title": "Express 5 → Express 4 (production stability)",
+      "area": "Backend / Dependencies",
+      "type": "bug",
+      "priority": "CRITICAL",
+      "impact": "Alta",
+      "effort": "Baix",
+      "risk": "Baix",
+      "status": "already_done",
+      "owner": null,
+      "files_affected": ["navi-os/package.json"],
+      "implementation_steps": [
+        "npm install express@^4.21.0 --save",
+        "Verificar arrencada dev:server",
+        "Testejar endpoints principals",
+        "Validar proxy Vite"
+      ],
+      "reason": "Express 5.2.1 és beta en producció. Risc de crash inesperat.",
+      "tags": ["backend", "dependencies", "stability", "express"],
+      "executor_notes": "Express 4.22.1 already installed. No action needed."
+    },
+    {
+      "id": "NAV IOS-2026-04-02-02",
+      "title": "Split Ops.jsx (934 línies → 163 linies)",
+      "area": "Frontend / Architecture",
+      "type": "optimization",
+      "priority": "CRITICAL",
+      "impact": "Alta",
+      "effort": "Mitjà",
+      "risk": "Mitjà",
+      "status": "done",
+      "owner": null,
+      "files_affected": [
+        "navi-os/src/modules/Ops.jsx",
+        "navi-os/src/modules/Ops/shared.jsx",
+        "navi-os/src/modules/Ops/sections/SessionsSection.jsx",
+        "navi-os/src/modules/Ops/sections/CronSection.jsx",
+        "navi-os/src/modules/Ops/sections/ActivitySection.jsx"
+      ],
+      "implementation_steps": [
+        "Crear Ops/sections/ amb 3 sub-components",
+        "Crear Ops/shared.jsx amb components i utilitats compartides",
+        "Ops.jsx passa a router/tab manager 163 linies",
+        "Git commit per rollback"
+      ],
+      "reason": "Ops.jsx de 934 linies és el component mes fragil. Un canvi accidental pot trencar tot Ops.",
+      "tags": ["frontend", "architecture", "refactor", "components"],
+      "executor_notes": "Ops.jsx reduced from 934 to 163 lines. 5 files created. Build passes."
+    },
+    {
+      "id": "NAV IOS-2026-04-02-03",
+      "title": "Async exec amb timeouts a server.js",
+      "area": "Backend / Performance",
+      "type": "optimization",
+      "priority": "HIGH",
+      "impact": "Alta",
+      "effort": "Mitjà",
+      "risk": "Baix",
+      "status": "already_done",
+      "owner": null,
+      "files_affected": ["navi-os/server.js"],
+      "implementation_steps": [
+        "Crear helper execAsync(cmd, timeoutMs)",
+        "Convertir 18 execSync a exec async",
+        "Afegir timeout 5000ms a tots (excepte backup: 120000)",
+        "Wrapping try/catch per endpoint",
+        "Substituir un a un verifican输出"
+      ],
+      "reason": "execSync sense timeout pot bloquejar el server indefinidament. openclaw status té timeout 30s manual.",
+      "tags": ["backend", "performance", "async", "server", "security"],
+      "executor_notes": "All 18 execSync calls already have timeouts (3000ms to 120000ms). No action needed."
+    },
+    {
+      "id": "NAV IOS-2026-04-02-04",
+      "title": "Loading Skeletons + Error Retry a TaskPipeline",
+      "area": "Frontend / UX",
+      "type": "feature",
+      "priority": "MEDIUM",
+      "impact": "Mitjana",
+      "effort": "Baix",
+      "risk": "Baix",
+      "status": "done",
+      "owner": null,
+      "files_affected": [
+        "navi-os/src/components/TaskPipeline.jsx",
+        "navi-os/src/components/TaskPipeline.css"
+      ],
+      "implementation_steps": [
+        "Substituir text carregant per CSS skeleton",
+        "Afegir retry button estilitzat",
+        "Mostrar banner quan API cau",
+        "Afegir toast quan recuperi",
+        "maxRetries 3 amb backoff a fetchTasks"
+      ],
+      "reason": "UX pobra quan API triga. Fallback localStorage existent pero invisible per usuari.",
+      "tags": ["frontend", "ux", "taskpipeline", "loading", "error-handling"],
+      "executor_notes": "SkeletonBoard component, maxRetries 3 with exponential backoff, localStorage fallback banner, toast on recovery. All styled."
+    },
+    {
+      "id": "NAV IOS-2026-04-02-05",
+      "title": "CSS Design Tokens + Architecture Split",
+      "area": "Frontend / Architecture",
+      "type": "optimization",
+      "priority": "MEDIUM",
+      "impact": "Alta",
+      "effort": "Mitjà",
+      "risk": "Baix",
+      "status": "done",
+      "owner": null,
+      "files_affected": [
+        "navi-os/src/styles/tokens.css",
+        "navi-os/src/index.css"
+      ],
+      "implementation_steps": [
+        "Crear styles/tokens.css amb CSS custom properties",
+        "Definir colors, spacing, typography tokens",
+        "Importar a index.css",
+        "Tokens preparats per aplicar a Ops.css i Lab.css (proof-of-concept)"
+      ],
+      "reason": "11.4k linies CSS sense sistema de tokens. Canvis de marca/colors impossibles sense tocar cada fitxer.",
+      "tags": ["frontend", "css", "architecture", "design-system", "tokens"],
+      "executor_notes": "50+ CSS custom properties created covering colors, spacing, typography, borders, shadows, transitions. Imported in index.css."
+    }
+  ],
+  "execution_order": [
+    "NAV IOS-2026-04-02-01",
+    "NAV IOS-2026-04-02-02",
+    "NAV IOS-2026-04-02-03",
+    "NAV IOS-2026-04-02-04",
+    "NAV IOS-2026-04-02-05"
+  ],
+  "stats": {
+    "total": 5,
+    "completed": 5,
+    "critical": 2,
+    "high": 1,
+    "medium": 2,
+    "already_done": 2,
+    "by_type": {
+      "bug": 1,
+      "optimization": 3,
+      "feature": 1
+    },
+    "by_area": {
+      "backend": 3,
+      "frontend": 3
+    }
+  }
+}

@@ -1,6 +1,6 @@
 # SUBAGENTS.md - JEFF / Chief Operations Officer
 
-_Last updated: 2026-03-31_
+_Last updated: 2026-04-02_
 
 ---
 
@@ -14,10 +14,10 @@ JEFF handles: implementation, automation deployment, process design, OS design, 
 
 | # | Nom | Model | Tasca Específica |
 |---|-----|-------|------------------|
-| 1 | **exec-agent** | `gpt-5.2` | Execució de tasques concretes: scripts, deploys, migrations, execució de pipelines |
-| 2 | **os-design-agent** | `minimax-2.5` | Disseny d'arquitectura OS/workspace: estructures de directoris, Navi OS, configuracions |
-| 3 | **processOS-agent** | `gpt-5.3-codex` | Disseny i optimització de processos operacionals: workflows, automatitzacions, templates |
-| 4 | **infra-agent** | `ollama` (quan disponible) | Gestió d'infraestructura: servidors,_configs, Docker, networking (tasques pesades) |
+| 1 | **exec-agent** | `gpt-5.4-mini` → `minimax-portal/MiniMax-M2.7` → `ollama` | Execució de tasques concretes: scripts, deploys, migrations, execució de pipelines |
+| 2 | **os-design-agent** | `gpt-5.4-mini` → `minimax-portal/MiniMax-M2.7` → `ollama` | Disseny d'arquitectura OS/workspace: estructures de directoris, Navi OS, configuracions |
+| 3 | **processOS-agent** | `gpt-5.4-mini` → `minimax-portal/MiniMax-M2.7` → `ollama` | Disseny i optimització de processos operacionals: workflows, automatitzacions, templates |
+| 4 | **infra-agent** | `gpt-5.4-mini` → `minimax-portal/MiniMax-M2.7` → `ollama` | Gestió d'infraestructura: servidors,_configs, Docker, networking (tasques pesades) |
 
 ---
 

@@ -1,6 +1,6 @@
 # MEMORY.md - Long-Term Memory
 
-_Last updated: 2026-04-01_
+_Last updated: 2026-04-02T22:20:00.000Z_
 
 ---
 
@@ -48,6 +48,49 @@ _Last updated: 2026-04-01_
 - **I am Navi** (the fairy) - NOT Goat
 - **Goat** = assistant from the ClearMUd course Aleix is following
 - **Navi-OS** = the operating system I'm building
+
+---
+
+## 🏛️ Memory Constitution (Navi - Coordinació)
+
+**Sistema de memòria implementat: 2026-04-02**
+
+Tots els agents han d'acatar la Memory Constitution a `memory/_constitution/MEMORY-CONSTITUTION.md`
+
+**Normes clau que coordino:**
+
+| Norma | Detall |
+|-------|--------|
+| **Frontmatter obligatori** | Projects/, Decisions/, Daily/, _inbox/ requereixen YAML vàlid |
+| **UUID obligatori** | Cada entrada nova ha de tenir `id: UUID-v4` |
+| **Inbox 7 dies** | _inbox/ vida màxima 7 dies - auto-processament |
+| **Semantic Index** | _meta/semantic-index.json actualitzat cada 24h (cron 03:00) |
+| **Navimap diari** | _meta/daily-navimap.md generat cada nit (cron 23:59) |
+
+**Scripts d'automatització:**
+
+| Script | CRON | Propòsit |
+|--------|------|----------|
+| `validate-memory.js` | Manual | Valida compliment constitució |
+| `inbox-cleanup.js` | Dilluns 00:00 | Processa inbox caducat |
+| `navimap-generator.js` | Diari 23:59 | Map "qui va fer què" |
+| `semantic-index-generator.js` | Diari 03:00 | Regenerar índex semàntic |
+
+**Estructura:**
+```
+memory/
+├── _constitution/      # Constitució (llei suprema)
+├── _meta/             # Dades machine-facing
+├── _templates/        # Plantilles obligatòries
+├── Projects/          # Projectes actius (ESTAT VIU)
+├── Decisions/         # Decisions (SOURCE OF TRUTH)
+├── Processes/         # Playbooks operatius
+├── Daily/             # Registres diaris
+├── _inbox/           # Captura ràpida (7 dies màx)
+└── _archive/         # Contingut antic
+```
+
+**Validació:** `node scripts/validate-memory.js`
 - Goat follows the course instructions; I maintain my fairy personality
 
 ---

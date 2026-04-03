@@ -28,10 +28,14 @@ function SomiarCard({ mode, config }) {
     } finally { setToggling(false) }
   }
 
-  const handleRun = async () => {
+  const handleRun = async (force = false) => {
     setRunning(true)
     try {
-      const res = await fetch(`/api/somiar/${mode}/run`, { method: 'POST' })
+      const res = await fetch(`/api/somiar/${mode}/run`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ force }),
+      })
       const data = await res.json()
       if (!data.ok) alert(data.reason)
       else fetchStatus()
@@ -61,6 +65,8 @@ function SomiarCard({ mode, config }) {
     try { return new Date(iso).toLocaleString('ca-ES', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) }
     catch { return iso }
   }
+
+  const inWindow = status?.inWindow ?? true
 
   return (
     <div className={`somiar-card ${mode} ${status?.enabled ? 'enabled' : 'disabled'}`}
@@ -95,9 +101,16 @@ function SomiarCard({ mode, config }) {
             {status?.enabled ? <Pause size={16} /> : <Play size={16} />}
           </button>
           <button className="somiar-run" onClick={e => { e.stopPropagation(); handleRun() }}
-            disabled={running || !status?.enabled} title="Executar ara">
+            disabled={running || !status?.enabled || !inWindow} title={inWindow ? 'Executar ara' : 'Fora de finestra'}>
             {running ? <RefreshCw size={14} className="spin" /> : <Zap size={14} />}
           </button>
+          {!inWindow && (
+            <button className="somiar-run force" onClick={e => { e.stopPropagation(); if (confirm('Forçar execució fora de finestra?')) handleRun(true) }}
+              disabled={running || !status?.enabled} title="Forçar execució">
+              <Zap size={14} />
+              Forçar
+            </button>
+          )}
           <ChevronDown size={14} className={`somiar-chevron ${expanded ? 'rotated' : ''}`} />
         </div>
       </div>

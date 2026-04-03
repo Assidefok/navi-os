@@ -1,0 +1,90 @@
+/* Navi OS Design Tokens
+ * ================================================
+ * Use these CSS custom properties instead of hardcoded values.
+ * All tokens are prefixed with --navi- to avoid collisions.
+ * ================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&family=Ubuntu+Mono:wght@400;700&display=swap');
+
+:root {
+  /* ── Colors: Brand ──────────────────────────────── */
+  --navi-bg:           #0d0d1a;
+  --navi-surface:      #13132b;
+  --navi-surface-2:    #1a1a35;
+  --navi-surface-3:    #22223f;
+  --navi-amber:        #ffb800;
+  --navi-amber-dim:    rgba(255, 184, 0, 0.15);
+  --navi-amber-glow:   rgba(255, 184, 0, 0.35);
+
+  /* ── Colors: Text ───────────────────────────────── */
+  --navi-text:         rgba(255, 255, 255, 0.92);
+  --navi-text-dim:     rgba(255, 255, 255, 0.55);
+  --navi-text-muted:   rgba(255, 255, 255, 0.3);
+
+  /* ── Colors: Borders ────────────────────────────── */
+  --navi-border:       rgba(255, 255, 255, 0.1);
+  --navi-border-2:    rgba(255, 255, 255, 0.06);
+
+  /* ── Colors: Status ─────────────────────────────── */
+  --navi-success:      #30d158;
+  --navi-success-bg:   rgba(48, 209, 88, 0.12);
+  --navi-success-border: rgba(48, 209, 88, 0.3);
+
+  --navi-warning:      #fbbf24;
+  --navi-warning-bg:   rgba(251, 191, 36, 0.1);
+  --navi-warning-border: rgba(251, 191, 36, 0.25);
+
+  --navi-error:        #ff453a;
+  --navi-error-bg:     rgba(255, 69, 58, 0.12);
+  --navi-error-border: rgba(255, 69, 58, 0.3);
+
+  --navi-info:         #0a84ff;
+  --navi-info-bg:      rgba(10, 132, 255, 0.12);
+  --navi-info-border:  rgba(10, 132, 255, 0.3);
+
+  /* ── Colors: Accents ────────────────────────────── */
+  --navi-violet:       #a78bfa;
+  --navi-violet-bg:    rgba(167, 139, 250, 0.12);
+  --navi-sky:          #38bdf8;
+  --navi-sky-bg:       rgba(56, 189, 248, 0.12);
+
+  /* ── Typography ─────────────────────────────────── */
+  --navi-font-ui:      'Ubuntu', system-ui, sans-serif;
+  --navi-font-mono:    'Ubuntu Mono', 'Courier New', monospace;
+
+  --navi-text-xs:      11px;
+  --navi-text-sm:      12px;
+  --navi-text-base:    14px;
+  --navi-text-lg:      16px;
+  --navi-text-xl:      18px;
+  --navi-text-2xl:     22px;
+  --navi-text-3xl:     28px;
+
+  /* ── Spacing (4px base unit) ───────────────────── */
+  --navi-space-1:      4px;
+  --navi-space-2:      8px;
+  --navi-space-3:      12px;
+  --navi-space-4:      16px;
+  --navi-space-5:      20px;
+  --navi-space-6:      24px;
+  --navi-space-8:      32px;
+  --navi-space-10:     40px;
+  --navi-space-12:     48px;
+
+  /* ── Border Radius ─────────────────────────────── */
+  --navi-radius-sm:    6px;
+  --navi-radius:       10px;
+  --navi-radius-lg:    16px;
+  --navi-radius-xl:    20px;
+  --navi-radius-full:  9999px;
+
+  /* ── Shadows ────────────────────────────────────── */
+  --navi-shadow-sm:    0 1px 3px rgba(0, 0, 0, 0.4);
+  --navi-shadow:      0 4px 12px rgba(0, 0, 0, 0.5);
+  --navi-shadow-lg:   0 8px 32px rgba(0, 0, 0, 0.6);
+  --navi-glow-amber:  0 0 20px rgba(255, 184, 0, 0.25);
+
+  /* ── Transitions ───────────────────────────────── */
+  --navi-transition:   0.2s ease;
+  --navi-transition-slow: 0.4s ease;
+}
