@@ -4,7 +4,7 @@ category: AI News
 icon: 🤖
 description: Artificial Intelligence and Machine Learning news
 tags: ['ai', 'ml', 'llm', 'openai', 'anthropic', 'startups']
-created: 2026-04-02 06:45
+created: 2026-04-03 06:45
 ---
 
 # 🤖 AI News
@@ -13,13 +13,19 @@ Artificial Intelligence and Machine Learning news
 
 ## Meta
 - **Carpeta:** `memory/AI-News/`
-- **Total entrades:** 4
-- **Darrer update:** 2026-04-02 06:45
+- **Total entrades:** 5
+- **Darrer update:** 2026-04-03 06:45
 
 ## Tags
 #ai #ml #llm #openai #anthropic #startups
 
 ## Entrades recents
+
+### [[2026-04-03-06.00.md|2026-04-03 06:00]] #openai #microsoft #google #anthropic #llms
+
+- OpenAI acquires TBPN, the buzzy founder-led business talk show...
+- Microsoft takes on AI rivals with three new foundational models...
+- Google now lets you direct avatars through prompts in its Vids app...
 
 ### [[2026-04-02-06.00.md|2026-04-02 06:00]] #anthropic
 

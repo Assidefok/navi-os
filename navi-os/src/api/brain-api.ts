@@ -1,15 +1,12 @@
 /**
- * Brain API - Server-side file system operations for Navi OS Brain module
- *
- * These functions read directly from the filesystem.
- * Mounted as Express routes in the OpenClaw gateway or served via a local server.
+ * Brain API - Unified Memory & Search for Navi OS Brain module
  *
  * Endpoints:
  *   GET /api/memory/files       → list all memory/*.md files
  *   GET /api/memory/file?path=  → read a specific memory file
  *   GET /api/briefs             → list all daily-*.md briefs
- *   GET /api/skills             → list skills from skills/index.md
- *   GET /api/cron-health        → fetch cron job status
+ *   GET /api/chiefs             → list all chief MEMORY.md files
+ *   GET /api/brain/search?q=   → keyword search across briefs, memory, chiefs
  */
 
 import * as fs from 'fs'
@@ -19,8 +16,7 @@ import { fileURLToPath } from 'url'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const WORKSPACE = '/home/user/.openclaw/workspace'
 const MEMORY_DIR = path.join(WORKSPACE, 'memory')
-const SKILLS_DIR = path.join(WORKSPACE, 'skills')
-const SKILLS_INDEX = path.join(SKILLS_DIR, 'index.md')
+const TEAM_DIR = path.join(WORKSPACE, 'team')
 
 // ─── Memory Files ────────────────────────────────────────────────────────────
 
@@ -45,7 +41,6 @@ export async function getMemoryFiles(): Promise<{ files: MemoryFile[] }> {
       } as MemoryFile
     })
     .sort((a, b) => {
-      // Pinned files first, then by date descending
       if (a.pinned && !b.pinned) return -1
       if (!a.pinned && b.pinned) return 1
       return new Date(b.modified).getTime() - new Date(a.modified).getTime()
@@ -55,7 +50,6 @@ export async function getMemoryFiles(): Promise<{ files: MemoryFile[] }> {
 }
 
 export async function getMemoryFile(reqPath: string): Promise<{ content: string; path: string } | { error: string }> {
-  // Sanitize: only allow relative paths inside memory dir
   const relativePath = reqPath.replace(/^\/+/, '')
   const fullPath = path.resolve(MEMORY_DIR, relativePath)
 
@@ -93,15 +87,12 @@ export async function getBriefs(): Promise<{ briefs: Brief[] }> {
       const dateMatch = f.match(/(\d{4}-\d{2}-\d{2})/)
       const date = dateMatch ? dateMatch[1] : f.replace('daily-', '').replace('.md', '')
 
-      // Extract title from first H2 or first line
       const titleMatch = content.match(/^#\s+(.+)$/m) || content.match(/^##\s+(.+)$/m)
       const title = titleMatch ? titleMatch[1] : `Brief ${date}`
 
-      // Determine status from content
       const status: 'delivered' | 'pending' =
         content.includes('*Generated at') ? 'delivered' : 'pending'
 
-      // Preview: first non-empty line after first heading
       const lines = content.split('\n').filter(l => l.trim())
       const preview = lines.length > 2 ? lines.slice(1, 3).join(' | ').substring(0, 120) : ''
 
@@ -119,93 +110,180 @@ export async function getBriefs(): Promise<{ briefs: Brief[] }> {
   return { briefs: entries }
 }
 
-// ─── Skills Directory ─────────────────────────────────────────────────────────
+// ─── Chiefs Memory ────────────────────────────────────────────────────────────
 
-export async function getSkills(): Promise<{ skills: SkillEntry[] }> {
-  const skills: SkillEntry[] = []
+const CHIEFS = [
+  { id: 'elom', name: 'ELOM', title: 'Chief Visionary Officer', emoji: '🚀' },
+  { id: 'warren', name: 'WARREN', title: 'Chief Quality Officer', emoji: '📊' },
+  { id: 'jeff', name: 'JEFF', title: 'Chief Operations Officer', emoji: '⚡' },
+  { id: 'sam', name: 'SAM', title: 'Chief AI Officer', emoji: '🤖' },
+]
 
-  if (!fs.existsSync(SKILLS_INDEX)) {
-    return { skills }
+export async function getChiefs(): Promise<{ chiefs: Chief[] }> {
+  const chiefs: Chief[] = []
+
+  for (const chief of CHIEFS) {
+    const memoryPath = path.join(TEAM_DIR, chief.id, 'MEMORY.md')
+    if (!fs.existsSync(memoryPath)) continue
+
+    try {
+      const content = fs.readFileSync(memoryPath, 'utf-8')
+      const stat = fs.statSync(memoryPath)
+
+      // Extract title from content
+      const titleMatch = content.match(/^#\s+MEMORY\.md\s+-\s+(.+)$/m)
+        || content.match(/^#\s+(.+)$/m)
+      const title = titleMatch ? titleMatch[1] : chief.name
+
+      // Extract active projects section for preview
+      const projectsMatch = content.match(/## Active Projects\n([\s\S]*?)(?=\n##|$)/)
+      const projectsPreview = projectsMatch
+        ? projectsMatch[1].replace(/^\|.*$/gm, '').trim().substring(0, 100)
+        : ''
+
+      // Extract last updated
+      const updatedMatch = content.match(/_Last updated:\s*(.+)$/m)
+      const lastUpdated = updatedMatch ? updatedMatch[1].trim() : stat.mtime.toISOString()
+
+      chiefs.push({
+        id: chief.id,
+        name: chief.name,
+        title: chief.title,
+        emoji: chief.emoji,
+        memoryPath: `team/${chief.id}/MEMORY.md`,
+        lastUpdated,
+        status: 'active',
+        preview: projectsPreview,
+        modified: stat.mtime.toISOString(),
+      })
+    } catch {
+      // skip
+    }
   }
 
-  const content = fs.readFileSync(SKILLS_INDEX, 'utf-8')
-  const lines = content.split('\n')
-
-  // Parse markdown table rows
-  let section = 'built-in'
-  for (const line of lines) {
-    if (line.includes('## Custom Skills')) {
-      section = 'custom'
-      continue
-    }
-    if (line.startsWith('|') && !line.includes('---') && line.includes('|')) {
-      const cols = line.split('|').map(c => c.trim()).filter(Boolean)
-      if (cols.length >= 4 && cols[0] !== 'Name') {
-        const [name, owner, status, category, lastUpdated] = cols
-        skills.push({
-          name,
-          owner,
-          status: status as 'active' | 'deprecated',
-          category,
-          lastUpdated,
-          source: section as 'built-in' | 'custom',
-        })
-      }
-    }
-  }
-
-  return { skills }
+  return { chiefs }
 }
 
-// ─── Cron Health ──────────────────────────────────────────────────────────────
+// ─── Unified Search ───────────────────────────────────────────────────────────
 
-export async function getCronHealth(): Promise<{ jobs: CronJob[] }> {
-  // Read cron status from workspace scripts
-  const scriptsDir = path.join(WORKSPACE, 'scripts')
-  const jobs: CronJob[] = []
-
-  if (!fs.existsSync(scriptsDir)) {
-    return { jobs }
+export async function searchBrain(query: string): Promise<{ results: SearchResult[] }> {
+  if (!query || query.trim().length < 2) {
+    return { results: [] }
   }
 
-  const cronFiles = fs.readdirSync(scriptsDir)
-    .filter(f => f.startsWith('cron-') && f.endsWith('.sh'))
+  const q = query.toLowerCase().trim()
+  const keywords = q.split(/\s+/).filter(Boolean)
+  const results: SearchResult[] = []
 
-  for (const file of cronFiles) {
-    const fullPath = path.join(scriptsDir, file)
-    const stat = fs.statSync(fullPath)
-    const content = fs.readFileSync(fullPath, 'utf-8')
-    const name = file.replace('cron-', '').replace('.sh', '')
+  // Helper: check if content matches any keyword
+  const matches = (content: string): boolean => {
+    const lower = content.toLowerCase()
+    return keywords.some(kw => lower.includes(kw))
+  }
 
-    // Determine status from last lines
-    const lines = content.split('\n')
-    const lastLine = lines[lines.length - 1] || ''
-    const disabled = content.includes('# DISABLED') || content.includes('exit 0')
-    const errorMatch = content.match(/# LAST ERROR: (.+)/)
+  // Helper: extract snippet around first match
+  const extractSnippet = (content: string, maxLen = 200): string => {
+    const lower = content.toLowerCase()
+    const firstKw = keywords.find(kw => lower.includes(kw))
+    if (!firstKw) return content.substring(0, maxLen)
 
-    jobs.push({
-      name,
-      status: disabled ? 'disabled' : 'healthy',
-      lastRun: stat.mtime.toISOString(),
-      nextRun: estimateNextRun(name, stat.mtime),
-      error: disabled ? 'Manually disabled' : (errorMatch ? errorMatch[1] : null),
+    const idx = lower.indexOf(firstKw)
+    const start = Math.max(0, idx - 60)
+    const end = Math.min(content.length, idx + maxLen - 60)
+    let snippet = content.substring(start, end)
+    if (start > 0) snippet = '…' + snippet
+    if (end < content.length) snippet = snippet + '…'
+    return snippet.replace(/\n+/g, ' ').trim()
+  }
+
+  // Helper: score by number of keyword matches
+  const score = (content: string): number => {
+    const lower = content.toLowerCase()
+    return keywords.filter(kw => lower.includes(kw)).length
+  }
+
+  // 1. Search daily briefs
+  if (fs.existsSync(MEMORY_DIR)) {
+    const briefFiles = fs.readdirSync(MEMORY_DIR).filter(f => f.startsWith('daily-') && f.endsWith('.md'))
+    for (const file of briefFiles) {
+      const fullPath = path.join(MEMORY_DIR, file)
+      const content = fs.readFileSync(fullPath, 'utf-8')
+      if (!matches(content)) continue
+
+      const stat = fs.statSync(fullPath)
+      const dateMatch = file.match(/(\d{4}-\d{2}-\d{2})/)
+      const date = dateMatch ? dateMatch[1] : file.replace('daily-', '').replace('.md', '')
+
+      results.push({
+        id: file,
+        type: 'brief',
+        title: `Brief ${date}`,
+        source: file,
+        sourcePath: `memory/${file}`,
+        snippet: extractSnippet(content),
+        score: score(content),
+        modified: stat.mtime.toISOString(),
+      })
+    }
+  }
+
+  // 2. Search memory files
+  if (fs.existsSync(MEMORY_DIR)) {
+    const memFiles = fs.readdirSync(MEMORY_DIR).filter(f => f.endsWith('.md'))
+    for (const file of memFiles) {
+      // Skip daily briefs (already searched)
+      if (file.startsWith('daily-')) continue
+
+      const fullPath = path.join(MEMORY_DIR, file)
+      const content = fs.readFileSync(fullPath, 'utf-8')
+      if (!matches(content)) continue
+
+      const stat = fs.statSync(fullPath)
+      results.push({
+        id: file,
+        type: 'memory',
+        title: file.replace('.md', ''),
+        source: file,
+        sourcePath: `memory/${file}`,
+        snippet: extractSnippet(content),
+        score: score(content),
+        modified: stat.mtime.toISOString(),
+      })
+    }
+  }
+
+  // 3. Search chief MEMORY.md files
+  for (const chief of CHIEFS) {
+    const memoryPath = path.join(TEAM_DIR, chief.id, 'MEMORY.md')
+    if (!fs.existsSync(memoryPath)) continue
+
+    const content = fs.readFileSync(memoryPath, 'utf-8')
+    if (!matches(content)) continue
+
+    const stat = fs.statSync(memoryPath)
+    const titleMatch = content.match(/^#\s+MEMORY\.md\s+-\s+(.+)$/m)
+      || content.match(/^#\s+(.+)$/m)
+    const title = titleMatch ? titleMatch[1] : chief.name
+
+    results.push({
+      id: chief.id,
+      type: 'chief',
+      title: `${chief.emoji} ${chief.name} — ${chief.title}`,
+      source: `team/${chief.id}/MEMORY.md`,
+      sourcePath: `team/${chief.id}/MEMORY.md`,
+      snippet: extractSnippet(content),
+      score: score(content),
+      modified: stat.mtime.toISOString(),
     })
   }
 
-  return { jobs }
-}
+  // Sort by score desc, then modified desc
+  results.sort((a, b) => {
+    if (b.score !== a.score) return b.score - a.score
+    return new Date(b.modified).getTime() - new Date(a.modified).getTime()
+  })
 
-function estimateNextRun(name: string, lastRun: Date): string {
-  // Rough estimates based on typical cron schedules
-  const schedules: Record<string, number> = {
-    daily: 24 * 60 * 60 * 1000,
-    backup: 24 * 60 * 60 * 1000,
-    audit: 24 * 60 * 60 * 1000,
-    rolling: 6 * 60 * 60 * 1000,
-  }
-  const interval = schedules[name] || 24 * 60 * 60 * 1000
-  const next = new Date(lastRun.getTime() + interval)
-  return next.toISOString()
+  return { results }
 }
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -227,19 +305,25 @@ interface Brief {
   modified: string
 }
 
-interface SkillEntry {
+interface Chief {
+  id: string
   name: string
-  owner: string
-  status: 'active' | 'deprecated'
-  category: string
+  title: string
+  emoji: string
+  memoryPath: string
   lastUpdated: string
-  source: 'built-in' | 'custom'
+  status: string
+  preview: string
+  modified: string
 }
 
-interface CronJob {
-  name: string
-  status: 'healthy' | 'failed' | 'disabled'
-  lastRun: string
-  nextRun: string
-  error: string | null
+interface SearchResult {
+  id: string
+  type: 'brief' | 'memory' | 'chief'
+  title: string
+  source: string
+  sourcePath: string
+  snippet: string
+  score: number
+  modified: string
 }

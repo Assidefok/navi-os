@@ -1,12 +1,13 @@
 # MEMORY.md - JEFF
 
-_Last updated: 2026-04-02T22:15:00.000Z_
+_Last updated: 2026-04-03T17:50:00.000Z_
 
 ---
 
 ## Active Projects
 | Project | Status | Last Update | Notes |
 |---------|--------|-------------|-------|
+| Navi OS Pipeline Implementation | DONE | 2026-04-03 | Physical separation Lab→Staging→Final→Prod |
 | OpenClaw Implementation Operations | IN-PROGRESS | 2026-04-01 | Building operational playbook |
 | Scalable OS v0.1 | BLOCKED | 2026-04-01 | Waiting on SAM (pm-sam-1) + ELOM (pm-elom-1) |
 
@@ -43,7 +44,18 @@ _Last updated: 2026-04-02T22:15:00.000Z_
 ## Automations
 | Process | Automated | Efficiency Gain | Status |
 |---------|-----------|-----------------|--------|
-| None established | No | N/A | - |
+| Navi OS Pipeline Deployment | YES | Alta | DONE - 2026-04-03 |
+| Proposal → Staging deploy | YES | Alta | DONE - deploy-proposal.sh |
+
+## Navi OS Pipeline Infrastructure
+
+| Component | Location | Purpose |
+|-----------|----------|---------|
+| Deploy script | `scripts/navios-deploy.sh` | Main pipeline script |
+| Proposal trigger | `scripts/deploy-proposal.sh` | Auto-deploy on proposal stage change |
+| Pipeline docs | `docs/PIPELINE.md` | Full documentation |
+
+**Pipeline:** Lab → Staging → Final → Production
 
 ---
 
@@ -85,8 +97,11 @@ _Last updated: 2026-04-02T22:15:00.000Z_
 ## Heartbeat Log
 | Timestamp (UTC) | Status | Notes |
 |-----------------|--------|-------|
+| 2026-04-03T12:10:00Z | OK | PM board unchanged. Aleix pitch still pending. pm-gary-1 now +83h stale. No changes needed. |
+| 2026-04-03T07:10:00Z | OK | PM board unchanged. Aleix pitch expected 02/04 — still pending. pm-gary-1 ~78h stale. No critical blockers. |
 | 2026-04-02T16:10:00Z | OK | PM board unchanged since morning. Aleix pitch expected today per Navi standup note. Warren sign-off on pm-sam-1 still pending. pm-gary-1 stale (+55h). No changes needed. |
 | 2026-04-02T08:41:00Z | OK | PM board unchanged. Aleix approval still pending on pm-elom-1. pm-sam-1 still in review. pm-gary-1 now +55h stale. No critical blockers. |
+| 2026-04-03T17:10:00Z | OK | PM board unchanged. Aleix pitch still pending. pm-gary-1 now +83h stale. No critical blockers. |
 | 2026-04-01T15:24:00Z | OK | Executing pm-navi-5. BACKLOG.md populated. MEMORY.md baseline metrics added. pm-gary-1 stale flagged. |
 | 2026-04-01T08:41:00Z | OK | New day. ELOM made progress on pm-elom-1 (draft v0.1). pm-navi-5 still TODO — was flagged yesterday, needs completion. pm-gary-1 stale since Mar31. No critical blockers. |
 | 2026-03-31T21:47:00Z | OK | PM board stale (14h since last update). No critical blockers. JEFF task pm-navi-5 (MEMORY/BACKLOG population) needs completion. |

@@ -2,7 +2,7 @@
   "vault": "navi-os-improvement",
   "description": "Sistema de millora automatitzada per Navi OS",
   "created": "2026-03-31",
-  "updated": "2026-04-02T21:00:00Z",
+  "updated": "2026-04-03T21:00:00Z",
   "tags": ["automation", "improvement", "navi-os", "react", "api", "pm2", "episodi-4"],
   "reports": [
     {
@@ -121,6 +121,40 @@
       "tags": ["queue", "json", "night", "automation"],
       "topics": ["improvement-queue", "express", "ops-jsx", "exec-async", "loading-skeleton", "css-tokens"],
       "summary": "Queue JSON amb 5 millores pendents: Express 5→4, Ops.jsx split, execSync→async, Loading skeletons, CSS Design Tokens"
+    },
+    {
+      "id": "standup-2026-04-03-22.00",
+      "filename": "2026-04-03-00-standup.md",
+      "type": "standup",
+      "date": "2026-04-03",
+      "time": "22:00",
+      "title": "Standup Navi OS - 2026-04-03",
+      "tags": ["standup", "daily", "no-improvements"],
+      "topics": ["execucio", "cap-millora"],
+      "summary": "Cap millora pendent - no hi ha reports generats per avui"
+    },
+    {
+      "id": "improvements-2026-04-03-23.00",
+      "filename": "2026-04-03-improvements.md",
+      "type": "proposal",
+      "date": "2026-04-03",
+      "time": "23:00",
+      "title": "Proposta de Millores Navi OS - 2026-04-03 (Nocturna)",
+      "tags": ["proposal", "improvement", "navi-os", "night-proposal", "localstorage", "utils", "exec-async", "refactor", "abort-controller"],
+      "topics": ["morning-briefing", "localStorage", "formatDate-duplication", "renderMarkdown-duplication", "execSync", "lab-jsx-split", "AbortController"],
+      "improvements": ["NAVI-OS-2026-04-03-01", "NAVI-OS-2026-04-03-02", "NAVI-OS-2026-04-03-03", "NAVI-OS-2026-04-03-04", "NAVI-OS-2026-04-03-05"],
+      "summary": "5 millores: localStorage de MorningBriefingPanel (CRITICA), Consolidacio utils duplicades, execSync async, Split Lab.jsx, AbortController"
+    },
+    {
+      "id": "queue-2026-04-03-23.00",
+      "filename": "2026-04-03-queue.json",
+      "type": "queue",
+      "date": "2026-04-03",
+      "time": "23:00",
+      "title": "Cua de millores - 2026-04-03 (Nocturna)",
+      "tags": ["queue", "json", "night", "automation"],
+      "topics": ["improvement-queue", "localStorage", "utils", "exec-async", "lab-split", "abort-controller"],
+      "summary": "Queue JSON amb 5 millores pendents: MorningBriefingPanel localStorage fix, Utils consolidation, execSync async, Lab.jsx split, AbortController"
     }
   ],
   "index_by_topic": {

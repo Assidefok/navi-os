@@ -1,0 +1,660 @@
+/* ProposalsBoard — Kanban-style proposal tracker */
+
+.pb-root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 0;
+}
+
+/* ── Topbar ─────────────────────────────────────────────────── */
+.pb-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.pb-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.pb-title {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pb-total-badge {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.06);
+  padding: 3px 10px;
+  border-radius: 10px;
+}
+
+.pb-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pb-filter-toggle {
+  display: flex;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.pb-filter-btn {
+  padding: 6px 14px;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 12px;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.pb-filter-btn.active {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.pb-filter-btn:hover:not(.active) {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.pb-add-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: rgba(255, 184, 0, 0.15);
+  border: 1px solid rgba(255, 184, 0, 0.3);
+  border-radius: 8px;
+  color: #ffb800;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pb-add-btn:hover {
+  background: rgba(255, 184, 0, 0.25);
+  border-color: rgba(255, 184, 0, 0.5);
+}
+
+/* ── Board ───────────────────────────────────────────────────── */
+.pb-board {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  padding-bottom: 16px;
+  align-items: flex-start;
+  min-height: 0;
+}
+
+/* ── Column ─────────────────────────────────────────────────── */
+.pb-column {
+  flex: 0 0 240px;
+  width: 240px;
+  display: flex;
+  flex-direction: column;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 14px;
+  max-height: calc(100vh - 220px);
+  overflow: hidden;
+}
+
+.pb-col-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.pb-col-title-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.pb-col-title {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--cc, rgba(255, 255, 255, 0.7));
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.pb-col-count {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.07);
+  padding: 1px 7px;
+  border-radius: 8px;
+  min-width: 22px;
+  text-align: center;
+}
+
+.pb-col-cards {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 80px;
+}
+
+.pb-col-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 30px 10px;
+  color: rgba(255, 255, 255, 0.2);
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+  text-align: center;
+}
+
+/* ── Card ───────────────────────────────────────────────────── */
+.pb-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 12px;
+  transition: all 0.2s;
+  border-left: 3px solid var(--cc, #555);
+}
+
+.pb-card:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.pb-card[data-status="rejected"]   { --cc: #ff453a; opacity: 0.75; }
+.pb-card[data-status="pending"]     { --cc: #ffb800; }
+.pb-card[data-status="accepted"]   { --cc: #00b4d8; }
+.pb-card[data-status="processing"] { --cc: #bf5af2; }
+.pb-card[data-status="done"]       { --cc: #30d158; }
+
+.pb-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.pb-card-title {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.35;
+  flex: 1;
+}
+
+.pb-card-delete {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.25);
+  cursor: pointer;
+  padding: 2px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  transition: color 0.15s;
+  flex-shrink: 0;
+}
+
+.pb-card-delete:hover {
+  color: #ff453a;
+}
+
+.pb-card-desc {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1.45;
+  margin-bottom: 8px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.pb-card-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.pb-card-author,
+.pb-card-date {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.pb-priority-badge {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(var(--pcolor, 255,255,255), 0.1);
+  color: var(--pcolor, rgba(255, 255, 255, 0.5));
+  background: color-mix(in srgb, var(--pcolor) 15%, transparent);
+}
+
+/* ── Card Actions ─────────────────────────────────────────── */
+.pb-card-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.pb-move-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  border: 1px solid color-mix(in srgb, var(--ac) 30%, transparent);
+  background: color-mix(in srgb, var(--ac) 10%, transparent);
+  color: var(--ac, rgba(255, 255, 255, 0.6));
+}
+
+.pb-move-btn:hover {
+  background: color-mix(in srgb, var(--ac) 20%, transparent);
+  border-color: color-mix(in srgb, var(--ac) 50%, transparent);
+}
+
+.pb-move-btn.next {
+  justify-content: flex-end;
+}
+
+.pb-move-btn.staging {
+  --ac: #f97316;
+}
+
+.pb-move-btn.done {
+  --ac: #30d158;
+}
+
+.pb-move-btn.replan {
+  --ac: #bf5af2;
+}
+
+.pb-card-area {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.05);
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+/* ── Reject Modal ──────────────────────────────────────────── */
+.pb-reject-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pb-reject-desc {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.5;
+}
+
+.pb-reject-modal textarea {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  padding: 12px;
+  color: #fff;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 13px;
+  resize: vertical;
+  min-height: 80px;
+  outline: none;
+}
+
+.pb-reject-modal textarea:focus {
+  border-color: rgba(191, 90, 242, 0.5);
+}
+
+.pb-reject-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.pb-btn-cancel {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  padding: 10px 16px;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.pb-btn-cancel:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.pb-btn-reject {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(191, 90, 242, 0.15);
+  border: 1px solid rgba(191, 90, 242, 0.4);
+  border-radius: 8px;
+  padding: 10px 16px;
+  color: #bf5af2;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.pb-btn-reject:hover:not(:disabled) {
+  background: rgba(191, 90, 242, 0.25);
+}
+
+.pb-btn-reject:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── Form ───────────────────────────────────────────────────── */
+.pb-form-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.pb-form {
+  width: 100%;
+  max-width: 480px;
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pb-form-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.pb-form-header h3 {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.pb-form-close {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  display: flex;
+  transition: color 0.15s;
+}
+
+.pb-form-close:hover { color: #ff453a; }
+
+.pb-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pb-form-field label {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.pb-form-field input,
+.pb-form-field textarea,
+.pb-form-field select {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: #fff;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.15s;
+  resize: vertical;
+}
+
+.pb-form-field input:focus,
+.pb-form-field textarea:focus,
+.pb-form-field select:focus {
+  border-color: rgba(255, 184, 0, 0.5);
+}
+
+.pb-form-field select option {
+  background: #1a1a2e;
+}
+
+.pb-form-row {
+  display: flex;
+  gap: 12px;
+}
+
+.pb-form-row .pb-form-field {
+  flex: 1;
+}
+
+.pb-form-submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  background: rgba(255, 184, 0, 0.15);
+  border: 1px solid rgba(255, 184, 0, 0.35);
+  border-radius: 10px;
+  color: #ffb800;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 4px;
+}
+
+.pb-form-submit:hover {
+  background: rgba(255, 184, 0, 0.25);
+}
+
+/* ── SLA Badge ──────────────────────────────────────────────── */
+.pb-sla-badge {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(0, 180, 216, 0.15);
+  color: #00b4d8;
+}
+
+.pb-sla-badge.warning {
+  background: rgba(255, 184, 0, 0.15);
+  color: #ffb800;
+}
+
+.pb-sla-badge.overdue {
+  background: rgba(255, 69, 58, 0.15);
+  color: #ff453a;
+}
+
+/* ── Overdue Card ───────────────────────────────────────────── */
+.pb-card.overdue {
+  border-left-color: #ff453a !important;
+  background: rgba(255, 69, 58, 0.05);
+}
+
+.pb-overdue-count {
+  color: #ff453a;
+}
+
+/* ── Rejection Reason ───────────────────────────────────────── */
+.pb-rejection-reason {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 8px 10px;
+  background: rgba(191, 90, 242, 0.1);
+  border: 1px solid rgba(191, 90, 242, 0.2);
+  border-radius: 6px;
+  margin-bottom: 8px;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.4;
+}
+
+.pb-rejection-reason svg {
+  color: #bf5af2;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* ── Pipeline Legend ────────────────────────────────────────── */
+.pb-pipeline-legend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+  overflow-x: auto;
+  flex-wrap: wrap;
+}
+
+.pb-pipeline-legend span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.pb-pipeline-legend svg {
+  opacity: 0.6;
+}
+
+/* ── Loading ─────────────────────────────────────────────────── */
+.pb-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 60px 20px;
+  color: rgba(255, 255, 255, 0.4);
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 13px;
+}
+
+.pb-spinner {
+  width: 28px;
+  height: 28px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-top-color: rgba(255, 184, 0, 0.7);
+  border-radius: 50%;
+  animation: pb-spin 0.8s linear infinite;
+}
+
+@keyframes pb-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .pb-board {
+    gap: 10px;
+  }
+  .pb-column {
+    flex: 0 0 200px;
+    width: 200px;
+  }
+}
+
+@media (max-width: 640px) {
+  .pb-column {
+    flex: 0 0 175px;
+    width: 175px;
+  }
+  .pb-form-row {
+    flex-direction: column;
+  }
+}

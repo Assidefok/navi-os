@@ -1,6 +1,31 @@
 {
   "entries": [
     {
+      "filename": "2026-04-03-06.00.md",
+      "headlines": [
+        "Artemis II blasts ever closer to the far side of the Moon",
+        "Trump removes US Attorney General Pam Bondi",
+        "'I haven't slept for days': Iranians describe mounting desperation after a month",
+        "Iran war could make beer and bottled water pricier for Indians",
+        "'Be serious... don't speak every day': Macron criticises Trump approach to Iran ",
+        "Judge dismisses most of Blake Lively's claims in Justin Baldoni harassment suit",
+        "Brazil grants joint custody over pets in new law for separated couples",
+        "Hegseth asks US Army's top general to step down",
+        "Iran's two largest steel plants shut down due to air strikes, companies say",
+        "Ancient golden helmet recovered more than a year after Dutch heist"
+      ],
+      "regions": [
+        "US",
+        "Middle East",
+        "Asia",
+        "Latin America"
+      ],
+      "date": "2026-04-03",
+      "hour": "06",
+      "timestamp": "2026-04-03 06:45:17",
+      "item_count": 10
+    },
+    {
       "filename": "2026-04-02-06.00.md",
       "headlines": [
         "Watch the moment Artemis II blasts into space",
@@ -100,5 +125,5 @@
       "item_count": 10
     }
   ],
-  "last_updated": "2026-04-02 06:45:15"
+  "last_updated": "2026-04-03 06:45:17"
 }

@@ -1,0 +1,20 @@
+{
+  "proposals": [
+    {
+      "id": "prop-001",
+      "title": "Millora PM Board - Drag & Drop de tasques",
+      "description": "Permetre arrossegar tasques entre columnes del Kanban per canviar el seu estat mes intuitivament.",
+      "category": "ux",
+      "status": "accepted",
+      "createdAt": "2026-03-30T10:00:00Z"
+    },
+    {
+      "id": "prop-002",
+      "title": "Sistema de propostes de millora",
+      "description": "Afegeix un panell on puc suggerir millores i tu pots acceptar o rebutjar. Aixi sabem què estem construint junts.",
+      "category": "workflow",
+      "status": "accepted",
+      "createdAt": "2026-03-31T00:40:00Z"
+    }
+  ]
+}

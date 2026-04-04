@@ -18,6 +18,7 @@ import ProposalsBoard from './Proposals/ProposalsBoard'
 import AutomationsBoard from './Ops/Automations/AutomationsBoard'
 import { OvernightSummary } from './Ops/shared'
 import SessionsModule from './Ops/sections/SessionsSection'
+import MorningBriefingPanel from './Ops/MorningBriefingPanel'
 import CronModule from './Ops/sections/CronSection'
 import ActivityModule from './Ops/sections/ActivitySection'
 import './Ops.css'
@@ -82,6 +83,7 @@ export default function Ops() {
   const renderPrimary = () => {
     if (viewMode === 'mission') return (
       <>
+        <MorningBriefingPanel />
         <OvernightSummary />
         <MissionControl />
       </>

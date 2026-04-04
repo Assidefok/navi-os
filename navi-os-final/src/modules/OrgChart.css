@@ -1,0 +1,183 @@
+/* OrgChart - Organizational Structure */
+
+.org-chart {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 28px;
+  margin-top: 32px;
+}
+
+.org-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+
+.org-header h2 {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.org-badge {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 10px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: rgba(52, 211, 153, 0.15);
+  color: #34d399;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.org-tree {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+.org-level {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  position: relative;
+}
+
+.overview-level {
+  width: 100%;
+  max-width: 900px;
+}
+
+.org-chief-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 18px;
+  width: 100%;
+  max-width: 1100px;
+}
+
+/* Node base styles */
+.org-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 28px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  min-width: 160px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.org-node:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+/* Node states */
+.org-node.human {
+  border-color: rgba(255, 184, 0, 0.4);
+  background: rgba(255, 184, 0, 0.08);
+}
+
+.org-node.human .node-icon {
+  color: var(--ops-amber);
+  filter: drop-shadow(0 0 8px var(--ops-glow));
+}
+
+.org-node.main-agent {
+  border-color: rgba(147, 51, 234, 0.5);
+  background: rgba(147, 51, 234, 0.1);
+}
+
+.org-node.main-agent .node-icon {
+  color: #a855f7;
+  filter: drop-shadow(0 0 12px rgba(147, 51, 234, 0.6));
+}
+
+.org-node.main-agent .node-icon.navi {
+  transform: scale(1.15);
+}
+
+/* Node icon */
+.node-icon {
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Node info */
+.node-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.node-name {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+}
+
+.node-role {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+/* Connectors */
+.org-connector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 32px;
+}
+
+.connector-line {
+  width: 2px;
+  height: 16px;
+  background: rgba(255, 184, 0, 0.4);
+}
+
+.connector-branch {
+  width: 2px;
+  height: 16px;
+  background: rgba(255, 184, 0, 0.4);
+}
+
+.connector-branch.multi {
+  width: 100px;
+  height: 2px;
+  border-radius: 1px;
+  position: relative;
+}
+
+.connector-branch.multi::before,
+.connector-branch.multi::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 2px;
+  height: 14px;
+  background: rgba(255, 184, 0, 0.4);
+}
+
+.connector-branch.multi::before {
+  left: 0;
+}
+
+.connector-branch.multi::after {
+  right: 0;
+}

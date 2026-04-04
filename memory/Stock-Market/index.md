@@ -4,7 +4,7 @@ category: Borsa
 icon: 📈
 description: Stock market and finance news
 tags: ['stocks', 'markets', 'finance', 'investing']
-created: 2026-04-02 06:45
+created: 2026-04-03 06:45
 ---
 
 # 📈 Borsa
@@ -13,13 +13,19 @@ Stock market and finance news
 
 ## Meta
 - **Carpeta:** `memory/Stock-Market/`
-- **Total entrades:** 5
-- **Darrer update:** 2026-04-02 06:45
+- **Total entrades:** 6
+- **Darrer update:** 2026-04-03 06:45
 
 ## Tags
 #stocks #markets #finance #investing
 
 ## Entrades recents
+
+### [[2026-04-03-06.00.md|2026-04-03 06:00]] #us-markets #global-markets #finance #stocks #markets
+
+- Analysts Bullish on Micron Technology (MU) Amid Robust AI Demand...
+- Anlaysts Bullish on Broadcom (AVGO) Despite Gross Margins Concerns...
+- GM Sales Fall Nearly 10% as Auto Industry Sputters...
 
 ### [[2026-04-02-06.00.md|2026-04-02 06:00]] #us-markets #global-markets #finance #stocks #markets
 

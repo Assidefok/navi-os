@@ -636,11 +636,11 @@ function SelfImprovementView() {
             )}
 
             {executedProposals.length > 0 && (
-              <div className="lab-improvements-section">
-                <h3 className="lab-improvements-section-title">
-                  <CheckCircle2 size={16} /> Final ({executedProposals.length})
+              <div className="lab-improvements-section lab-improvements-executed">
+                <h3 className="lab-improvements-section-title executed-title">
+                  <CheckCircle2 size={16} /> Executades ({executedProposals.length}) — arxivades
                 </h3>
-                <div className="lab-proposal-cards">
+                <div className="lab-proposal-cards lab-proposal-cards-archived">
                   {executedProposals.map(proposal => (
                     <ProposalCard key={proposal.id} proposal={proposal} onOpen={setSelectedProposal} />
                   ))}

@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import {
   ChevronDown, ChevronUp, ChevronRight, Cpu, MessageSquare, Clock, Bot, Sparkles,
   Moon, RefreshCw, CheckCircle2, AlertCircle, Loader2, Wifi, WifiOff,
-  Globe, Send, User, Zap
+  Globe, Send, User, Zap, Newspaper, ArrowUpRight, ListTodo, GitMerge, PackageCheck
 } from 'lucide-react'
 import { marked } from 'marked'
 import DOMPurify from 'dompurify'

@@ -1,0 +1,256 @@
+.logs-module {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-bottom: 40px;
+}
+
+.logs-header {
+  margin-bottom: 4px;
+}
+
+.logs-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.logs-title-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logs-icon { color: #6366f1; }
+
+.logs-title-group h2 {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--lab-purple, #6366f1);
+}
+
+.logs-subtitle {
+  font-size: 13px;
+  color: rgba(255,255,255,0.45);
+  line-height: 1.5;
+}
+
+.logs-refresh-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.6);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.logs-refresh-btn:hover {
+  background: rgba(99,102,241,0.15);
+  border-color: rgba(99,102,241,0.3);
+  color: #6366f1;
+}
+
+/* Controls */
+.logs-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.logs-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 8px 12px;
+  max-width: 360px;
+}
+
+.logs-search svg { color: rgba(255,255,255,0.35); flex-shrink: 0; }
+
+.logs-search input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: rgba(255,255,255,0.9);
+  font-size: 13px;
+  font-family: 'Ubuntu', sans-serif;
+  width: 100%;
+}
+
+.logs-search input::placeholder { color: rgba(255,255,255,0.35); }
+
+.logs-type-filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.type-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.55);
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 12px;
+  font-family: 'Ubuntu', sans-serif;
+  transition: all 0.15s;
+}
+
+.type-pill:hover { background: rgba(255,255,255,0.08); }
+
+.type-count {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 10px;
+  background: rgba(255,255,255,0.08);
+  padding: 1px 5px;
+  border-radius: 8px;
+}
+
+/* List */
+.logs-loading,
+.logs-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 40px 0;
+  color: rgba(255,255,255,0.3);
+  font-size: 13px;
+}
+
+.logs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.log-entry {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-left: 3px solid #888;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.log-entry-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 12px 14px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  gap: 12px;
+}
+
+.log-entry-header:hover { background: rgba(255,255,255,0.03); }
+
+.log-entry-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.log-entry-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.log-title {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.88);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.log-entry-tags {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.log-date {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 10px;
+  color: rgba(255,255,255,0.35);
+}
+
+.log-type-badge {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 5px;
+}
+
+.log-chevron {
+  color: rgba(255,255,255,0.35);
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+
+.log-chevron.rotated { transform: rotate(180deg); }
+
+.log-entry-body {
+  padding: 0 14px 12px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.log-filename {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+}
+
+.log-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.log-view-btn {
+  font-size: 12px;
+  color: rgba(99,102,241,0.8);
+  text-decoration: none;
+  padding: 4px 10px;
+  background: rgba(99,102,241,0.08);
+  border-radius: 6px;
+  border: 1px solid rgba(99,102,241,0.2);
+  transition: all 0.15s;
+}
+
+.log-view-btn:hover {
+  background: rgba(99,102,241,0.15);
+  color: #6366f1;
+}

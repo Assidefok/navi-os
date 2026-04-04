@@ -346,6 +346,77 @@
   background: rgba(88, 225, 143, 0.12);
 }
 
+.brain-status-badge.chief {
+  color: #c792ea;
+  background: rgba(199, 146, 234, 0.12);
+}
+
+.brain-search-form {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.brain-search-input-wrap {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.brain-search-icon {
+  position: absolute;
+  left: 14px;
+  color: rgba(255,255,255,0.48);
+  pointer-events: none;
+}
+
+.brain-search-input {
+  width: 100%;
+  padding: 12px 14px 12px 40px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.brain-search-input:focus {
+  border-color: rgba(91, 212, 255, 0.4);
+  background: rgba(255,255,255,0.08);
+  box-shadow: 0 0 0 3px rgba(91, 212, 255, 0.1);
+}
+
+.brain-search-input::placeholder {
+  color: rgba(255,255,255,0.38);
+}
+
+.brain-search-results {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.brain-search-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.brain-search-snippet {
+  display: block;
+  margin-top: 4px;
+  color: rgba(255,255,255,0.52);
+  font-size: 11px;
+  line-height: 1.5;
+  max-width: 520px;
+  white-space: normal;
+}
+
 .brain-status-badge.pending {
   color: #ffd166;
   background: rgba(255, 209, 102, 0.12);

@@ -166,6 +166,155 @@ app.get('/api/briefs', (req, res) => {
   }
 })
 
+// ─── Chiefs Memory ─────────────────────────────────────────────────────────────
+
+const CHIEFS = [
+  { id: 'elom', name: 'ELOM', title: 'Chief Visionary Officer', emoji: '🚀' },
+  { id: 'warren', name: 'WARREN', title: 'Chief Quality Officer', emoji: '📊' },
+  { id: 'jeff', name: 'JEFF', title: 'Chief Operations Officer', emoji: '⚡' },
+  { id: 'sam', name: 'SAM', title: 'Chief AI Officer', emoji: '🤖' },
+]
+const TEAM_DIR = join(WORKSPACE, 'team')
+
+app.get('/api/chiefs', (req, res) => {
+  try {
+    const chiefs = []
+    for (const chief of CHIEFS) {
+      const memoryPath = join(TEAM_DIR, chief.id, 'MEMORY.md')
+      if (!existsSync(memoryPath)) continue
+      try {
+        const content = readFileSync(memoryPath, 'utf-8')
+        const stat = statSync(memoryPath)
+        const titleMatch = content.match(/^#\s+MEMORY\.md\s+-\s+(.+)$/m) || content.match(/^#\s+(.+)$/m)
+        const title = titleMatch ? titleMatch[1] : chief.name
+        const projectsMatch = content.match(/## Active Projects\n([\s\S]*?)(?=\n##|$)/)
+        const projectsPreview = projectsMatch
+          ? projectsMatch[1].replace(/^\|.*$/gm, '').trim().substring(0, 100)
+          : ''
+        const updatedMatch = content.match(/_Last updated:\s*(.+)$/m)
+        const lastUpdated = updatedMatch ? updatedMatch[1].trim() : stat.mtime.toISOString()
+        chiefs.push({
+          id: chief.id,
+          name: chief.name,
+          title: chief.title,
+          emoji: chief.emoji,
+          memoryPath: `team/${chief.id}/MEMORY.md`,
+          lastUpdated,
+          status: 'active',
+          preview: projectsPreview,
+          modified: stat.mtime.toISOString(),
+        })
+      } catch { /* skip */ }
+    }
+    res.json({ chiefs })
+  } catch (err) {
+    res.status(500).json({ error: err.message, chiefs: [] })
+  }
+})
+
+// ─── Unified Brain Search ─────────────────────────────────────────────────────
+
+app.get('/api/brain/search', (req, res) => {
+  try {
+    const query = (req.query.q || '').trim()
+    if (query.length < 2) return res.json({ results: [] })
+
+    const q = query.toLowerCase()
+    const keywords = q.split(/\s+/).filter(Boolean)
+    const results = []
+
+    const matches = (content) => keywords.some(kw => content.toLowerCase().includes(kw))
+    const extractSnippet = (content, maxLen = 200) => {
+      const lower = content.toLowerCase()
+      const firstKw = keywords.find(kw => lower.includes(kw))
+      if (!firstKw) return content.substring(0, maxLen)
+      const idx = lower.indexOf(firstKw)
+      const start = Math.max(0, idx - 60)
+      const end = Math.min(content.length, idx + maxLen - 60)
+      let snippet = content.substring(start, end)
+      if (start > 0) snippet = '…' + snippet
+      if (end < content.length) snippet = snippet + '…'
+      return snippet.replace(/\n+/g, ' ').trim()
+    }
+    const score = (content) => keywords.filter(kw => content.toLowerCase().includes(kw)).length
+
+    // 1. Daily briefs
+    if (existsSync(MEMORY_DIR)) {
+      const briefFiles = readdirSync(MEMORY_DIR).filter(f => f.startsWith('daily-') && f.endsWith('.md'))
+      for (const file of briefFiles) {
+        const fullPath = join(MEMORY_DIR, file)
+        const content = readFileSync(fullPath, 'utf-8')
+        if (!matches(content)) continue
+        const stat = statSync(fullPath)
+        const dateMatch = file.match(/(\d{4}-\d{2}-\d{2})/)
+        const date = dateMatch ? dateMatch[1] : file.replace('daily-', '').replace('.md', '')
+        results.push({
+          id: file,
+          type: 'brief',
+          title: `Brief ${date}`,
+          source: file,
+          sourcePath: `memory/${file}`,
+          snippet: extractSnippet(content),
+          score: score(content),
+          modified: stat.mtime.toISOString(),
+        })
+      }
+    }
+
+    // 2. Memory files (not briefs)
+    if (existsSync(MEMORY_DIR)) {
+      const memFiles = readdirSync(MEMORY_DIR).filter(f => f.endsWith('.md') && !f.startsWith('daily-'))
+      for (const file of memFiles) {
+        const fullPath = join(MEMORY_DIR, file)
+        const content = readFileSync(fullPath, 'utf-8')
+        if (!matches(content)) continue
+        const stat = statSync(fullPath)
+        results.push({
+          id: file,
+          type: 'memory',
+          title: file.replace('.md', ''),
+          source: file,
+          sourcePath: `memory/${file}`,
+          snippet: extractSnippet(content),
+          score: score(content),
+          modified: stat.mtime.toISOString(),
+        })
+      }
+    }
+
+    // 3. Chief MEMORY.md
+    for (const chief of CHIEFS) {
+      const memoryPath = join(TEAM_DIR, chief.id, 'MEMORY.md')
+      if (!existsSync(memoryPath)) continue
+      const content = readFileSync(memoryPath, 'utf-8')
+      if (!matches(content)) continue
+      const stat = statSync(memoryPath)
+      const titleMatch = content.match(/^#\s+MEMORY\.md\s+-\s+(.+)$/m) || content.match(/^#\s+(.+)$/m)
+      const title = titleMatch ? titleMatch[1] : chief.name
+      results.push({
+        id: chief.id,
+        type: 'chief',
+        title: `${chief.emoji} ${chief.name} — ${chief.title}`,
+        source: `team/${chief.id}/MEMORY.md`,
+        sourcePath: `team/${chief.id}/MEMORY.md`,
+        snippet: extractSnippet(content),
+        score: score(content),
+        modified: stat.mtime.toISOString(),
+      })
+    }
+
+    // Sort: score desc, then modified desc
+    results.sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score
+      return new Date(b.modified) - new Date(a.modified)
+    })
+
+    res.json({ results })
+  } catch (err) {
+    res.status(500).json({ error: err.message, results: [] })
+  }
+})
+
 // ─── Org Chart / PM Board ─────────────────────────────────────────────────────
 
 app.get('/api/org-chart', (req, res) => {

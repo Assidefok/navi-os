@@ -1,0 +1,110 @@
+{
+  "date": "2026-04-03",
+  "time": "23:00",
+  "generated_by": "Navi OS Improvement Proposer (Nocturnal)",
+  "report_file": "2026-04-03-improvements.md",
+  "improvements": [
+    {
+      "id": "NAVI-OS-2026-04-03-01",
+      "title": "Eliminar localStorage de MorningBriefingPanel",
+      "area": "MorningBriefingPanel.jsx",
+      "type": "bug_fix",
+      "priority": "CRITICA",
+      "impact": "Propostes i deliverable counts no sobreviuen canvis de sessio. Dades desactualitzades en multiples finestres.",
+      "implementation_steps": [
+        "Crear endpoint GET /api/proposals/summary a server.js",
+        "Substituir useProposals() (localStorage) per fetch API",
+        "Crear endpoint GET /api/deliverables/summary?today=YYYY-MM-DD",
+        "Substituir useDeliverables() (localStorage) per crida API",
+        "Mantenir fallback amb console.warn si API cau"
+      ],
+      "risk": "baix",
+      "dependencies": [],
+      "status": "pending"
+    },
+    {
+      "id": "NAVI-OS-2026-04-03-02",
+      "title": "Consolidar utils duplicades en /src/utils/",
+      "area": "src/utils/ (nou)",
+      "type": "refactor",
+      "priority": "ALTA",
+      "impact": "Elimina 5 copies de formatDate() i 2 de renderMarkdown(). Millora manteniment i testejabilitat.",
+      "implementation_steps": [
+        "Crear src/utils/format.js amb formatDate(), formatDateTime(), formatRelative()",
+        "Crear src/utils/markdown.js amb renderMarkdown() com a mixin marked+DOMPurify",
+        "Substituir imports a Lab.jsx, Brain.jsx, Sync.jsx, Status.jsx, TaskPipeline.jsx",
+        "Substituir a ProposalsBoard.jsx i AutomationsBoard.jsx",
+        "Verificar build amb npm run build"
+      ],
+      "risk": "baix",
+      "dependencies": [],
+      "status": "pending"
+    },
+    {
+      "id": "NAVI-OS-2026-04-03-03",
+      "title": "Convertir execSync de server.js a exec asincron",
+      "area": "server.js",
+      "type": "estabilitat",
+      "priority": "ALTA",
+      "impact": "Elimina blocking en request handlers. Servidor no es penja si un proces tarda massa.",
+      "implementation_steps": [
+        "Crear wrapper execCmd() amb util.promisify(exec) i timeout",
+        "Convertir tots els endpoints que fan servir execSync (git, pm2, find, top...)",
+        "Canviar handlers de sync a async/await",
+        "Mantenir try/catch i resposta 503 si el proces falla",
+        "Verificar que els endpoints segueixen retornant el mateix JSON"
+      ],
+      "risk": "mitja",
+      "dependencies": [],
+      "status": "pending"
+    },
+    {
+      "id": "NAVI-OS-2026-04-03-04",
+      "title": "Split Lab.jsx (765 linies) en components per tab",
+      "area": "src/modules/Lab/",
+      "type": "refactor",
+      "priority": "MITJANA",
+      "impact": "Lab.jsx passa de 765 a ~150 linies (shell). Facilita manteniment, testejabilitat i treball en paral·lel.",
+      "implementation_steps": [
+        "Crear directori src/modules/Lab/tabs/",
+        "Extreure LabOverview -> tabs/LabOverview.jsx",
+        "Extreure LabPrototypes -> tabs/LabPrototypes.jsx",
+        "Moure LabLogs a tabs/LabLogs.jsx",
+        "Moure LabPipeline a tabs/LabPipeline.jsx",
+        "Lab.jsx passa a ser shell minimal que nomes gestiona tabs",
+        "Importar utils de src/utils/ (del improvement #2)"
+      ],
+      "risk": "mitja",
+      "dependencies": ["NAVI-OS-2026-04-03-02"],
+      "status": "pending"
+    },
+    {
+      "id": "NAVI-OS-2026-04-03-05",
+      "title": "Afegir AbortController a totes les crides fetch",
+      "area": "Tots els components frontend",
+      "type": "estabilitat",
+      "priority": "MITJANA",
+      "impact": "Evita request zombies i memory leaks quan es desmunta component durant request. Codi mes robust.",
+      "implementation_steps": [
+        "Crear src/utils/api.js amb wrapper fetchAPI() i AbortController",
+        "Substituir fetch() a Status.jsx, Sync.jsx, TeamOverview.jsx, ChiefsCouncil.jsx, MorningBriefingPanel.jsx, Standups.jsx",
+        "Substituir fetch() a Lab.jsx, Brain.jsx, ProposalsBoard.jsx, AutomationsBoard.jsx, TaskPipeline.jsx",
+        "Afegir try/catch als useEffect que fan fetch i mostrar error state"
+      ],
+      "risk": "baix",
+      "dependencies": [],
+      "status": "pending"
+    }
+  ],
+  "total": 5,
+  "by_priority": {
+    "CRITICA": ["NAVI-OS-2026-04-03-01"],
+    "ALTA": ["NAVI-OS-2026-04-03-02", "NAVI-OS-2026-04-03-03"],
+    "MITJANA": ["NAVI-OS-2026-04-03-04", "NAVI-OS-2026-04-03-05"]
+  },
+  "by_type": {
+    "bug_fix": ["NAVI-OS-2026-04-03-01"],
+    "refactor": ["NAVI-OS-2026-04-03-02", "NAVI-OS-2026-04-03-04"],
+    "estabilitat": ["NAVI-OS-2026-04-03-03", "NAVI-OS-2026-04-03-05"]
+  }
+}

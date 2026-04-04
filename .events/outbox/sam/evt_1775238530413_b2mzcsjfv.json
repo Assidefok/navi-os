@@ -1,0 +1,10 @@
+{
+  "id": "evt_1775238530413_b2mzcsjfv",
+  "type": "test_event",
+  "payload": {
+    "message": "Hello from Event Bus",
+    "priority": 3
+  },
+  "timestamp": "2026-04-03T17:48:50.413Z",
+  "source": "navi"
+}

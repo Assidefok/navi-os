@@ -1,6 +1,6 @@
 # MEMORY.md - SAM
 
-_Last updated: 2026-04-02T22:15:00.000Z_
+_Last updated: 2026-04-03T21:45:00.000Z_
 
 ---
 
@@ -89,6 +89,48 @@ Navi OS (React + Vite)
 
 ## Scripts Created by SAM
 1. `scripts/navios-tech-health.sh` - Tech health check script
+2. `team/sam/scripts/sam-inbox-processor.js` - Event Bus inbox processor
+
+---
+
+## Event Bus Integration
+
+**Directoris:** `.events/inbox/{chief}/` i `.events/outbox/{chief}/`
+
+**Com emetre un event de proposta:**
+```bash
+node scripts/emit-proposal-event.js <proposal-id> <old-state> <new-state> [proposer]
+```
+
+**Estats de proposta:** `draft` → `pending` → `approved` | `denied`
+
+**Com processar inbox de SAM:**
+```bash
+node team/sam/scripts/sam-inbox-processor.js        # Llegir events
+node team/sam/scripts/sam-inbox-processor.js --process  # Processar i moure a outbox
+```
+
+**Format event JSON:**
+```json
+{
+  "id": "evt_TIMESTAMP_random",
+  "type": "proposal_state_changed",
+  "payload": {
+    "proposalId": "prop-001",
+    "oldState": "draft",
+    "newState": "pending",
+    "proposer": "jeff",
+    "changedAt": "2026-04-03T19:00:00Z"
+  },
+  "timestamp": "2026-04-03T19:00:00Z",
+  "source": "navi"
+}
+```
+
+**Flux:**
+1. Quan una proposta canvia d'estat → `emit-proposal-event.js` genera JSON a inbox de tots els chiefs
+2. Cada chief processa la seva inbox amb el seu processor
+3. Events processats es mouen a outbox per audit trail
 
 ---
 

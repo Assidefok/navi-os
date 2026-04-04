@@ -1,6 +1,6 @@
 # MEMORY.md - WARREN
 
-_Last updated: 2026-04-02T22:15:00.000Z_
+_Last updated: 2026-04-03T19:46:00.000Z_
 
 ---
 
@@ -20,6 +20,7 @@ _Last updated: 2026-04-02T22:15:00.000Z_
 |------|------|---------|---------|
 | 2026-03-31 | Cron Jobs | Pass (with caveats) | Fix delivery targets |
 | 2026-03-31 | Navi OS Security | Pass | Verify port exposure |
+| 2026-04-03 | Port 8100 Security Audit | **FAIL** | Proposta Nginx+BasicAuth documentada |
 | 2026-03-31 | Session Management | Pass | OK |
 | 2026-03-31 | Overnight Audit Script | FAIL | False positive bug in import checker |
 
@@ -74,7 +75,7 @@ _Last updated: 2026-04-02T22:15:00.000Z_
 | Risc | Probabilitat | Impacte | Mitigació | Estat |
 |------|--------------|---------|-----------|-------|
 | Audit script false positives | Alta | Baix | Cal fix 02-overnight-audit.sh | Actiu |
-| Port 8100 exposed | Mitjana | Mitjà | Verify intentional | En verificació |
+| Port 8100 exposed | ALTA | ALT | Proposta Nginx+BasicAuth | Oberte |
 
 ---
 
@@ -103,7 +104,7 @@ _Last updated: 2026-04-02T22:15:00.000Z_
 
 ## Open Issues
 - Fix 02-overnight-audit.sh import checker (false positive for .jsx files)
-- Verify port 8100 exposure is intentional
+- Port 8100: **CONFIRMADO EXPOSADO** - cal implementar Nginx+BasicAuth (ticket per JEFF)
 - BBQ Brand cron resource usage verification pending
 
 ---

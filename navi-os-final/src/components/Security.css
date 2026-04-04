@@ -1,0 +1,251 @@
+.security-view {
+  max-width: 900px;
+}
+
+.security-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.security-tab {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 8px 16px;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.security-tab:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.security-tab.active {
+  background: rgba(255, 184, 0, 0.15);
+  border-color: rgba(255, 184, 0, 0.4);
+  color: #ffb800;
+}
+
+.security-content {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.security-section {
+  margin-bottom: 24px;
+}
+
+.security-section:last-child {
+  margin-bottom: 0;
+}
+
+.section-title {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.security-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.security-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 10px;
+  font-size: 13px;
+}
+
+.security-item-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.security-item-icon.amber {
+  background: rgba(255, 184, 0, 0.15);
+  color: #ffb800;
+}
+
+.security-item-icon.sky {
+  background: rgba(0, 180, 216, 0.15);
+  color: #00b4d8;
+}
+
+.security-item-icon.green {
+  background: rgba(48, 209, 88, 0.15);
+  color: #30d158;
+}
+
+.security-item-icon.red {
+  background: rgba(255, 69, 58, 0.15);
+  color: #ff453a;
+}
+
+.security-item-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.security-item-name {
+  font-family: 'Ubuntu', sans-serif;
+  font-weight: 500;
+  color: #fff;
+}
+
+.security-item-details {
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: 2px;
+}
+
+.security-item-status {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  font-family: 'Ubuntu', sans-serif;
+  font-weight: 500;
+}
+
+.security-item-status.ok {
+  background: rgba(48, 209, 88, 0.15);
+  color: #30d158;
+}
+
+.security-item-status.warning {
+  background: rgba(255, 184, 0, 0.15);
+  color: #ffb800;
+}
+
+.security-item-status.error {
+  background: rgba(255, 69, 58, 0.15);
+  color: #ff453a;
+}
+
+.security-item-status.unknown {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* Audit summary */
+.audit-summary {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.audit-stat {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.audit-stat.critical { color: #ff453a; }
+.audit-stat.warn { color: #ffb800; }
+.audit-stat.info { color: #30d158; }
+
+.audit-issues {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.audit-issue {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.audit-issue.critical {
+  background: rgba(255, 69, 58, 0.1);
+  border-left: 3px solid #ff453a;
+}
+
+.audit-issue.warn {
+  background: rgba(255, 184, 0, 0.1);
+  border-left: 3px solid #ffb800;
+}
+
+.audit-issue.info {
+  background: rgba(48, 209, 88, 0.08);
+  border-left: 3px solid #30d158;
+}
+
+.issue-level {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  min-width: 60px;
+}
+
+.audit-issue.critical .issue-level { color: #ff453a; }
+.audit-issue.warn .issue-level { color: #ffb800; }
+.audit-issue.info .issue-level { color: #30d158; }
+
+.issue-text {
+  color: rgba(255, 255, 255, 0.7);
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 12px;
+}
+
+.status-loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 13px;
+  padding: 20px 0;
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.empty-state {
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 13px;
+  padding: 10px 0;
+}

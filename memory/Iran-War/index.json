@@ -1,6 +1,32 @@
 {
   "entries": [
     {
+      "filename": "2026-04-03-06.00.md",
+      "headlines": [
+        "Iran vows retaliation after deadly US strike on bridge in Karaj",
+        "Oil shock triggers global price spikes as Iran war drags on",
+        "Iran says army forces are ready to repel US-Israeli attacks",
+        "As war drags on, US reiterates Trump open to diplomacy with Iran",
+        "State Department claims Iran \u2018continually\u2019 pursuing nuclear weapon"
+      ],
+      "date": "2026-04-03",
+      "hour": "06",
+      "timestamp": "2026-04-03 06:45:25",
+      "item_count": 5,
+      "keywords": [
+        "iran",
+        "iranian",
+        "tehran",
+        "isfahan",
+        "persian",
+        "middle east war",
+        "us-iran",
+        "iran war",
+        "iran attack",
+        "iran nuclear"
+      ]
+    },
+    {
       "filename": "2026-04-02-06.00.md",
       "headlines": [
         "Iran war live: Trump claims goals nearing completion, vows to \u2018finish job\u2019",
@@ -105,5 +131,5 @@
       ]
     }
   ],
-  "last_updated": "2026-04-02 06:45:24"
+  "last_updated": "2026-04-03 06:45:25"
 }
