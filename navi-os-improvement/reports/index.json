@@ -2,7 +2,7 @@
   "vault": "navi-os-improvement",
   "description": "Sistema de millora automatitzada per Navi OS",
   "created": "2026-03-31",
-  "updated": "2026-04-03T21:00:00Z",
+  "updated": "2026-04-04T20:00:00Z",
   "tags": ["automation", "improvement", "navi-os", "react", "api", "pm2", "episodi-4"],
   "reports": [
     {
@@ -155,6 +155,17 @@
       "tags": ["queue", "json", "night", "automation"],
       "topics": ["improvement-queue", "localStorage", "utils", "exec-async", "lab-split", "abort-controller"],
       "summary": "Queue JSON amb 5 millores pendents: MorningBriefingPanel localStorage fix, Utils consolidation, execSync async, Lab.jsx split, AbortController"
+    },
+    {
+      "id": "standup-2026-04-04-22.00",
+      "filename": "2026-04-04-00-standup.md",
+      "type": "standup",
+      "date": "2026-04-04",
+      "time": "22:00",
+      "title": "Standup Navi OS - 2026-04-04",
+      "tags": ["standup", "daily", "no-improvements"],
+      "topics": ["execucio", "cap-millora"],
+      "summary": "Cap millora pendent - no hi ha reports generats per avui"
     }
   ],
   "index_by_topic": {

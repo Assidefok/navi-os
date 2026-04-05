@@ -4,7 +4,7 @@ category: Borsa
 icon: 📈
 description: Stock market and finance news
 tags: ['stocks', 'markets', 'finance', 'investing']
-created: 2026-04-03 06:45
+created: 2026-04-04 23:10
 ---
 
 # 📈 Borsa
@@ -13,13 +13,25 @@ Stock market and finance news
 
 ## Meta
 - **Carpeta:** `memory/Stock-Market/`
-- **Total entrades:** 6
-- **Darrer update:** 2026-04-03 06:45
+- **Total entrades:** 8
+- **Darrer update:** 2026-04-04 23:10
 
 ## Tags
 #stocks #markets #finance #investing
 
 ## Entrades recents
+
+### [[2026-04-04-23.00.md|2026-04-04 23:00]] #us-markets #global-markets #finance #stocks #markets
+
+- US Inflation Seen Spiking in First Snapshot Since Iran War...
+- Sleijpen Says ECB Discussion Will Be Rate Hike or Hold: Podcast...
+- Pakistan Says It Will Repay Matured Loan Deposits to UAE...
+
+### [[2026-04-04-06.00.md|2026-04-04 06:00]] #us-markets #global-markets #finance #stocks #markets
+
+- Roundtable CEO James Heckman Clarifies Equity Status, Announces One Year Lock...
+- Best credit cards for shopping on Amazon for April 2026: Boost your Amazon purch...
+- Two solid ‘yes’ votes for Echo Global’s acquisition: Moody’s and S&P...
 
 ### [[2026-04-03-06.00.md|2026-04-03 06:00]] #us-markets #global-markets #finance #stocks #markets
 

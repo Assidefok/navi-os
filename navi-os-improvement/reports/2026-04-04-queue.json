@@ -1,0 +1,91 @@
+{
+  "date": "2026-04-04",
+  "generated": "2026-04-04T21:00:00Z",
+  "total_analyzed_lines": 8982,
+  "total_files": 35,
+  "queue": [
+    {
+      "id": 1,
+      "title": "Extreure useTaskSync com a Custom Hook",
+      "area": "Components / TaskPipeline",
+      "type": "refactor",
+      "priority": "high",
+      "impact": "Redueix TaskPipeline de 491 a ~300 línies",
+      "risk": "low",
+      "status": "pending",
+      "estimated_time": "1-2h"
+    },
+    {
+      "id": 2,
+      "title": "ErrorBoundary global amb reporting",
+      "area": "Components / ErrorBoundary",
+      "type": "feature",
+      "priority": "high",
+      "impact": "Visibilitat d'errors en producció",
+      "risk": "low",
+      "status": "pending",
+      "estimated_time": "1h"
+    },
+    {
+      "id": 3,
+      "title": "Debounce a Brain.jsx (671 línies)",
+      "area": "Modules / Brain",
+      "type": "optimization",
+      "priority": "medium",
+      "impact": "Evita cerques innecessàries a l'API",
+      "risk": "low",
+      "status": "pending",
+      "estimated_time": "1h"
+    },
+    {
+      "id": 4,
+      "title": "Persistència de preferències d'UI",
+      "area": "Components / Settings",
+      "type": "feature",
+      "priority": "medium",
+      "impact": "Millora UX persistint preferències",
+      "risk": "low",
+      "status": "pending",
+      "estimated_time": "2h"
+    },
+    {
+      "id": 5,
+      "title": "Keyboard Shortcuts globals",
+      "area": "App / UX",
+      "type": "feature",
+      "priority": "low",
+      "impact": "Navegació ràpida sense ratolí",
+      "risk": "low",
+      "status": "pending",
+      "estimated_time": "2h"
+    }
+  ],
+  "technical_debt": [
+    {
+      "item": "Lab.jsx (765 línies)",
+      "description": "Component massa gran, necessita refactor a sub-components",
+      "urgency": "high"
+    },
+    {
+      "item": "Brain.jsx (671 línies)",
+      "description": "Separar cerca de resultats en components independents",
+      "urgency": "high"
+    },
+    {
+      "item": "Zero test coverage",
+      "description": "No hi ha tests automatitzats",
+      "urgency": "medium"
+    },
+    {
+      "item": "No TypeScript strict",
+      "description": "Projecte és JS pur, afegir TS reduiria bugs",
+      "urgency": "low"
+    },
+    {
+      "item": "API backend undocumented",
+      "description": "brain-api.ts parcial, cal documentar tots els endpoints",
+      "urgency": "medium"
+    }
+  ],
+  "next_action": "Implementar Millora #2 (ErrorBoundary + Reporting) demà al matí"
+}

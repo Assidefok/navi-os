@@ -1,6 +1,77 @@
 {
   "entries": [
     {
+      "filename": "2026-04-04-23.00.md",
+      "headlines": [
+        "How will Pakistan deal with the fallout from Iran war?",
+        "Indonesia receives bodies of peacekeepers killed in southern Lebanon",
+        "Trump files emergency motion to continue building White House ballroom",
+        "Israeli police arrest antiwar protesters in Tel Aviv",
+        "Tehran psychiatric hospital not usable after US-Israeli strike",
+        "Universities hit as US, Israel ramp up attacks on Iran\u2019s infrastructure",
+        "Unabomber: c\u00f3mo atraparon hace 30 a\u00f1os al anarquista superdotado que aterroriz\u00f3 ",
+        "Iran\u2019s coastline: architecture of control",
+        "Vehicle engulfed in flames after Israeli drone strike in central Gaza",
+        "Italy\u2019s Meloni meets Qatar emir to discuss energy issues amid Iran war"
+      ],
+      "regions": [
+        "Middle East",
+        "US",
+        "Europe"
+      ],
+      "date": "2026-04-04",
+      "hour": "23",
+      "timestamp": "2026-04-04 23:10:15",
+      "item_count": 10
+    },
+    {
+      "filename": "2026-04-04-15.00.md",
+      "headlines": [
+        "C\u00f3mo llevan a cabo los equipos de \u00e9lite de EE.UU. las operaciones de rescate en ",
+        "Ir\u00e1n afirma haber derribado dos aviones de combate de EE.UU.: rescatan a dos de ",
+        "4 formas en las que la guerra de aranceles iniciada por Trump hace un a\u00f1o ha imp",
+        "Ver la cara oculta de la Luna y llegar a donde nunca antes la humanidad ha estad",
+        "\"Ser o no ser, esa es la cuesti\u00f3n\": qu\u00e9 se esconde detr\u00e1s de la famosa frase de ",
+        "Esperma de salm\u00f3n y excrementos de p\u00e1jaros: la ciencia detr\u00e1s de las extra\u00f1as ru",
+        "Las \"espectaculares\" im\u00e1genes de la Tierra captadas por la tripulaci\u00f3n de Artemi",
+        "Cuba inicia la liberaci\u00f3n de m\u00e1s de 2.000 presos anunciada por el gobierno en me",
+        "C\u00f3mo el Ave Mar\u00eda, rezada originalmente solo por los creyentes analfabetos, se c",
+        "\u00bfPor qu\u00e9 los astronautas de Artemis II no pisar\u00e1n la Luna como en las misiones A"
+      ],
+      "regions": [
+        "US"
+      ],
+      "date": "2026-04-04",
+      "hour": "15",
+      "timestamp": "2026-04-04 15:21:46",
+      "item_count": 10
+    },
+    {
+      "filename": "2026-04-04-06.00.md",
+      "headlines": [
+        "Rescue team in Iran face 'harrowing and dangerous' search for US crew member",
+        "Artemis II crew take 'spectacular' image of Earth",
+        "After 16 years in power, can Viktor Orban finally be unseated?",
+        "Burkina Faso must 'forget' about democracy, military leader says",
+        "French-owned ship passes through Strait of Hormuz",
+        "France's Muslim gathering ban overturned by courts",
+        "Rapper Gucci Mane kidnapped and robbed by fellow artist, prosecutors say",
+        "Trump seeks $1.5tn for defence alongside domestic spending cuts",
+        "Cuba begins releasing more than 2,000 prisoners as US pressure mounts",
+        "US deports eight people 'of African origin' to Uganda"
+      ],
+      "regions": [
+        "Middle East",
+        "US",
+        "Europe",
+        "Africa"
+      ],
+      "date": "2026-04-04",
+      "hour": "06",
+      "timestamp": "2026-04-04 06:45:14",
+      "item_count": 10
+    },
+    {
       "filename": "2026-04-03-06.00.md",
       "headlines": [
         "Artemis II blasts ever closer to the far side of the Moon",
@@ -125,5 +196,5 @@
       "item_count": 10
     }
   ],
-  "last_updated": "2026-04-03 06:45:17"
+  "last_updated": "2026-04-04 23:10:15"
 }

@@ -1,6 +1,59 @@
 {
   "entries": [
     {
+      "filename": "2026-04-04-23.00.md",
+      "headlines": [
+        "Four things we\u2019d need to put data centers in space",
+        "The Download: plastic\u2019s problem with fuel prices, and SpaceX\u2019s blockbuster IPO",
+        "Fuel prices are soaring. Plastic could be next.",
+        "The Download: gig workers training humanoids, and better AI benchmarks",
+        "The gig workers who are training humanoid robots at home"
+      ],
+      "topics": [],
+      "tags": [],
+      "date": "2026-04-04",
+      "hour": "23",
+      "timestamp": "2026-04-04 23:10:22",
+      "item_count": 5
+    },
+    {
+      "filename": "2026-04-04-15.00.md",
+      "headlines": [
+        "Four things we\u2019d need to put data centers in space",
+        "The Download: plastic\u2019s problem with fuel prices, and SpaceX\u2019s blockbuster IPO",
+        "Fuel prices are soaring. Plastic could be next.",
+        "The Download: gig workers training humanoids, and better AI benchmarks",
+        "The gig workers who are training humanoid robots at home"
+      ],
+      "topics": [],
+      "tags": [],
+      "date": "2026-04-04",
+      "hour": "15",
+      "timestamp": "2026-04-04 15:21:54",
+      "item_count": 5
+    },
+    {
+      "filename": "2026-04-04-06.00.md",
+      "headlines": [
+        "Anthropic is having a moment in the private markets; SpaceX could spoil the part",
+        "OpenAI executive shuffle includes new role for COO Brad Lightcap to lead \u2018specia",
+        "Anthropic buys biotech startup Coefficient Bio in $400M deal: Reports",
+        "Anthropic ramps up its political activities with a new PAC",
+        "AI companies are building huge natural gas plants to power data centers. What co"
+      ],
+      "topics": [
+        "OpenAI",
+        "Anthropic"
+      ],
+      "tags": [
+        "Startups"
+      ],
+      "date": "2026-04-04",
+      "hour": "06",
+      "timestamp": "2026-04-04 06:45:06",
+      "item_count": 5
+    },
+    {
       "filename": "2026-04-03-06.00.md",
       "headlines": [
         "OpenAI acquires TBPN, the buzzy founder-led business talk show",
@@ -99,5 +152,5 @@
       "item_count": 5
     }
   ],
-  "last_updated": "2026-04-03 06:45:08"
+  "last_updated": "2026-04-04 23:10:22"
 }

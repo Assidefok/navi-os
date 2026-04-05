@@ -1,0 +1,13 @@
+{
+  "id": "evt_1775318611039_o7xcdcz7x",
+  "type": "proposal_state_changed",
+  "payload": {
+    "proposalId": "test-prop-001",
+    "oldState": "pending",
+    "newState": "approved",
+    "proposer": "sam",
+    "changedAt": "2026-04-04T16:03:30.882Z"
+  },
+  "timestamp": "2026-04-04T16:03:31.039Z",
+  "source": "navi"
+}

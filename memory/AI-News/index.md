@@ -4,7 +4,7 @@ category: AI News
 icon: 🤖
 description: Artificial Intelligence and Machine Learning news
 tags: ['ai', 'ml', 'llm', 'openai', 'anthropic', 'startups']
-created: 2026-04-03 06:45
+created: 2026-04-04 23:10
 ---
 
 # 🤖 AI News
@@ -13,13 +13,31 @@ Artificial Intelligence and Machine Learning news
 
 ## Meta
 - **Carpeta:** `memory/AI-News/`
-- **Total entrades:** 5
-- **Darrer update:** 2026-04-03 06:45
+- **Total entrades:** 8
+- **Darrer update:** 2026-04-04 23:10
 
 ## Tags
 #ai #ml #llm #openai #anthropic #startups
 
 ## Entrades recents
+
+### [[2026-04-04-23.00.md|2026-04-04 23:00]] 
+
+- Four things we’d need to put data centers in space...
+- The Download: plastic’s problem with fuel prices, and SpaceX’s blockbuster IPO...
+- Fuel prices are soaring. Plastic could be next....
+
+### [[2026-04-04-15.00.md|2026-04-04 15:00]] 
+
+- Four things we’d need to put data centers in space...
+- The Download: plastic’s problem with fuel prices, and SpaceX’s blockbuster IPO...
+- Fuel prices are soaring. Plastic could be next....
+
+### [[2026-04-04-06.00.md|2026-04-04 06:00]] #openai #anthropic #startups
+
+- Anthropic is having a moment in the private markets; SpaceX could spoil the part...
+- OpenAI executive shuffle includes new role for COO Brad Lightcap to lead ‘specia...
+- Anthropic buys biotech startup Coefficient Bio in $400M deal: Reports...
 
 ### [[2026-04-03-06.00.md|2026-04-03 06:00]] #openai #microsoft #google #anthropic #llms
 

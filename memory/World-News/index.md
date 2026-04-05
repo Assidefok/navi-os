@@ -4,7 +4,7 @@ category: World News
 icon: 🌍
 description: Top world news from international sources
 tags: ['world', 'politics', 'international']
-created: 2026-04-03 06:45
+created: 2026-04-04 23:10
 ---
 
 # 🌍 World News
@@ -13,13 +13,31 @@ Top world news from international sources
 
 ## Meta
 - **Carpeta:** `memory/World-News/`
-- **Total entrades:** 5
-- **Darrer update:** 2026-04-03 06:45
+- **Total entrades:** 8
+- **Darrer update:** 2026-04-04 23:10
 
 ## Tags
 #world #politics #international
 
 ## Entrades recents
+
+### [[2026-04-04-23.00.md|2026-04-04 23:00]] #middle-east #us #europe
+
+- How will Pakistan deal with the fallout from Iran war?...
+- Indonesia receives bodies of peacekeepers killed in southern Lebanon...
+- Trump files emergency motion to continue building White House ballroom...
+
+### [[2026-04-04-15.00.md|2026-04-04 15:00]] #us
+
+- Cómo llevan a cabo los equipos de élite de EE.UU. las operaciones de rescate en ...
+- Irán afirma haber derribado dos aviones de combate de EE.UU.: rescatan a dos de ...
+- 4 formas en las que la guerra de aranceles iniciada por Trump hace un año ha imp...
+
+### [[2026-04-04-06.00.md|2026-04-04 06:00]] #middle-east #us #europe #africa
+
+- Rescue team in Iran face 'harrowing and dangerous' search for US crew member...
+- Artemis II crew take 'spectacular' image of Earth...
+- After 16 years in power, can Viktor Orban finally be unseated?...
 
 ### [[2026-04-03-06.00.md|2026-04-03 06:00]] #us #middle-east #asia #latin-america
 

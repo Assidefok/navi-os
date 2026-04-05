@@ -4,7 +4,7 @@ category: Guerra d'Iran
 icon: ⚔️
 description: Iran war and Middle East conflict news
 tags: ['iran', 'middle-east', 'war', 'conflict']
-created: 2026-04-03 06:45
+created: 2026-04-04 23:10
 ---
 
 # ⚔️ Guerra d'Iran
@@ -13,13 +13,31 @@ Iran war and Middle East conflict news
 
 ## Meta
 - **Carpeta:** `memory/Iran-War/`
-- **Total entrades:** 5
-- **Darrer update:** 2026-04-03 06:45
+- **Total entrades:** 8
+- **Darrer update:** 2026-04-04 23:10
 
 ## Tags
 #iran #middle-east #war #conflict
 
 ## Entrades recents
+
+### [[2026-04-04-23.00.md|2026-04-04 23:00]] 
+
+- Iran War Live Updates: U.S. Races to Find Missing Crew Member as Trump Repeats T...
+- How will Pakistan deal with the fallout from Iran war?...
+- Israeli police arrest antiwar protesters in Tel Aviv...
+
+### [[2026-04-04-15.00.md|2026-04-04 15:00]] 
+
+- Projectile hits near Iran’s Bushehr nuclear plant, killing one: IAEA...
+- Iran executes two convicted members of banned opposition group...
+- Iran war: What is happening on day 36 of US-Israeli attacks?...
+
+### [[2026-04-04-06.00.md|2026-04-04 06:00]] 
+
+- Iran war: What is happening on day 36 of US-Israeli attacks?...
+- Iranian missile attack hits residential areas in central Israel...
+- Iran war live: Tehran downs 2 US warplanes; Israel bombs Lebanon bridges...
 
 ### [[2026-04-03-06.00.md|2026-04-03 06:00]] 
 

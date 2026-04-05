@@ -1,0 +1,13 @@
+{
+  "id": "evt_1775318595941_zucnhpoc8",
+  "type": "proposal_state_changed",
+  "payload": {
+    "proposalId": "test-prop-001",
+    "oldState": "draft",
+    "newState": "pending",
+    "proposer": "jeff",
+    "changedAt": "2026-04-04T16:03:15.868Z"
+  },
+  "timestamp": "2026-04-04T16:03:15.941Z",
+  "source": "navi"
+}

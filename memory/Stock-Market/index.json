@@ -1,6 +1,56 @@
 {
   "entries": [
     {
+      "filename": "2026-04-04-23.00.md",
+      "headlines": [
+        "US Inflation Seen Spiking in First Snapshot Since Iran War",
+        "Sleijpen Says ECB Discussion Will Be Rate Hike or Hold: Podcast",
+        "Pakistan Says It Will Repay Matured Loan Deposits to UAE",
+        "Bloomberg This Weekend 04/04/2026",
+        "Apple at 50: The iPhone maker 'blew a 5-year lead' on AI, but former insiders sa"
+      ],
+      "topics": [
+        "US Markets",
+        "Global Markets",
+        "Finance"
+      ],
+      "tags": [
+        "stocks",
+        "markets",
+        "finance",
+        "investing"
+      ],
+      "date": "2026-04-04",
+      "hour": "23",
+      "timestamp": "2026-04-04 23:07:57",
+      "item_count": 5
+    },
+    {
+      "filename": "2026-04-04-06.00.md",
+      "headlines": [
+        "Roundtable CEO James Heckman Clarifies Equity Status, Announces One Year Lock",
+        "Best credit cards for shopping on Amazon for April 2026: Boost your Amazon purch",
+        "Two solid \u2018yes\u2019 votes for Echo Global\u2019s acquisition: Moody\u2019s and S&P",
+        "How to calculate credit card interest",
+        "Vietnam Growth Slows as Rising Energy Costs Feed Uncertainty"
+      ],
+      "topics": [
+        "US Markets",
+        "Global Markets",
+        "Finance"
+      ],
+      "tags": [
+        "stocks",
+        "markets",
+        "finance",
+        "investing"
+      ],
+      "date": "2026-04-04",
+      "hour": "06",
+      "timestamp": "2026-04-04 06:45:28",
+      "item_count": 5
+    },
+    {
       "filename": "2026-04-03-06.00.md",
       "headlines": [
         "Analysts Bullish on Micron Technology\u00a0(MU) Amid Robust AI Demand",
@@ -151,5 +201,5 @@
       "item_count": 5
     }
   ],
-  "last_updated": "2026-04-03 06:45:34"
+  "last_updated": "2026-04-04 23:07:57"
 }

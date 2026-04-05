@@ -95,42 +95,36 @@ Navi OS (React + Vite)
 
 ## Event Bus Integration
 
-**Directoris:** `.events/inbox/{chief}/` i `.events/outbox/{chief}/`
+**Directoris:** `.events/inbox/{chief}/` i `.events/outbox/{chief}/` - CREATS I FUNCIONALS
 
 **Com emetre un event de proposta:**
 ```bash
 node scripts/emit-proposal-event.js <proposal-id> <old-state> <new-state> [proposer]
 ```
 
-**Estats de proposta:** `draft` → `pending` → `approved` | `denied`
+**Estats de proposta:** `draft` → `pending` → `approved` | `denied` | `executed`
 
-**Com processar inbox de SAM:**
+**Processadors per chief:**
 ```bash
-node team/sam/scripts/sam-inbox-processor.js        # Llegir events
-node team/sam/scripts/sam-inbox-processor.js --process  # Processar i moure a outbox
+# ELOM - Vision perspective
+node team/elom/scripts/elom-inbox-processor.js [--process]
+
+# WARREN - Quality/Risk perspective
+node team/warren/scripts/warren-inbox-processor.js [--process]
+
+# JEFF - Operations perspective
+node team/jeff/scripts/jeff-inbox-processor.js [--process]
+
+# SAM - AI/Tech perspective
+node team/sam/scripts/sam-inbox-processor.js [--process]
 ```
 
-**Format event JSON:**
-```json
-{
-  "id": "evt_TIMESTAMP_random",
-  "type": "proposal_state_changed",
-  "payload": {
-    "proposalId": "prop-001",
-    "oldState": "draft",
-    "newState": "pending",
-    "proposer": "jeff",
-    "changedAt": "2026-04-03T19:00:00Z"
-  },
-  "timestamp": "2026-04-03T19:00:00Z",
-  "source": "navi"
-}
-```
-
-**Flux:**
+**Flux complet:**
 1. Quan una proposta canvia d'estat → `emit-proposal-event.js` genera JSON a inbox de tots els chiefs
-2. Cada chief processa la seva inbox amb el seu processor
+2. Cada chief processa la seva inbox amb el seu processor (perspective-specific)
 3. Events processats es mouen a outbox per audit trail
+
+**Estat actual (2026-04-04):** Event Bus OPERATIU - tots 4 chiefs tenen processador funcional
 
 ---
 
